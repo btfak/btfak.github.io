@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>BT搜索引擎爬虫实践 &#8211; Programmer</title>
+    <link rel="dns-prefetch" href="//maxcdn.bootstrapcdn.com">
+    <link rel="dns-prefetch" href="//cdn.mathjax.org">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="最近完成了一个BT搜索引擎，基于磁力链接，目前这个技术已经很成熟了，从三年前的论文发表开始，以及去年的一系列开源，技术上几乎已经没有难题，更多难点在工程上。后端采用Golang+Mysql+Elasticsearch，前端采用bootstrap">
+    <meta name="robots" content="all">
+    <meta name="author" content="btfak">
+    
+    <meta name="keywords" content="BT搜索引擎">
+    <link rel="canonical" href="http://btfak.com/bt%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/2016/06/15/memory_optimize_on_dht_spider/">
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed for Programmer" href="/feed.xml" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/pixyll.css?201608261417" type="text/css">
+
+    <!-- Fonts -->
+    
+    <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+    
+    
+
+    <!-- MathJax -->
+    
+
+    <!-- Verifications -->
+    
+    
+
+    <!-- Open Graph -->
+    <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="BT搜索引擎爬虫实践">
+    <meta property="og:description" content="blog site of btfak">
+    <meta property="og:url" content="http://btfak.com/bt%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/2016/06/15/memory_optimize_on_dht_spider/">
+    <meta property="og:site_name" content="Programmer">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    
+    <meta name="twitter:title" content="BT搜索引擎爬虫实践" />
+    <meta name="twitter:description" content="最近完成了一个BT搜索引擎，基于磁力链接，目前这个技术已经很成熟了，从三年前的论文发表开始，以及去年的一系列开源，技术上几乎已经没有难题，更多难点在工程上。后端采用Golang+Mysql+Elasticsearch，前端采用bootstrap" />
+    <meta name="twitter:url" content="http://btfak.com/bt%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/2016/06/15/memory_optimize_on_dht_spider/" />
+
+    <!-- Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/favicon-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/favicon-160x160.png" sizes="160x160">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+
+    
+</head>
+
+<body class="site">
+  
+	
+
+  <div class="site-wrap">
+    <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="http://btfak.com" class="site-title">Programmer</a>
+      <nav class="site-nav">
+        
+    
+
+    
+        <a href="/about/">About Me</a>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+      </nav>
+      <div class="clearfix"></div>
+      
+    </div>
+  </div>
+</header>
+
+
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+        
+
+
+<div class="post-header mb2">
+  <h1>BT搜索引擎爬虫实践</h1>
+  <span class="post-meta">Jun 15, 2016</span><br>
+  
+  <span class="post-meta small">
+  </span>
+</div>
+
+<article class="post-content">
+  <p>最近完成了一个BT搜索引擎，基于<a href="https://zh.wikipedia.org/zh/%E7%A3%81%E5%8A%9B%E9%93%BE%E6%8E%A5">磁力链接</a>，目前这个技术已经很成熟了，从三年前的<a href="http://xiaoxia.org/2013/05/11/magnet-search-engine/">这篇文章</a>开始，和去年的<a href="http://xiaoxia.org/2015/05/15/shousibaocai-opensource/">开源</a>，技术上几乎已经没有难题，更多难点在工程上。后端采用Golang+Mysql+Elasticsearch，前端采用bootstrap。后端由三个单独的模块组成，spider组件是从DHT网络获取活跃资源id，storage组件是根据id查询到种子信息（metadata），存储到Mysql，并索引到Elasticsearch。API组件是对外提供查询、搜索服务，API组件采用nginx进行负载均衡。前端采用bootstrap，使用nginx做为web服务器，前端直接与后端的API组件进行交互。</p>
+
+<p>本文介绍爬虫的实现技巧。</p>
+
+<p>磁力搜索的原理看<a href="http://codemacro.com/2013/05/19/crawl-dht/">这个文章</a>，近两年已经有多个开源版本，我参考了<a href="https://github.com/alanyang/dhtspider">nodejs版本</a>和<a href="https://github.com/xiaojiong/DhtCrawler">golang版本</a>，前者在算法上更为巧妙，后者在实现上已经有现成的逻辑。结合两者，实现了自有版本，会在未来开源出来。</p>
+
+<p>在单核，内存768M的VPS上，完全运行时，每秒UDP请求约12K，每日入口流量约220G，出口流量约300G，CPU会跑到100%，内存占用约100MB。</p>
+
+<p>爬虫的关键在于认识尽可能多的节点，一旦进入某节点的哈希表中，此节点想要下载资源，都会询问你，这样你就得到了一个活跃的资源id。</p>
+
+<p>第一个技巧：动态控制find_node请求的频率</p>
+
+<p>启动时应该全力调用find_node，尽快的结识尽可能多的节点，随着认识你的节点数量迅速递增，再降低速率，前期结识的节点已经足够跑满你的CPU，否则会无端占用带宽、CPU资源。一个可以参考的算法是每分钟收到的get_peers请求每增加一万，find_node的sleep时间增加50毫秒，算下来当你每分钟收到40万个get_peers请求时，每两秒钟才会调用一次find_node，根据你的机器，这个50毫秒是可调整的。</p>
+
+<p>第二个技巧：均匀分配节点id</p>
+
+<p>节点会根据自己的id认识周围的节点，整个网络节点数量最大是16的40次方个，每个节点的id是随机的。加入我们运行100个节点，随机分配显然是不行的，应该是把整个网络均分为100份，每一份中运行我们的一个节点，才能尽可能接触到不同的资源，否则多个节点收到的资源可能会是同一个。参考代码：</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">type</span><span class="x"> </span><span class="n">ID</span><span class="x"> </span><span class="p">[]</span><span class="kt">byte</span><span class="x">
+
+</span><span class="k">func</span><span class="x"> </span><span class="n">GenerateIDList</span><span class="p">(</span><span class="n">count</span><span class="x"> </span><span class="kt">int64</span><span class="p">)</span><span class="x"> </span><span class="p">(</span><span class="n">ids</span><span class="x"> </span><span class="p">[]</span><span class="n">ID</span><span class="p">)</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="k">if</span><span class="x"> </span><span class="n">count</span><span class="x"> </span><span class="o">&lt;=</span><span class="x"> </span><span class="m">0</span><span class="x"> </span><span class="p">{</span><span class="x">
+		</span><span class="k">return</span><span class="x">
+	</span><span class="p">}</span><span class="x">
+	</span><span class="n">max</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="p">[]</span><span class="kt">byte</span><span class="p">{</span><span class="m">0xff</span><span class="p">,</span><span class="x"> </span><span class="m">0xff</span><span class="p">,</span><span class="x"> </span><span class="m">0xff</span><span class="p">,</span><span class="x"> </span><span class="m">0xff</span><span class="p">,</span><span class="x"> </span><span class="m">0xff</span><span class="p">,</span><span class="x"> </span><span class="m">0xff</span><span class="p">,</span><span class="x"> </span><span class="m">0xff</span><span class="p">,</span><span class="x"> </span><span class="m">0xff</span><span class="p">,</span><span class="x"> </span><span class="m">0xff</span><span class="p">,</span><span class="x"> </span><span class="m">0xff</span><span class="p">,</span><span class="x">
+		</span><span class="m">0xff</span><span class="p">,</span><span class="x"> </span><span class="m">0xff</span><span class="p">,</span><span class="x"> </span><span class="m">0xff</span><span class="p">,</span><span class="x"> </span><span class="m">0xff</span><span class="p">,</span><span class="x"> </span><span class="m">0xff</span><span class="p">,</span><span class="x"> </span><span class="m">0xff</span><span class="p">,</span><span class="x"> </span><span class="m">0xff</span><span class="p">,</span><span class="x"> </span><span class="m">0xff</span><span class="p">,</span><span class="x"> </span><span class="m">0xff</span><span class="p">,</span><span class="x"> </span><span class="m">0xff</span><span class="p">}</span><span class="x">
+	</span><span class="n">num</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">big</span><span class="o">.</span><span class="n">NewInt</span><span class="p">(</span><span class="m">0</span><span class="p">)</span><span class="o">.</span><span class="n">SetBytes</span><span class="p">(</span><span class="n">max</span><span class="p">)</span><span class="x">
+	</span><span class="n">step</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">big</span><span class="o">.</span><span class="n">NewInt</span><span class="p">(</span><span class="m">0</span><span class="p">)</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">num</span><span class="p">,</span><span class="x"> </span><span class="n">big</span><span class="o">.</span><span class="n">NewInt</span><span class="p">(</span><span class="n">count</span><span class="o">+</span><span class="m">2</span><span class="p">))</span><span class="x">
+	</span><span class="k">for</span><span class="x"> </span><span class="n">i</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="m">1</span><span class="p">;</span><span class="x"> </span><span class="n">i</span><span class="x"> </span><span class="o">&lt;</span><span class="x"> </span><span class="kt">int</span><span class="p">(</span><span class="n">count</span><span class="o">+</span><span class="m">1</span><span class="p">);</span><span class="x"> </span><span class="n">i</span><span class="o">++</span><span class="x"> </span><span class="p">{</span><span class="x">
+		</span><span class="n">item</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">big</span><span class="o">.</span><span class="n">NewInt</span><span class="p">(</span><span class="m">0</span><span class="p">)</span><span class="o">.</span><span class="n">Mul</span><span class="p">(</span><span class="n">step</span><span class="p">,</span><span class="x"> </span><span class="n">big</span><span class="o">.</span><span class="n">NewInt</span><span class="p">(</span><span class="kt">int64</span><span class="p">(</span><span class="n">i</span><span class="p">)))</span><span class="x">
+		</span><span class="n">item</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">item</span><span class="p">,</span><span class="x"> </span><span class="n">big</span><span class="o">.</span><span class="n">NewInt</span><span class="p">(</span><span class="kt">int64</span><span class="p">(</span><span class="n">rand</span><span class="o">.</span><span class="n">Intn</span><span class="p">(</span><span class="m">99</span><span class="p">))))</span><span class="x">
+		</span><span class="n">ids</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="nb">append</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span><span class="x"> </span><span class="n">item</span><span class="o">.</span><span class="n">Bytes</span><span class="p">())</span><span class="x">
+	</span><span class="p">}</span><span class="x">
+	</span><span class="k">return</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>第三个技巧：内存复用</p>
+
+<p>在如此高的流量压力下怎样控制内存占用是关键的问题，理论上每个UDP请求都需要使用新的内存空间，但分析协议你会发现有趣的事情，协议定义看<a href="http://www.bittorrent.org/beps/bep_0005.html">这里</a>。爬虫只会使用5条协议，发出的只有find_node，收到的是ping，get_peers，announce_peer，find_node。收到的四条协议在格式上是很接近的，而且长度是可控的。通过使用pprof进行分析，最主要的内存消耗发生在读取请求内容和解析请求内容上。如果我们运行的每个节点复用这些空间呢？那么内存总量就是可控的，只会随着节点数量线性增加，因此我们可以并发的运行一批节点，而节点接收UDP请求是单线程的。参考以下代码：</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">func</span><span class="x"> </span><span class="p">(</span><span class="n">nw</span><span class="x"> </span><span class="o">*</span><span class="n">Network</span><span class="p">)</span><span class="x"> </span><span class="n">Listening</span><span class="p">()</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="n">val</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="nb">make</span><span class="p">(</span><span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="k">interface</span><span class="p">{})</span><span class="x">  </span><span class="c">//每个节点解析请求需要占用的空间</span><span class="x">
+	</span><span class="n">buf</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="nb">make</span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span><span class="x"> </span><span class="m">1024</span><span class="p">)</span><span class="x">            </span><span class="c">//每个节点读取请求内容需要占用的空间</span><span class="x">
+	</span><span class="k">for</span><span class="x"> </span><span class="p">{</span><span class="x">
+		</span><span class="n">n</span><span class="p">,</span><span class="x"> </span><span class="n">raddr</span><span class="p">,</span><span class="x"> </span><span class="n">err</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">nw</span><span class="o">.</span><span class="n">Conn</span><span class="o">.</span><span class="n">ReadFromUDP</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span><span class="x">
+		</span><span class="k">if</span><span class="x"> </span><span class="n">err</span><span class="x"> </span><span class="o">!=</span><span class="x"> </span><span class="no">nil</span><span class="x"> </span><span class="p">{</span><span class="x">
+			</span><span class="k">continue</span><span class="x">
+		</span><span class="p">}</span><span class="x">
+		</span><span class="n">nw</span><span class="o">.</span><span class="n">Dht</span><span class="o">.</span><span class="n">krpc</span><span class="o">.</span><span class="n">Decode</span><span class="p">(</span><span class="n">buf</span><span class="p">[</span><span class="o">:</span><span class="n">n</span><span class="p">],</span><span class="x"> </span><span class="n">val</span><span class="p">,</span><span class="x"> </span><span class="n">raddr</span><span class="p">)</span><span class="x">
+	</span><span class="p">}</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>第四个技巧：高并发下优化nf_conntrack</p>
+
+<p>终于运行起了爬虫，但运行没几分钟，各种linux问题出现了，最开始应该是ulimit问题，这个问题很好解决，参考<a href="http://www.stutostu.com/?p=1322">这个文章</a>。然后会出现开始大量报出：<code class="highlighter-rouge">nf_conntrack: table full, dropping packet</code>。这个问题参考<a href="http://jaseywang.me/2012/08/16/%E8%A7%A3%E5%86%B3-nf_conntrack-table-full-dropping-packet-%E7%9A%84%E5%87%A0%E7%A7%8D%E6%80%9D%E8%B7%AF/">这个文章</a>。原因就是，</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>nf_conntrack/ip_conntrack 跟 nat 有关，用来跟踪连接条目，它会使用一个哈希表来记录 established 的记录。nf_conntrack 在 2.6.15 被引入，而 ip_conntrack 在 2.6.22 被移除，如果该哈希表满了，就会出现：nf_conntrack: table full, dropping packet。
+</code></pre>
+</div>
+
+<p>解决办法很简单，我们让某些端口的流量不要被记录即可。假如我们运行100个节点，而节点监听的端口是20000到20099，我们只需要执行以下命令即可。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>iptables -A INPUT -m state --state UNTRACKED -j ACCEPT
+iptables -t raw -A PREROUTING -p udp -m udp --dport 20000 -j NOTRACK
+...... //从端口20000一直到20099，每个端口一行
+iptables -t raw -A PREROUTING -p udp -m udp --dport 20099 -j NOTRACK
+</code></pre>
+</div>
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="center">
+  <div class="measure">
+    <!-- <small>
+      Theme crafted with &lt;3 by <a href="http://johnotander.com">John Otander</a> (<a href="https://twitter.com/4lpine">@4lpine</a>).<br>
+      &lt;/&gt; available on <a href="https://github.com/johnotander/pixyll">Github</a>.
+    </small> -->
+  </div>
+</footer>
+
+
+</body>
+</html>

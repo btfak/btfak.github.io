@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>开源一个完整的BT搜索引擎 &#8211; Programmer</title>
+    <link rel="dns-prefetch" href="//maxcdn.bootstrapcdn.com">
+    <link rel="dns-prefetch" href="//cdn.mathjax.org">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="单核,768MB的VPS上，每秒处理UDP请求超过12K，内存占用不超过100MB">
+    <meta name="robots" content="all">
+    <meta name="author" content="btfak">
+    
+    <meta name="keywords" content="BT搜索引擎">
+    <link rel="canonical" href="http://btfak.com/bt%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/2016/08/17/opensource-of-btlike/">
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed for Programmer" href="/feed.xml" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/pixyll.css?201608261417" type="text/css">
+
+    <!-- Fonts -->
+    
+    <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+    
+    
+
+    <!-- MathJax -->
+    
+
+    <!-- Verifications -->
+    
+    
+
+    <!-- Open Graph -->
+    <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="开源一个完整的BT搜索引擎">
+    <meta property="og:description" content="blog site of btfak">
+    <meta property="og:url" content="http://btfak.com/bt%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/2016/08/17/opensource-of-btlike/">
+    <meta property="og:site_name" content="Programmer">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    
+    <meta name="twitter:title" content="开源一个完整的BT搜索引擎" />
+    <meta name="twitter:description" content="单核,768MB的VPS上，每秒处理UDP请求超过12K，内存占用不超过100MB" />
+    <meta name="twitter:url" content="http://btfak.com/bt%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/2016/08/17/opensource-of-btlike/" />
+
+    <!-- Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/favicon-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/favicon-160x160.png" sizes="160x160">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+
+    
+</head>
+
+<body class="site">
+  
+	
+
+  <div class="site-wrap">
+    <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="http://btfak.com" class="site-title">Programmer</a>
+      <nav class="site-nav">
+        
+    
+
+    
+        <a href="/about/">About Me</a>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+      </nav>
+      <div class="clearfix"></div>
+      
+    </div>
+  </div>
+</header>
+
+
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+        
+
+
+<div class="post-header mb2">
+  <h1>开源一个完整的BT搜索引擎</h1>
+  <span class="post-meta">Aug 17, 2016</span><br>
+  
+  <span class="post-meta small">
+  </span>
+</div>
+
+<article class="post-content">
+  <h3 id="section">开源</h3>
+
+<ul>
+  <li>
+    <p>地址  <a href="http://github.com/btlike">github.com/btlike</a></p>
+  </li>
+  <li>
+    <p>在线演示 <a href="http://www.btlike.com">www.btlike.com</a></p>
+  </li>
+</ul>
+
+<h3 id="section-1">特性</h3>
+<ul>
+  <li>高性能<br />
+单核,768MB的<a href="https://www.vultr.com/pricing/">VPS</a>上，每秒处理UDP请求超过12K，内存占用不超过100MB`</li>
+  <li>大容量<br />
+采用Mysql分表存储,设计容量6千万~8千万数据</li>
+  <li>全文搜索<br />
+采用<a href="https://github.com/elastic/elasticsearch">Elasticsearch</a>实现全文索引和热度排序</li>
+</ul>
+
+<h3 id="section-2">组件</h3>
+<ul>
+  <li><a href="https://github.com/btlike/spider">spider</a>   底层DHT网络爬虫库</li>
+  <li><a href="https://github.com/btlike/crawl">crawl</a>     从DHT网络中抓取活跃的infohash与metadata并存储</li>
+  <li><a href="https://github.com/btlike/storage">storage</a> 根据infohash从网络中抓取torrent并存储metadata</li>
+  <li><a href="https://github.com/btlike/api">api</a>    对外提供接口，响应搜索等请求</li>
+</ul>
+
+<h3 id="section-3">直接下载可执行文件运行(推荐方式)</h3>
+<ul>
+  <li>下载地址: <a href="https://github.com/btlike/release">release</a></li>
+</ul>
+
+<h3 id="section-4">安装准备(从源码安装，较为复杂)</h3>
+<ul>
+  <li>安装 golang</li>
+  <li>安装 mysql</li>
+  <li>安装 <a href="https://github.com/elastic/elasticsearch">Elasticsearch</a></li>
+  <li>安装组件<a href="https://github.com/btlike/crawl">crawl</a><br />
+go get github.com/btlike/crawl</li>
+  <li>安装组件<a href="https://github.com/btlike/api">api</a><br />
+go get github.com/btlike/api</li>
+  <li>安装组件<a href="https://github.com/btlike/storage">storage</a><br />
+go get github.com/btlike/storage</li>
+</ul>
+
+<h3 id="section-5">流量图</h3>
+<p><img src="http://77g42f.com1.z0.glb.clouddn.com/flow.jpg" alt="flow" /></p>
+
+<h3 id="section-6">设计思路</h3>
+<ul>
+  <li>从全网尽可能多的获取infohash</li>
+  <li>从DHT网络，通过<a href="http://www.bittorrent.org/beps/bep_0009.html">BEP0009</a>获取资源</li>
+  <li>通过资源库查询资源，采用流量+带宽暴力遍历</li>
+  <li>极力优化内存、CPU与带宽资源</li>
+</ul>
+
+<h3 id="section-7">帮助与联系</h3>
+<p>在项目下提issue或联系 yanyuan2046 at 126.com</p>
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="center">
+  <div class="measure">
+    <!-- <small>
+      Theme crafted with &lt;3 by <a href="http://johnotander.com">John Otander</a> (<a href="https://twitter.com/4lpine">@4lpine</a>).<br>
+      &lt;/&gt; available on <a href="https://github.com/johnotander/pixyll">Github</a>.
+    </small> -->
+  </div>
+</footer>
+
+
+</body>
+</html>

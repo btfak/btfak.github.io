@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>怎样设计友好的API接口 &#8211; Programmer</title>
+    <link rel="dns-prefetch" href="//maxcdn.bootstrapcdn.com">
+    <link rel="dns-prefetch" href="//cdn.mathjax.org">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Cheney在2014年发表的，我认为在go语言的接口设计上，这篇文章起到了指明灯的作用，包括Micro在内的框架，都使用了这种方式提供API">
+    <meta name="robots" content="all">
+    <meta name="author" content="btfak">
+    
+    <meta name="keywords" content="Go">
+    <link rel="canonical" href="http://btfak.com/go/2016/05/22/functional-options-for-friendly-apis/">
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed for Programmer" href="/feed.xml" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/pixyll.css?201608261417" type="text/css">
+
+    <!-- Fonts -->
+    
+    <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+    
+    
+
+    <!-- MathJax -->
+    
+
+    <!-- Verifications -->
+    
+    
+
+    <!-- Open Graph -->
+    <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="怎样设计友好的API接口">
+    <meta property="og:description" content="blog site of btfak">
+    <meta property="og:url" content="http://btfak.com/go/2016/05/22/functional-options-for-friendly-apis/">
+    <meta property="og:site_name" content="Programmer">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    
+    <meta name="twitter:title" content="怎样设计友好的API接口" />
+    <meta name="twitter:description" content="Cheney在2014年发表的，我认为在go语言的接口设计上，这篇文章起到了指明灯的作用，包括Micro在内的框架，都使用了这种方式提供API" />
+    <meta name="twitter:url" content="http://btfak.com/go/2016/05/22/functional-options-for-friendly-apis/" />
+
+    <!-- Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/favicon-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/favicon-160x160.png" sizes="160x160">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+
+    
+</head>
+
+<body class="site">
+  
+	
+
+  <div class="site-wrap">
+    <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="http://btfak.com" class="site-title">Programmer</a>
+      <nav class="site-nav">
+        
+    
+
+    
+        <a href="/about/">About Me</a>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+      </nav>
+      <div class="clearfix"></div>
+      
+    </div>
+  </div>
+</header>
+
+
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+        
+
+
+<div class="post-header mb2">
+  <h1>怎样设计友好的API接口</h1>
+  <span class="post-meta">May 22, 2016</span><br>
+  
+  <span class="post-meta small">
+  </span>
+</div>
+
+<article class="post-content">
+  <p><em>这篇文章是Dave Cheney在2014年发表的，我认为在go语言的接口设计上，这篇文章起到了指明灯的作用，包括<a href="https://github.com/micro">Micro</a>在内的框架，都使用了这种方式提供API。原文看<a href="http://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis">这里</a></em></p>
+
+<p>正文开始：</p>
+
+<p>下面的内容是我的一次演示的文字版本，这是我在<a href="http://www.dotgo.eu/">dotGo</a>上演讲的『Functional options for friendly APIs』，在这里已经编辑的可读了。</p>
+
+<p><img src="/images/api-design1.png" alt="" /></p>
+
+<p>我想用一个故事作为开头。</p>
+
+<p>在2014年的晚些时候，你的公司发布了一款革命性的分布式社交网络工具，很明智的，你选择了Go来开发你的产品。</p>
+
+<p>你分配到的任务是编写极为重要的服务端组件，看起来可能像这样</p>
+
+<p><img src="/images/api-design2.png" alt="" /></p>
+
+<p>这里有一些不可导出的字段需要初始化，通过一个goroutine运行起来，响应请求。</p>
+
+<p>这个包有很简单的API，非常容易使用。</p>
+
+<p>但有一个问题，当你发布了你的第一个版本后，新的需求不断的被提出来。</p>
+
+<p><img src="/images/api-design3.png" alt="" /></p>
+
+<p>手机客户端经常是响应的很慢，甚至停止响应。你需要添加支持来对慢的客户端主动断开连接。</p>
+
+<p>为了增加安全，新的需求是增加安全连接（TLS）。</p>
+
+<p>然后，你的某些用户是在一个很小的服务器上运行服务，他们需要限制客户端数量的方式。</p>
+
+<p>下面是想要对并发数进行限制。</p>
+
+<p>不断的新需求…</p>
+
+<p>限制你需要调整你的API来满足这一系列的新需求</p>
+
+<p><img src="/images/api-design4.png" alt="" /></p>
+
+<p>还需要考虑不同版本直接接口的兼容性问题。</p>
+
+<p>实话说，谁用过这样的API？</p>
+
+<p>谁编写过这样的API?</p>
+
+<p>谁的代码以为依赖了这样的包，而不能正常使用了？</p>
+
+<p>明显的这种解决方式是笨重而脆弱的，同时也不容易发现问题。</p>
+
+<p>你的包的新用户，不知道哪些参数是可选的，哪些是必须的。</p>
+
+<p>比如说，如果我想创建一个服务的实例作为测试，我需要提供一个真实的TLS证书吗，如果不需要，我需要在接口中提供什么？</p>
+
+<p>如果我不关心最大连接数，或者最大并发数，我应该在参数中设置什么值，我应该使用0？0听起来是合理的，但这依赖于具体的接口是怎样实现的，这也许真的会导致并发数限制为0。</p>
+
+<p>在我看来，这样写API是容易的，同时你把正确使用接口的责任抛给了使用者。</p>
+
+<p>这个例子甚至代码写的很糟糕，文档也不友好，我想这示范了一个看起来华丽，其实很脆弱的API设计。</p>
+
+<p>现在我们定位了问题，我们看看解决方案。</p>
+
+<p><img src="/images/api-design5.png" alt="" /></p>
+
+<p>与其提供一个单独的接口处理多种情况，一种解决方案是提供一系列的接口。</p>
+
+<p>用户按需调用即可。</p>
+
+<p>但你很快会发现，提供如此大量的接口，很快会让你不堪重负。</p>
+
+<p>让我们看看另一种方式。</p>
+
+<p><img src="/images/api-design6.png" alt="" /></p>
+
+<p>一种非常简单的方式是提供一个配置结构体。</p>
+
+<p>这有一些优势。</p>
+
+<p>使用这种方式，如果有新的需求加入，在结构体中增加选项即可。对外的公共API仍然保持不变。这也能让文档更加友好、可读。</p>
+
+<p>在结构体上注明这是<code class="highlighter-rouge">NewServer</code>的参数，文档上也很容易识别。</p>
+
+<p>潜在的它也允许用户使用0作为参数的值。</p>
+
+<p><img src="/images/api-design7.png" alt="" /></p>
+
+<p>但是这种模式并不完美。</p>
+
+<p>对于默认值是有歧义的，特别是0的值如果有特别的含义。</p>
+
+<p>比如在这里的配置结构中，如果<code class="highlighter-rouge">port</code>没有被设置，<code class="highlighter-rouge">NewServer</code>会监听8080端口。</p>
+
+<p>但是这有一个负面影响，你也许想设置为0，然后服务端默认分配一个随机端口，但你设置的0与默认值是相同的。</p>
+
+<p><img src="/images/api-design8.png" alt="" /></p>
+
+<p>大部分时候，你的API用户只是想使用你的默认值。</p>
+
+<p>即使他们不想改变你的配置的任何内容，仍然不得不传入一些参数。</p>
+
+<p>当你的用户读你的测试代码或者示例代码时，在想着怎样使用你的包，他们会看到这个魔幻的空字符串参数。</p>
+
+<p>对我来说，这让我感觉很糟糕。</p>
+
+<p>为什么你的API的用户需要传入一个空的值，只是简单的让你的函数满足声明需求？</p>
+
+<p><img src="/images/api-design9.png" alt="" /></p>
+
+<p>一个常见的解决办法是传入一个结构体指针，这让调用者可以传入<code class="highlighter-rouge">nil</code>，而不用考虑空值的问题。</p>
+
+<p>在我看来，这个方案有前面的示例中的所有问题，甚至让问题更复杂了。</p>
+
+<p>首先，我们仍然需要在第二个参数传入点什么，但目前，这个参数可以是nil了，而且大部分时候，对于默认的使用者，它就是nil。</p>
+
+<p>使用指针的方式，包的作者和使用者都会担心的是，他们引用了同一份数据，随时有可能在运行中这份数据被修改而发生突变。</p>
+
+<p>我想设计精良的API不应该要求用户传递这些额外的参数，只是为了应对一些罕见的情况。</p>
+
+<p>我认为我们，Go程序员，应该努力确保不要求用户传递一个<code class="highlighter-rouge">nil</code>作为参数。</p>
+
+<p>如果我们想要传递配置信息时，这应该是自解释的，尽量的有表达性。</p>
+
+<p>现在，我们怀着这样的理念，我讨论一下我认为更好的解决方案。</p>
+
+<p><img src="/images/api-design10.png" alt="" /></p>
+
+<p>我们可以让API把不必须的参数作为一个变参。</p>
+
+<p>不是传入nil，或者一些值为0的结构体，这种函数的设计发出了这样的信号：你不需要在config上传入任何参数。</p>
+
+<p>在我看来这解决了两个问题。</p>
+
+<p>首先，默认的调用方式变得简介命了。</p>
+
+<p>其次，<code class="highlighter-rouge">NewServer</code>现在只接受config的值，不是指针，移除了<code class="highlighter-rouge">nil</code>和其他可能的参数，确保用户不会修改已经传入的参数。</p>
+
+<p>我认为这个一个巨大的提升。</p>
+
+<p>但我们深究一下，这仍然有问题。</p>
+
+<p>明显对你的预期是提供最多一个config值，但这个参数是变参，实现的时候需要考虑用户传入多个参数的情况。</p>
+
+<p>我们可以既能使用变参，同时也能提高我们的参数的表达性吗？</p>
+
+<p>我认为这就是结局方案。</p>
+
+<p><img src="/images/api-design11.png" alt="" /></p>
+
+<p>在这里我想要说清楚，函数式参数的想法是来自于Rob Pike的这篇文章：<a href="http://commandcenter.blogspot.com.au/2014/01/self-referential-functions-and-design.html">Self referential functions and design</a> ，我鼓励每个人都去看看。</p>
+
+<p>这种方式与上面的例子关键的不同在于，服务的定制化并不是通过传递参数实现的，而是通过函数来直接修改<code class="highlighter-rouge">server</code>的配置本身。</p>
+
+<p>正如前面看到的，不传递变参让我们使用默认的方式。</p>
+
+<p>当需要进行配置时，我们传递一个操作<code class="highlighter-rouge">server</code>的配置的函数。</p>
+
+<p>上面的代码中，<code class="highlighter-rouge">timeout</code>这个函数是用于改变<code class="highlighter-rouge">server</code>的配置中的timeout字段。</p>
+
+<p><img src="/images/api-design12.png" alt="" /></p>
+
+<p>在<code class="highlighter-rouge">NewServer</code>的实现内部，直接应用这些函数即可。</p>
+
+<p>在上面的代码中，我们调用了一个<code class="highlighter-rouge"> net.Listener</code>，在server的示例中，我们使用了这个默认的listener。</p>
+
+<p>然后，对于每个传入的option，我们都调用它，把我们的配置传入进去。</p>
+
+<p>很明显，如果没有option传递进来，我们就使用的是默认的server.</p>
+
+<p>使用这种方式，我们可以让API有这样的特性</p>
+
+<ul>
+  <li>默认情况是实用的</li>
+  <li>高度可配置</li>
+  <li>配置可以不断增长</li>
+  <li>自解释的文档</li>
+  <li>对新的使用者很安全</li>
+  <li>不会要求传入一个nil的或者空值（只是为了让编译通过）</li>
+</ul>
+
+<p>全文完。</p>
+
+<p><a href="https://github.com/micro">Micro</a>在几乎所有接口中使用了这样的方式，比如要创建一个micro server的实例，开发者通过一个<a href="https://github.com/micro/go-micro/blob/master/server/options.go">option.go</a>提供了所有可能的配置函数，当然你也可以自己实现。</p>
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="center">
+  <div class="measure">
+    <!-- <small>
+      Theme crafted with &lt;3 by <a href="http://johnotander.com">John Otander</a> (<a href="https://twitter.com/4lpine">@4lpine</a>).<br>
+      &lt;/&gt; available on <a href="https://github.com/johnotander/pixyll">Github</a>.
+    </small> -->
+  </div>
+</footer>
+
+
+</body>
+</html>

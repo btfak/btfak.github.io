@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>怎样自动化部署微服务 &#8211; Programmer</title>
+    <link rel="dns-prefetch" href="//maxcdn.bootstrapcdn.com">
+    <link rel="dns-prefetch" href="//cdn.mathjax.org">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="blog site of btfak">
+    <meta name="robots" content="all">
+    <meta name="author" content="btfak">
+    
+    <meta name="keywords" content="CI">
+    <link rel="canonical" href="http://btfak.com/ci/2016/05/30/deploy-micro/">
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed for Programmer" href="/feed.xml" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/pixyll.css?201608261417" type="text/css">
+
+    <!-- Fonts -->
+    
+    <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+    
+    
+
+    <!-- MathJax -->
+    
+
+    <!-- Verifications -->
+    
+    
+
+    <!-- Open Graph -->
+    <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="怎样自动化部署微服务">
+    <meta property="og:description" content="blog site of btfak">
+    <meta property="og:url" content="http://btfak.com/ci/2016/05/30/deploy-micro/">
+    <meta property="og:site_name" content="Programmer">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    
+    <meta name="twitter:title" content="怎样自动化部署微服务" />
+    <meta name="twitter:description" content="blog site of btfak" />
+    <meta name="twitter:url" content="http://btfak.com/ci/2016/05/30/deploy-micro/" />
+
+    <!-- Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/favicon-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/favicon-160x160.png" sizes="160x160">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+
+    
+</head>
+
+<body class="site">
+  
+	
+
+  <div class="site-wrap">
+    <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="http://btfak.com" class="site-title">Programmer</a>
+      <nav class="site-nav">
+        
+    
+
+    
+        <a href="/about/">About Me</a>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+      </nav>
+      <div class="clearfix"></div>
+      
+    </div>
+  </div>
+</header>
+
+
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+        
+
+
+<div class="post-header mb2">
+  <h1>怎样自动化部署微服务</h1>
+  <span class="post-meta">May 30, 2016</span><br>
+  
+  <span class="post-meta small">
+  </span>
+</div>
+
+<article class="post-content">
+  <p>这篇文章将讨论我们团队在实际开发和运维过程中，怎样基于gitlab的CI系统和supervisor，进行微服务的自动化部署。</p>
+
+<h2 id="ci">CI</h2>
+
+<p>持续集成的重要性不用多说，能够显著提高开发、部署和运维效率，但非侵入式的持续集成架构是很难的，此处分享我们在小型的开发团队中采用的持续集成方案。</p>
+
+<h3 id="gitlab">Gitlab</h3>
+
+<p>我们采用自建gitlab进行代码版本管理，通过docker进行搭建极其容易。目前的gitlab CI系统已经非常完善，可以针对特定的代码分支执行持续集成任务。</p>
+
+<p>怎样安装gitlab-ci-runner参考<a href="/2016/05/28/gitlab-ci-runner/">这篇文章</a></p>
+
+<h3 id="supervisor">Supervisor</h3>
+
+<p>测试环境采用supervisor进行进程监控，保证应用挂掉之后能重启，且能正常的杀掉老的进程。</p>
+
+<h2 id="example">Example</h2>
+
+<p>以目前实现的一个监控组件monitor作为示例，分享怎样实现持续集成。</p>
+
+<p>monitor是一个标准的micro服务，假设代码存放目录为</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="nv">$GOPATH</span>/src/git.domain.com/micro/monitor
+</code></pre>
+</div>
+
+<p>monitor的代码目录如下</p>
+
+<p><img src="/images/micro-monitor-code.jpg" alt="micro-monitor-code" /></p>
+
+<p>其中与部署相关的是两个文件</p>
+
+<p><code class="highlighter-rouge">.gitlab-ci.yml</code>是一个名字固定的文件，gitlab会根据这个文件名，来找到这个文件，将其中的内容根据分支设定，发送给runner执行，比如我们的文件内容是:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>develop:
+    script:
+    - <span class="nb">cd</span> <span class="k">${</span><span class="nv">GOPATH</span><span class="k">}</span>/src/git.xxx.com/micro/monitor  //进入代码目录
+    <span class="o">&amp;&amp;</span> git pull <span class="o">&amp;&amp;</span> git checkout develop <span class="o">&amp;&amp;</span> go build  //更新代码、切换到develop分支、编译
+    <span class="o">&amp;&amp;</span> mkdir -p logs  //创建logs文件夹
+    <span class="o">&amp;&amp;</span> supervisorctl -c ../../supervisord.conf update  //更新supervisor配置文件
+    <span class="o">&amp;&amp;</span> supervisorctl -c ../../supervisord.conf restart monitor //重启服务
+    tags:
+      - micro   //将任务分发给有micro这个tag的runner执行
+    only:
+      - develop   //只监听develop分支
+</code></pre>
+</div>
+
+<p>注意，文件里的GOPATH是一个变量，这个变量在gitlab后台的monitor工程中设置，它是全局的，不用每个工程都设置，在某个工程设置一次即可。</p>
+
+<p>具体参考<a href="/2016/05/28/gitlab-ci-runner/">这篇文章</a></p>
+
+<p>``supervisord.conf`是supervisor的配置文件，supervisor的安装等等内容请参考<a href="http://supervisord.org/">官网</a></p>
+
+<p>内容如下：</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="o">[</span>program:monitor]
+<span class="nv">directory</span><span class="o">=</span>%<span class="o">(</span>here<span class="o">)</span>s/micro/%<span class="o">(</span>program_name<span class="o">)</span>s
+<span class="nv">environment</span><span class="o">=</span><span class="nv">RUN_MODE</span><span class="o">=</span>%<span class="o">(</span>ENV_RUN_MODE<span class="o">)</span>s
+<span class="nb">command</span><span class="o">=</span>%<span class="o">(</span>here<span class="o">)</span>s/micro/%<span class="o">(</span>program_name<span class="o">)</span>s/%<span class="o">(</span>program_name<span class="o">)</span>s
+<span class="nv">process_name</span><span class="o">=</span>%<span class="o">(</span>program_name<span class="o">)</span>s
+autorestart <span class="o">=</span> <span class="nb">true
+</span>startretries <span class="o">=</span> 3
+<span class="nv">redirect_stderr</span><span class="o">=</span><span class="nb">true
+</span>stdout_logfile_maxbytes <span class="o">=</span> 20MB
+stdout_logfile_backups <span class="o">=</span> 20
+<span class="nv">stdout_logfile</span><span class="o">=</span>%<span class="o">(</span>here<span class="o">)</span>s/micro/%<span class="o">(</span>program_name<span class="o">)</span>s/logs/%<span class="o">(</span>program_name<span class="o">)</span>s.log
+</code></pre>
+</div>
+
+<p>内容很简单，就是进去某个设定好的目录，执行某个命令。</p>
+
+<p>实际效果：</p>
+
+<p><img src="/images/ci-01.jpg" alt="micro-monitor-code" /></p>
+
+<p><img src="/images/ci-02.jpg" alt="micro-monitor-code" /></p>
+
+<h2 id="section">总结</h2>
+
+<p>本质上就是gitlab+supervisor的组合，需要一些细节的设计，开发的项目需要增加两个文件。部署的服务器需要设计好路径结构，否则可能会找不到文件。实际操作过程中有疑问欢迎给我发邮件。自动化部署如果想要运行起来，还需要另一个方面的配合 — 不同环境的配置文件问题，本地环境、开发环境、测试环境、生产环境的配置大部分情况下都不一样，怎样智能的读取响应环境的配置文件？这个问题我们也有自己的解决方案，在接下来的文章中我会进一步说明。</p>
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="center">
+  <div class="measure">
+    <!-- <small>
+      Theme crafted with &lt;3 by <a href="http://johnotander.com">John Otander</a> (<a href="https://twitter.com/4lpine">@4lpine</a>).<br>
+      &lt;/&gt; available on <a href="https://github.com/johnotander/pixyll">Github</a>.
+    </small> -->
+  </div>
+</footer>
+
+
+</body>
+</html>

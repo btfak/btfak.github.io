@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>使用Go Micro编写微服务 &#8211; Programmer</title>
+    <link rel="dns-prefetch" href="//maxcdn.bootstrapcdn.com">
+    <link rel="dns-prefetch" href="//cdn.mathjax.org">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Go Micro是一个插件化的基础框架，基于此可以构建微服务。Micro的设计哲学是『可插拔』的插件化架构。在架构之外，它默认实现了consul作为服务发现，通过http进行通信，通过protobuf和json进行编解码。">
+    <meta name="robots" content="all">
+    <meta name="author" content="btfak">
+    
+    <meta name="keywords" content="微服务">
+    <link rel="canonical" href="http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/03/28/go-micro/">
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed for Programmer" href="/feed.xml" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/pixyll.css?201608261417" type="text/css">
+
+    <!-- Fonts -->
+    
+    <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+    
+    
+
+    <!-- MathJax -->
+    
+
+    <!-- Verifications -->
+    
+    
+
+    <!-- Open Graph -->
+    <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="使用Go Micro编写微服务">
+    <meta property="og:description" content="blog site of btfak">
+    <meta property="og:url" content="http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/03/28/go-micro/">
+    <meta property="og:site_name" content="Programmer">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    
+    <meta name="twitter:title" content="使用Go Micro编写微服务" />
+    <meta name="twitter:description" content="Go Micro是一个插件化的基础框架，基于此可以构建微服务。Micro的设计哲学是『可插拔』的插件化架构。在架构之外，它默认实现了consul作为服务发现，通过http进行通信，通过protobuf和json进行编解码。" />
+    <meta name="twitter:url" content="http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/03/28/go-micro/" />
+
+    <!-- Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/favicon-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/favicon-160x160.png" sizes="160x160">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+
+    
+</head>
+
+<body class="site">
+  
+	
+
+  <div class="site-wrap">
+    <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="http://btfak.com" class="site-title">Programmer</a>
+      <nav class="site-nav">
+        
+    
+
+    
+        <a href="/about/">About Me</a>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+      </nav>
+      <div class="clearfix"></div>
+      
+    </div>
+  </div>
+</header>
+
+
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+        
+
+
+<div class="post-header mb2">
+  <h1>使用Go Micro编写微服务</h1>
+  <span class="post-meta">Mar 28, 2016</span><br>
+  
+  <span class="post-meta small">
+  </span>
+</div>
+
+<article class="post-content">
+  <p>这是一系列介绍<a href="http://github.com/micro">Micro</a>框架的文章的第三篇，我将会把作者的博客翻译成中文，推广Micro这个微服务框架。</p>
+
+<p>这是一个高等级的说明：怎样使用<a href="https://github.com/micro/go-micro">go-micro</a>来编写微服务，如果你想学习更多微服务的知识以及Micro的整体架构，参考以前的文章。</p>
+
+<h2 id="go-micro">什么是Go Micro?</h2>
+
+<p><a href="https://github.com/micro/go-micro">Go Micro</a>是一个插件化的基础框架，基于此可以构建微服务。Micro的设计哲学是『可插拔』的插件化架构。在架构之外，它默认实现了consul作为服务发现，通过http进行通信，通过protobuf和json进行编解码。我们一步步深入下去。</p>
+
+<p>Go Micro是：</p>
+
+<ol>
+  <li>一个用Golang编写的包</li>
+  <li>一系列插件化的接口定义</li>
+  <li>基于RPC</li>
+</ol>
+
+<p>Go Micro为下面的模块定义了接口：</p>
+
+<ol>
+  <li>服务发现</li>
+  <li>编解码</li>
+  <li>服务端、客户端</li>
+  <li>订阅、发布消息</li>
+</ol>
+
+<p>更详细的说明可以在<a href="https://blog.micro.mu/2016/03/20/micro.html#go-micro">这里</a>看到。</p>
+
+<h2 id="go-micro-1">为什么是Go Micro?</h2>
+
+<p>Go Micro从一年多以前开始开发，最初只是个人需求，很快我发现这对那些编写微服务的程序员会有很大的价值。它基于我在不同的技术公司如google和hailo的开发经验编写而成。</p>
+
+<p>就像前面提到的，Go Micro是一个golang编写的插件化架构，专注于提供底层的接口定义和基础工具。这些接口可以接纳各种实现。比如 <a href="https://godoc.org/github.com/micro/go-micro/registry">Registry</a>接口定义了服务发现的接口，默认采用了consul作为服务发现的实现，但也可以采用其他实现比如etcd和zookeeper等，只要能满足接口，就可以使用。</p>
+
+<p>插件化的架构意味着如果你想替换底层的实现，你不需要修改任何底层的代码。</p>
+
+<h2 id="section">编写一个服务</h2>
+
+<p>如果你想直接看代码，看这里：<a href="https://github.com/micro/go-micro/tree/master/examples/service">examples/service</a></p>
+
+<p>顶层的<a href="https://godoc.org/github.com/micro/go-micro#Service">Service</a>接口是构建服务的主要组件。它把底层的各个包需要实现的接口，做了一次封装。</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">type</span><span class="x"> </span><span class="n">Service</span><span class="x"> </span><span class="k">interface</span><span class="x"> </span><span class="p">{</span><span class="x">
+    </span><span class="n">Init</span><span class="p">(</span><span class="o">...</span><span class="n">Option</span><span class="p">)</span><span class="x">
+    </span><span class="n">Options</span><span class="p">()</span><span class="x"> </span><span class="n">Options</span><span class="x">
+    </span><span class="n">Client</span><span class="p">()</span><span class="x"> </span><span class="n">client</span><span class="o">.</span><span class="n">Client</span><span class="x">
+    </span><span class="n">Server</span><span class="p">()</span><span class="x"> </span><span class="n">server</span><span class="o">.</span><span class="n">Server</span><span class="x">
+    </span><span class="n">Run</span><span class="p">()</span><span class="x"> </span><span class="kt">error</span><span class="x">
+    </span><span class="n">String</span><span class="p">()</span><span class="x"> </span><span class="kt">string</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre>
+</div>
+
+<h3 id="section-1">初始化</h3>
+
+<p>一个服务可以这样创建<code class="highlighter-rouge">micro.NewService</code></p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">import</span><span class="x"> </span><span class="s">"github.com/micro/go-micro"</span><span class="x">
+
+</span><span class="n">service</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">micro</span><span class="o">.</span><span class="n">NewService</span><span class="p">()</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>参数可以在创建时传入</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="n">service</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">micro</span><span class="o">.</span><span class="n">NewService</span><span class="p">(</span><span class="x">
+	</span><span class="n">micro</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="s">"greeter"</span><span class="p">),</span><span class="x">
+	</span><span class="n">micro</span><span class="o">.</span><span class="n">Version</span><span class="p">(</span><span class="s">"latest"</span><span class="p">),</span><span class="x">
+</span><span class="p">)</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>所有可选的参数设置可以在<a href="https://godoc.org/github.com/micro/go-micro#Option">这里</a>看到</p>
+
+<p>Go Micro也提供了读取命令行的方式</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">import</span><span class="x"> </span><span class="p">(</span><span class="x">
+	</span><span class="s">"github.com/micro/cli"</span><span class="x">
+	</span><span class="s">"github.com/micro/go-micro"</span><span class="x">
+</span><span class="p">)</span><span class="x">
+
+</span><span class="n">service</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">micro</span><span class="o">.</span><span class="n">NewService</span><span class="p">(</span><span class="x">
+	</span><span class="n">micro</span><span class="o">.</span><span class="n">Flags</span><span class="p">(</span><span class="x">
+		</span><span class="n">cli</span><span class="o">.</span><span class="n">StringFlag</span><span class="p">{</span><span class="x">
+			</span><span class="n">Name</span><span class="o">:</span><span class="x">  </span><span class="s">"environment"</span><span class="p">,</span><span class="x">
+			</span><span class="n">Usage</span><span class="o">:</span><span class="x"> </span><span class="s">"The environment"</span><span class="p">,</span><span class="x">
+		</span><span class="p">},</span><span class="x">
+	</span><span class="p">)</span><span class="x">
+</span><span class="p">)</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>通过 <code class="highlighter-rouge">service.Init</code>来解析参数，附加的处理可以通过<code class="highlighter-rouge">micro.Action</code>解决</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="n">service</span><span class="o">.</span><span class="n">Init</span><span class="p">(</span><span class="x">
+	</span><span class="n">micro</span><span class="o">.</span><span class="n">Action</span><span class="p">(</span><span class="k">func</span><span class="p">(</span><span class="n">c</span><span class="x"> </span><span class="o">*</span><span class="n">cli</span><span class="o">.</span><span class="n">Context</span><span class="p">)</span><span class="x"> </span><span class="p">{</span><span class="x">
+		</span><span class="n">env</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">c</span><span class="o">.</span><span class="n">StringFlag</span><span class="p">(</span><span class="s">"environment"</span><span class="p">)</span><span class="x">
+		</span><span class="k">if</span><span class="x"> </span><span class="nb">len</span><span class="p">(</span><span class="n">env</span><span class="p">)</span><span class="x"> </span><span class="o">&gt;</span><span class="x"> </span><span class="m">0</span><span class="x"> </span><span class="p">{</span><span class="x">
+			</span><span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Environment set to"</span><span class="p">,</span><span class="x"> </span><span class="n">env</span><span class="p">)</span><span class="x">
+		</span><span class="p">}</span><span class="x">
+	</span><span class="p">}),</span><span class="x">
+</span><span class="p">)</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>Go Micro提供了提供了预定义的参数，也会被<code class="highlighter-rouge">service.Init</code>解析，<a href="https://godoc.org/github.com/micro/go-micro/cmd#pkg-variables">这里</a>可以看到所有的flag</p>
+
+<h3 id="api">定义API</h3>
+
+<p>我们使用protobuf文件来定义服务的API，这是一种方便且严格的定义方式，协议将会提供给服务端和客户端。下面是一个协议的例子：greeter.proto</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="n">syntax</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="s">"proto3"</span><span class="p">;</span><span class="x">
+
+</span><span class="n">service</span><span class="x"> </span><span class="n">Greeter</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="n">rpc</span><span class="x"> </span><span class="n">Hello</span><span class="p">(</span><span class="n">HelloRequest</span><span class="p">)</span><span class="x"> </span><span class="n">returns</span><span class="x"> </span><span class="p">(</span><span class="n">HelloResponse</span><span class="p">)</span><span class="x"> </span><span class="p">{}</span><span class="x">
+</span><span class="p">}</span><span class="x">
+
+</span><span class="n">message</span><span class="x"> </span><span class="n">HelloRequest</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="kt">string</span><span class="x"> </span><span class="n">name</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="m">1</span><span class="p">;</span><span class="x">
+</span><span class="p">}</span><span class="x">
+
+</span><span class="n">message</span><span class="x"> </span><span class="n">HelloResponse</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="kt">string</span><span class="x"> </span><span class="n">greeting</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="m">2</span><span class="p">;</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>这里定义了一个服务叫做Greeter，它提供一个接口叫Hello，它接受HelloRequest的请求，返回HelloResponse。</p>
+
+<h3 id="api-1">生成API接口</h3>
+
+<p>我们使用<code class="highlighter-rouge">protoc</code>和<code class="highlighter-rouge">proto-gen-go</code>这两个工具来生成代码，Go Micro也会生成客户端代码，减少工作量，这里需要使用我们fork并修改过的<a href="https://blog.micro.mu/2016/03/28/github.com/micro/protobuf">github.com/micro/protobuf</a>，与原始版本的区别是，fork版本能生成客户端代码</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>go get github.com/micro/protobuf/<span class="o">{</span>proto,protoc-gen-go<span class="o">}</span>
+protoc --go_out<span class="o">=</span><span class="nv">plugins</span><span class="o">=</span>micro:. greeter.proto
+</code></pre>
+</div>
+
+<p>生成的代码可以在handler中引用相应的包进行使用，下面是生成的一部分代码</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">type</span><span class="x"> </span><span class="n">HelloRequest</span><span class="x"> </span><span class="k">struct</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="n">Name</span><span class="x"> </span><span class="kt">string</span><span class="x"> </span><span class="s">`protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`</span><span class="x">
+</span><span class="p">}</span><span class="x">
+
+</span><span class="k">type</span><span class="x"> </span><span class="n">HelloResponse</span><span class="x"> </span><span class="k">struct</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="n">Greeting</span><span class="x"> </span><span class="kt">string</span><span class="x"> </span><span class="s">`protobuf:"bytes,2,opt,name=greeting" json:"greeting,omitempty"`</span><span class="x">
+</span><span class="p">}</span><span class="x">
+
+</span><span class="c">// Client API for Greeter service</span><span class="x">
+
+</span><span class="k">type</span><span class="x"> </span><span class="n">GreeterClient</span><span class="x"> </span><span class="k">interface</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="n">Hello</span><span class="p">(</span><span class="n">ctx</span><span class="x"> </span><span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span><span class="x"> </span><span class="n">in</span><span class="x"> </span><span class="o">*</span><span class="n">HelloRequest</span><span class="p">,</span><span class="x"> </span><span class="n">opts</span><span class="x"> </span><span class="o">...</span><span class="n">client</span><span class="o">.</span><span class="n">CallOption</span><span class="p">)</span><span class="x"> </span><span class="p">(</span><span class="o">*</span><span class="n">HelloResponse</span><span class="p">,</span><span class="x"> </span><span class="kt">error</span><span class="p">)</span><span class="x">
+</span><span class="p">}</span><span class="x">
+
+
+</span><span class="k">type</span><span class="x"> </span><span class="n">greeterClient</span><span class="x"> </span><span class="k">struct</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="n">c</span><span class="x">           </span><span class="n">client</span><span class="o">.</span><span class="n">Client</span><span class="x">
+	</span><span class="n">serviceName</span><span class="x"> </span><span class="kt">string</span><span class="x">
+</span><span class="p">}</span><span class="x">
+
+</span><span class="k">func</span><span class="x"> </span><span class="n">NewGreeterClient</span><span class="p">(</span><span class="n">serviceName</span><span class="x"> </span><span class="kt">string</span><span class="p">,</span><span class="x"> </span><span class="n">c</span><span class="x"> </span><span class="n">client</span><span class="o">.</span><span class="n">Client</span><span class="p">)</span><span class="x"> </span><span class="n">GreeterClient</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="k">if</span><span class="x"> </span><span class="n">c</span><span class="x"> </span><span class="o">==</span><span class="x"> </span><span class="no">nil</span><span class="x"> </span><span class="p">{</span><span class="x">
+		</span><span class="n">c</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="n">client</span><span class="o">.</span><span class="n">NewClient</span><span class="p">()</span><span class="x">
+	</span><span class="p">}</span><span class="x">
+	</span><span class="k">if</span><span class="x"> </span><span class="nb">len</span><span class="p">(</span><span class="n">serviceName</span><span class="p">)</span><span class="x"> </span><span class="o">==</span><span class="x"> </span><span class="m">0</span><span class="x"> </span><span class="p">{</span><span class="x">
+		</span><span class="n">serviceName</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="s">"greeter"</span><span class="x">
+	</span><span class="p">}</span><span class="x">
+	</span><span class="k">return</span><span class="x"> </span><span class="o">&amp;</span><span class="n">greeterClient</span><span class="p">{</span><span class="x">
+		</span><span class="n">c</span><span class="o">:</span><span class="x">           </span><span class="n">c</span><span class="p">,</span><span class="x">
+		</span><span class="n">serviceName</span><span class="o">:</span><span class="x"> </span><span class="n">serviceName</span><span class="p">,</span><span class="x">
+	</span><span class="p">}</span><span class="x">
+</span><span class="p">}</span><span class="x">
+
+</span><span class="k">func</span><span class="x"> </span><span class="p">(</span><span class="n">c</span><span class="x"> </span><span class="o">*</span><span class="n">greeterClient</span><span class="p">)</span><span class="x"> </span><span class="n">Hello</span><span class="p">(</span><span class="n">ctx</span><span class="x"> </span><span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span><span class="x"> </span><span class="n">in</span><span class="x"> </span><span class="o">*</span><span class="n">HelloRequest</span><span class="p">,</span><span class="x"> </span><span class="n">opts</span><span class="x"> </span><span class="o">...</span><span class="n">client</span><span class="o">.</span><span class="n">CallOption</span><span class="p">)</span><span class="x"> </span><span class="p">(</span><span class="o">*</span><span class="n">HelloResponse</span><span class="p">,</span><span class="x"> </span><span class="kt">error</span><span class="p">)</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="n">req</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">c</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">NewRequest</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">serviceName</span><span class="p">,</span><span class="x"> </span><span class="s">"Greeter.Hello"</span><span class="p">,</span><span class="x"> </span><span class="n">in</span><span class="p">)</span><span class="x">
+	</span><span class="n">out</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="nb">new</span><span class="p">(</span><span class="n">HelloResponse</span><span class="p">)</span><span class="x">
+	</span><span class="n">err</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">c</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">Call</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span><span class="x"> </span><span class="n">req</span><span class="p">,</span><span class="x"> </span><span class="n">out</span><span class="p">,</span><span class="x"> </span><span class="n">opts</span><span class="o">...</span><span class="p">)</span><span class="x">
+	</span><span class="k">if</span><span class="x"> </span><span class="n">err</span><span class="x"> </span><span class="o">!=</span><span class="x"> </span><span class="no">nil</span><span class="x"> </span><span class="p">{</span><span class="x">
+		</span><span class="k">return</span><span class="x"> </span><span class="no">nil</span><span class="p">,</span><span class="x"> </span><span class="n">err</span><span class="x">
+	</span><span class="p">}</span><span class="x">
+	</span><span class="k">return</span><span class="x"> </span><span class="n">out</span><span class="p">,</span><span class="x"> </span><span class="no">nil</span><span class="x">
+</span><span class="p">}</span><span class="x">
+
+</span><span class="c">// Server API for Greeter service</span><span class="x">
+
+</span><span class="k">type</span><span class="x"> </span><span class="n">GreeterHandler</span><span class="x"> </span><span class="k">interface</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="n">Hello</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span><span class="x"> </span><span class="o">*</span><span class="n">HelloRequest</span><span class="p">,</span><span class="x"> </span><span class="o">*</span><span class="n">HelloResponse</span><span class="p">)</span><span class="x"> </span><span class="kt">error</span><span class="x">
+</span><span class="p">}</span><span class="x">
+
+</span><span class="k">func</span><span class="x"> </span><span class="n">RegisterGreeterHandler</span><span class="p">(</span><span class="n">s</span><span class="x"> </span><span class="n">server</span><span class="o">.</span><span class="n">Server</span><span class="p">,</span><span class="x"> </span><span class="n">hdlr</span><span class="x"> </span><span class="n">GreeterHandler</span><span class="p">)</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="n">s</span><span class="o">.</span><span class="n">Handle</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">NewHandler</span><span class="p">(</span><span class="o">&amp;</span><span class="n">Greeter</span><span class="p">{</span><span class="n">hdlr</span><span class="p">}))</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre>
+</div>
+
+<h3 id="handler">实现handler</h3>
+
+<p>服务端需要注册handler来处理请求，一个handler是一个这样的方法：</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">func</span><span class="p">(</span><span class="n">ctx</span><span class="x"> </span><span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span><span class="x"> </span><span class="n">req</span><span class="x"> </span><span class="k">interface</span><span class="p">{},</span><span class="x"> </span><span class="n">rsp</span><span class="x"> </span><span class="k">interface</span><span class="p">{})</span><span class="x"> </span><span class="kt">error</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>正如上面看到的，一个handler实现了API协议中定义的接口</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">type</span><span class="x"> </span><span class="n">GreeterHandler</span><span class="x"> </span><span class="k">interface</span><span class="x"> </span><span class="p">{</span><span class="x">
+        </span><span class="n">Hello</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span><span class="x"> </span><span class="o">*</span><span class="n">HelloRequest</span><span class="p">,</span><span class="x"> </span><span class="o">*</span><span class="n">HelloResponse</span><span class="p">)</span><span class="x"> </span><span class="kt">error</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>这里是一个Greeter的handler实现</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">import</span><span class="x"> </span><span class="n">proto</span><span class="x"> </span><span class="s">"github.com/micro/micro/examples/service/proto"</span><span class="x">
+
+</span><span class="k">type</span><span class="x"> </span><span class="n">Greeter</span><span class="x"> </span><span class="k">struct</span><span class="p">{}</span><span class="x">
+
+</span><span class="k">func</span><span class="x"> </span><span class="p">(</span><span class="n">g</span><span class="x"> </span><span class="o">*</span><span class="n">Greeter</span><span class="p">)</span><span class="x"> </span><span class="n">Hello</span><span class="p">(</span><span class="n">ctx</span><span class="x"> </span><span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span><span class="x"> </span><span class="n">req</span><span class="x"> </span><span class="o">*</span><span class="n">proto</span><span class="o">.</span><span class="n">HelloRequest</span><span class="p">,</span><span class="x"> </span><span class="n">rsp</span><span class="x"> </span><span class="o">*</span><span class="n">proto</span><span class="o">.</span><span class="n">HelloResponse</span><span class="p">)</span><span class="x"> </span><span class="kt">error</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="n">rsp</span><span class="o">.</span><span class="n">Greeting</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="s">"Hello "</span><span class="x"> </span><span class="o">+</span><span class="x"> </span><span class="n">req</span><span class="o">.</span><span class="n">Name</span><span class="x">
+	</span><span class="k">return</span><span class="x"> </span><span class="no">nil</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>handler需要注册到某个服务</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="n">service</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">micro</span><span class="o">.</span><span class="n">NewService</span><span class="p">(</span><span class="x">
+	</span><span class="n">micro</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="s">"greeter"</span><span class="p">),</span><span class="x">
+</span><span class="p">)</span><span class="x">
+
+</span><span class="n">proto</span><span class="o">.</span><span class="n">RegisterGreeterHandler</span><span class="p">(</span><span class="n">service</span><span class="o">.</span><span class="n">Server</span><span class="p">(),</span><span class="x"> </span><span class="nb">new</span><span class="p">(</span><span class="n">Greeter</span><span class="p">))</span><span class="x">
+</span></code></pre>
+</div>
+
+<h3 id="section-2">运行服务</h3>
+
+<p>服务可以直接调用<code class="highlighter-rouge">server.Run()</code>来运行，这会让服务监听一个随机端口，这个调用也会让服务将自身注册到注册器，当服务停止运行时，会在注册器注销自己。</p>
+
+<h3 id="section-3">完整的服务端</h3>
+
+<p>greeter.go</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">package</span><span class="x"> </span><span class="n">main</span><span class="x">
+
+</span><span class="k">import</span><span class="x"> </span><span class="p">(</span><span class="x">
+        </span><span class="s">"log"</span><span class="x">
+
+        </span><span class="s">"github.com/micro/go-micro"</span><span class="x">
+        </span><span class="n">proto</span><span class="x"> </span><span class="s">"github.com/micro/go-micro/examples/service/proto"</span><span class="x">
+
+        </span><span class="s">"golang.org/x/net/context"</span><span class="x">
+</span><span class="p">)</span><span class="x">
+
+</span><span class="k">type</span><span class="x"> </span><span class="n">Greeter</span><span class="x"> </span><span class="k">struct</span><span class="p">{}</span><span class="x">
+
+</span><span class="k">func</span><span class="x"> </span><span class="p">(</span><span class="n">g</span><span class="x"> </span><span class="o">*</span><span class="n">Greeter</span><span class="p">)</span><span class="x"> </span><span class="n">Hello</span><span class="p">(</span><span class="n">ctx</span><span class="x"> </span><span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span><span class="x"> </span><span class="n">req</span><span class="x"> </span><span class="o">*</span><span class="n">proto</span><span class="o">.</span><span class="n">HelloRequest</span><span class="p">,</span><span class="x"> </span><span class="n">rsp</span><span class="x"> </span><span class="o">*</span><span class="n">proto</span><span class="o">.</span><span class="n">HelloResponse</span><span class="p">)</span><span class="x"> </span><span class="kt">error</span><span class="x"> </span><span class="p">{</span><span class="x">
+        </span><span class="n">rsp</span><span class="o">.</span><span class="n">Greeting</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="s">"Hello "</span><span class="x"> </span><span class="o">+</span><span class="x"> </span><span class="n">req</span><span class="o">.</span><span class="n">Name</span><span class="x">
+        </span><span class="k">return</span><span class="x"> </span><span class="no">nil</span><span class="x">
+</span><span class="p">}</span><span class="x">
+
+</span><span class="k">func</span><span class="x"> </span><span class="n">main</span><span class="p">()</span><span class="x"> </span><span class="p">{</span><span class="x">
+        </span><span class="n">service</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">micro</span><span class="o">.</span><span class="n">NewService</span><span class="p">(</span><span class="x">
+                </span><span class="n">micro</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="s">"greeter"</span><span class="p">),</span><span class="x">
+                </span><span class="n">micro</span><span class="o">.</span><span class="n">Version</span><span class="p">(</span><span class="s">"latest"</span><span class="p">),</span><span class="x">
+        </span><span class="p">)</span><span class="x">
+
+        </span><span class="n">service</span><span class="o">.</span><span class="n">Init</span><span class="p">()</span><span class="x">
+
+        </span><span class="n">proto</span><span class="o">.</span><span class="n">RegisterGreeterHandler</span><span class="p">(</span><span class="n">service</span><span class="o">.</span><span class="n">Server</span><span class="p">(),</span><span class="x"> </span><span class="nb">new</span><span class="p">(</span><span class="n">Greeter</span><span class="p">))</span><span class="x">
+
+        </span><span class="k">if</span><span class="x"> </span><span class="n">err</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">service</span><span class="o">.</span><span class="n">Run</span><span class="p">();</span><span class="x"> </span><span class="n">err</span><span class="x"> </span><span class="o">!=</span><span class="x"> </span><span class="no">nil</span><span class="x"> </span><span class="p">{</span><span class="x">
+                </span><span class="n">log</span><span class="o">.</span><span class="n">Fatal</span><span class="p">(</span><span class="n">err</span><span class="p">)</span><span class="x">
+        </span><span class="p">}</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>注意，服务发现机制需要首先运行起来，这样服务才能注册到注册器中，才能被客户端发现，<a href="https://github.com/micro/go-micro#getting-started">这里</a>有一个简单的介绍。</p>
+
+<h2 id="section-4">编写客户端</h2>
+
+<p><a href="https://godoc.org/github.com/micro/go-micro/client">client</a> 包用于向服务端发起请求，当你创建一个服务，客户端可以调用的接口已经自动生成了</p>
+
+<p>调用上面的服务可以用下面的客户端代码</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="o">/</span><span class="x"> </span><span class="n">create</span><span class="x"> </span><span class="n">the</span><span class="x"> </span><span class="n">greeter</span><span class="x"> </span><span class="n">client</span><span class="x"> </span><span class="n">using</span><span class="x"> </span><span class="n">the</span><span class="x"> </span><span class="n">service</span><span class="x"> </span><span class="n">name</span><span class="x"> </span><span class="n">and</span><span class="x"> </span><span class="n">client</span><span class="x">
+</span><span class="n">greeter</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">proto</span><span class="o">.</span><span class="n">NewGreeterClient</span><span class="p">(</span><span class="s">"greeter"</span><span class="p">,</span><span class="x"> </span><span class="n">service</span><span class="o">.</span><span class="n">Client</span><span class="p">())</span><span class="x">
+
+</span><span class="c">// request the Hello method on the Greeter handler</span><span class="x">
+</span><span class="n">rsp</span><span class="p">,</span><span class="x"> </span><span class="n">err</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">greeter</span><span class="o">.</span><span class="n">Hello</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">TODO</span><span class="p">(),</span><span class="x"> </span><span class="o">&amp;</span><span class="n">proto</span><span class="o">.</span><span class="n">HelloRequest</span><span class="p">{</span><span class="x">
+	</span><span class="n">Name</span><span class="o">:</span><span class="x"> </span><span class="s">"John"</span><span class="p">,</span><span class="x">
+</span><span class="p">})</span><span class="x">
+</span><span class="k">if</span><span class="x"> </span><span class="n">err</span><span class="x"> </span><span class="o">!=</span><span class="x"> </span><span class="no">nil</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">err</span><span class="p">)</span><span class="x">
+	</span><span class="k">return</span><span class="x">
+</span><span class="p">}</span><span class="x">
+
+</span><span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">rsp</span><span class="o">.</span><span class="n">Greeter</span><span class="p">)</span><span class="x">
+</span></code></pre>
+</div>
+
+<p><code class="highlighter-rouge">proto.NewGreeterClient</code>就是我们刚才生成的代码，根据服务名称发送请求。</p>
+
+<p>完整的示例可以在这里看到：<a href="https://github.com/micro/go-micro/tree/master/examples/service">go-micro/examples/service</a></p>
+
+<h2 id="section-5">总结</h2>
+
+<p>这篇文章是一个高等级的使用说明，介绍了怎样编写客户端和服务端代码，你可以在这里看到更多示例代码：<a href="https://github.com/micro">github.com/micro</a></p>
+
+<p>如果你想了解更多，请看这个<a href="https://blog.micro.mu/">blog</a>，或者这个<a href="https://github.com/micro/micro">repo</a>，Twitter可以关注<a href="https://twitter.com/microhq">@MicroHQ</a>，Slack社区在<a href="http://slack.micro.mu/">这里</a></p>
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="center">
+  <div class="measure">
+    <!-- <small>
+      Theme crafted with &lt;3 by <a href="http://johnotander.com">John Otander</a> (<a href="https://twitter.com/4lpine">@4lpine</a>).<br>
+      &lt;/&gt; available on <a href="https://github.com/johnotander/pixyll">Github</a>.
+    </small> -->
+  </div>
+</footer>
+
+
+</body>
+</html>

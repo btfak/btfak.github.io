@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Micro Bot - 微服务中的ChatOps &#8211; Programmer</title>
+    <link rel="dns-prefetch" href="//maxcdn.bootstrapcdn.com">
+    <link rel="dns-prefetch" href="//cdn.mathjax.org">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="现在我知道你在想什么，现在有许多关于机器人的夸张说法。如果你对聊天机器人熟悉的话，你会知道这些都不是什么新说法，事实上最早的历史开始于Eliza。大众对机器人重新开始着迷，是因为我们发现了机器人有更多的功能，而不仅是简单的好玩。同时他们也提醒了我们下一代的人机交互接口会演变成什么样">
+    <meta name="robots" content="all">
+    <meta name="author" content="btfak">
+    
+    <meta name="keywords" content="微服务">
+    <link rel="canonical" href="http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/04/25/the-micro-bot/">
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed for Programmer" href="/feed.xml" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/pixyll.css?201608261417" type="text/css">
+
+    <!-- Fonts -->
+    
+    <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+    
+    
+
+    <!-- MathJax -->
+    
+
+    <!-- Verifications -->
+    
+    
+
+    <!-- Open Graph -->
+    <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Micro Bot - 微服务中的ChatOps">
+    <meta property="og:description" content="blog site of btfak">
+    <meta property="og:url" content="http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/04/25/the-micro-bot/">
+    <meta property="og:site_name" content="Programmer">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    
+    <meta name="twitter:title" content="Micro Bot - 微服务中的ChatOps" />
+    <meta name="twitter:description" content="现在我知道你在想什么，现在有许多关于机器人的夸张说法。如果你对聊天机器人熟悉的话，你会知道这些都不是什么新说法，事实上最早的历史开始于Eliza。大众对机器人重新开始着迷，是因为我们发现了机器人有更多的功能，而不仅是简单的好玩。同时他们也提醒了我们下一代的人机交互接口会演变成什么样" />
+    <meta name="twitter:url" content="http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/04/25/the-micro-bot/" />
+
+    <!-- Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/favicon-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/favicon-160x160.png" sizes="160x160">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+
+    
+</head>
+
+<body class="site">
+  
+	
+
+  <div class="site-wrap">
+    <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="http://btfak.com" class="site-title">Programmer</a>
+      <nav class="site-nav">
+        
+    
+
+    
+        <a href="/about/">About Me</a>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+      </nav>
+      <div class="clearfix"></div>
+      
+    </div>
+  </div>
+</header>
+
+
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+        
+
+
+<div class="post-header mb2">
+  <h1>Micro Bot - 微服务中的ChatOps</h1>
+  <span class="post-meta">Apr 25, 2016</span><br>
+  
+  <span class="post-meta small">
+  </span>
+</div>
+
+<article class="post-content">
+  <p>这是一系列介绍<a href="http://github.com/micro">Micro</a>框架的文章的第六篇，我将会把作者的博客翻译成中文，推广Micro这个微服务框架。</p>
+
+<p>今天我想聊一下机器人。</p>
+
+<h2 id="section">机器人?真的吗…</h2>
+
+<p>现在我知道你在想什么，现在有许多关于机器人的夸张说法。如果你对聊天机器人熟悉的话，你会知道这些都不是什么新说法，事实上最早的历史开始于<a href="https://en.wikipedia.org/wiki/ELIZA">Eliza</a>。大众对机器人重新开始着迷，是因为我们发现了机器人有更多的功能，而不仅是简单的好玩。同时他们也提醒了我们下一代的人机交互接口会演变成什么样。</p>
+
+<p>从工程师的思维来看，机器人不仅是为了交谈的目的，他们在执行任务的时候，超出想象的好用。大部分的我们已经对ChatOps很熟悉了。Github创造了这个概念，推出了他们的 <a href="https://hubot.github.com/">Hubot</a>,这是一个聊天机器人，可以管理技术上和业务上的操作任务。</p>
+
+<p>看看这篇Jesse Newland的演讲了解更多：<a href="https://www.youtube.com/watch?v=NST3u-GjjFw">ChatOpts at GitHub</a></p>
+
+<p>Hubot和机器人看起来已经证明了，在技术公司他们是非常有用的，他们在运维和自动化方面成为了好用的助手。现在通过HipChat或者Slack操控机器人来执行任务，而以前我们是手动的执行一些脚本，这明显要强大的多。这对整个团队带来的价值是显而易见的，每个人都能看到你在做的事情，已经事情的结果。</p>
+
+<h2 id="microchatops">Micro服务怎样与ChatOps结合起来?</h2>
+
+<p><a href="https://github.com/micro/micro"><strong>Micro</strong></a>，这个微服务工具箱，包括了一系列的服务，提供了接入点连接你正在运行的系统。API，Web控制台，CLI等等。他们都能与你的服务进行交互，观察你的服务的运行环境。在过去的几个月，这已经变得很清楚了，机器人是另外一种接入点，用于与你的服务进行交互与观察你的服务，这也是Micro世界的第一等公民。</p>
+
+<p>这样一来</p>
+
+<p><img src="https://blog.micro.mu/assets/images/micro_bot.png" alt="" /></p>
+
+<p>首先我们要明确，Micro 机器人是处于非常早期的阶段，目前主要是通过CLI提供功能。我们现在不能说实现了ChatOps，但或许有一天可以呢…</p>
+
+<p>Micro机器人包括了类似hubot的语法命令，已经一种实现的输入，比如Slack或者HipChat。这是粗糙的第一个版本，但我相信随着工作的投入，不久以后就能大大提供机器人的能力。希望社区也能加入进来。</p>
+
+<p>Bot 包括了所有的CLI命令，也提供了Slack和HipChat的入口。我们的机器人目前运行在一个demo环境中，通过Micro Slack提供，在<a href="http://slack.micro.mu/">这里</a>加入我们。</p>
+
+<p>在最近的开发周期中，我们会看看增加一些入口，比如IRC,XMPP，让我们可以通过命令简单的管理运行中的微服务。如果你有新的入口或者命令需要添加，请提交PR，贡献者是非常欢迎的。目前的插件可以在这里看到：<a href="https://github.com/micro/go-plugins/tree/master/bot">github.com/micro/go-plugins/bot</a></p>
+
+<p>这确实是一个基础的框架，用于对Micro生态系统做可编程的机器人。整个工具箱拥有插件化的特性。让我们看看Inputs和Commands是怎样工作的。</p>
+
+<h2 id="inputs">Inputs</h2>
+
+<p>Inputs是micro机器人怎样连接hipchat,slack,irc,xmpp等等。我们目前已经实现了HipChat和Slack，应该覆盖了大部分的用户。</p>
+
+<p>这里是Input的接口定义</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">type</span><span class="x"> </span><span class="n">Input</span><span class="x"> </span><span class="k">interface</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="c">// Provide cli flags</span><span class="x">
+	</span><span class="n">Flags</span><span class="p">()</span><span class="x"> </span><span class="p">[]</span><span class="n">cli</span><span class="o">.</span><span class="n">Flag</span><span class="x">
+	</span><span class="c">// Initialise input using cli context</span><span class="x">
+	</span><span class="n">Init</span><span class="p">(</span><span class="o">*</span><span class="n">cli</span><span class="o">.</span><span class="n">Context</span><span class="p">)</span><span class="x"> </span><span class="kt">error</span><span class="x">
+	</span><span class="c">// Stream events from the input</span><span class="x">
+	</span><span class="n">Stream</span><span class="p">()</span><span class="x"> </span><span class="p">(</span><span class="n">Conn</span><span class="p">,</span><span class="x"> </span><span class="kt">error</span><span class="p">)</span><span class="x">
+	</span><span class="c">// Start the input</span><span class="x">
+	</span><span class="n">Start</span><span class="p">()</span><span class="x"> </span><span class="kt">error</span><span class="x">
+	</span><span class="c">// Stop the input</span><span class="x">
+	</span><span class="n">Stop</span><span class="p">()</span><span class="x"> </span><span class="kt">error</span><span class="x">
+	</span><span class="c">// name of the input</span><span class="x">
+	</span><span class="n">String</span><span class="p">()</span><span class="x"> </span><span class="kt">string</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>Input提供了方便的功能，用于添加你自己的命令行参数。<code class="highlighter-rouge">Flag()</code>这个方法会在初始化之前调用，任何自定义的参数会增加到全局参数列表里面。</p>
+
+<p>在参数被解析之后，<code class="highlighter-rouge">Init()</code>会被调用，这样一来，这个入口的任何中间数据都会被初始化，一旦所有事情执行完成，机器人就会调用<code class="highlighter-rouge">Start（）</code>然后是<code class="highlighter-rouge">Stream（）</code>方法，用于与Input建立连接。</p>
+
+<p>这是Stream方法返回的Conn接口</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">type</span><span class="x"> </span><span class="n">Conn</span><span class="x"> </span><span class="k">interface</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="n">Close</span><span class="p">()</span><span class="x"> </span><span class="kt">error</span><span class="x">
+	</span><span class="n">Recv</span><span class="p">(</span><span class="o">*</span><span class="n">Event</span><span class="p">)</span><span class="x"> </span><span class="kt">error</span><span class="x">
+	</span><span class="n">Send</span><span class="p">(</span><span class="o">*</span><span class="n">Event</span><span class="p">)</span><span class="x"> </span><span class="kt">error</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>机器人会持续的调用<code class="highlighter-rouge">Recv()</code>来监听事件。<code class="highlighter-rouge">Recv()</code>应该是一个阻塞的调用，否则我们会陷入死循环，耗尽CPU。一旦机器人处理完了事件，它会通过<code class="highlighter-rouge">Send()</code>返回一些结果。</p>
+
+<p>Event是一个基础的类型，用户在机器人和入口之间通信。他可以让我们把不同的消息类型，封装成统一的格式。目前只有一个<code class="highlighter-rouge">TextEvent</code>类型，在未来我们会有更多。</p>
+
+<p>机器人是不知道命令是来自于Slack,HipChat还是其他地方。它只知道收到了一个事件，然后需要执行它。这是一种很好的方式，用于把机器人和Input拆分开。</p>
+
+<p>这里是Event类型</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">type</span><span class="x"> </span><span class="n">Event</span><span class="x"> </span><span class="k">struct</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="n">Type</span><span class="x"> </span><span class="n">EventType</span><span class="x">
+	</span><span class="n">From</span><span class="x"> </span><span class="kt">string</span><span class="x">
+	</span><span class="n">To</span><span class="x">   </span><span class="kt">string</span><span class="x">
+	</span><span class="n">Data</span><span class="x"> </span><span class="p">[]</span><span class="kt">byte</span><span class="x">
+	</span><span class="n">Meta</span><span class="x"> </span><span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="k">interface</span><span class="p">{}</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre>
+</div>
+
+<h2 id="commands">Commands</h2>
+
+<p>commands是可以被机器人执行的函数。这很简单，它们存储在map中，key经过正则，它们会匹配上input接收到的事件。如果正则匹配上了某个事件，关联的函数就会被执行。命令的执行结果就会被发送回input。如果事件的From字段不为空，返回会被发送到To字段。你可以看到这是怎样让机器人直接的进行交流，不管任何地方，任何时候。</p>
+
+<p>当前的Command的接口非常直接，但未来可能会更改，一旦我们遇到更复杂的情况。</p>
+
+<p>command的接口：</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">type</span><span class="x"> </span><span class="n">Command</span><span class="x"> </span><span class="k">interface</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="c">// Executes the command with args passed in</span><span class="x">
+	</span><span class="n">Exec</span><span class="p">(</span><span class="n">args</span><span class="x"> </span><span class="o">...</span><span class="kt">string</span><span class="p">)</span><span class="x"> </span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span><span class="x"> </span><span class="kt">error</span><span class="p">)</span><span class="x">
+	</span><span class="c">// Usage of the command</span><span class="x">
+	</span><span class="n">Usage</span><span class="p">()</span><span class="x"> </span><span class="kt">string</span><span class="x">
+	</span><span class="c">// Description of the command</span><span class="x">
+	</span><span class="n">Description</span><span class="p">()</span><span class="x"> </span><span class="kt">string</span><span class="x">
+	</span><span class="c">// Name of the command</span><span class="x">
+	</span><span class="n">String</span><span class="p">()</span><span class="x"> </span><span class="kt">string</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>这里是一个Echo Command的示例</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="c">// Echo returns the same message</span><span class="x">
+</span><span class="k">func</span><span class="x"> </span><span class="n">Echo</span><span class="p">(</span><span class="n">ctx</span><span class="x"> </span><span class="o">*</span><span class="n">cli</span><span class="o">.</span><span class="n">Context</span><span class="p">)</span><span class="x"> </span><span class="n">Command</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="n">usage</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="s">"echo [text]"</span><span class="x">
+	</span><span class="n">desc</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="s">"Returns the [text]"</span><span class="x">
+
+	</span><span class="k">return</span><span class="x"> </span><span class="n">NewCommand</span><span class="p">(</span><span class="s">"echo"</span><span class="p">,</span><span class="x"> </span><span class="n">usage</span><span class="p">,</span><span class="x"> </span><span class="n">desc</span><span class="p">,</span><span class="x"> </span><span class="k">func</span><span class="p">(</span><span class="n">args</span><span class="x"> </span><span class="o">...</span><span class="kt">string</span><span class="p">)</span><span class="x"> </span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span><span class="x"> </span><span class="kt">error</span><span class="p">)</span><span class="x"> </span><span class="p">{</span><span class="x">
+		</span><span class="k">if</span><span class="x"> </span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="x"> </span><span class="o">&lt;</span><span class="x"> </span><span class="m">2</span><span class="x"> </span><span class="p">{</span><span class="x">
+			</span><span class="k">return</span><span class="x"> </span><span class="p">[]</span><span class="kt">byte</span><span class="p">(</span><span class="s">"echo what?"</span><span class="p">),</span><span class="x"> </span><span class="no">nil</span><span class="x">
+		</span><span class="p">}</span><span class="x">
+		</span><span class="k">return</span><span class="x"> </span><span class="p">[]</span><span class="kt">byte</span><span class="p">(</span><span class="n">strings</span><span class="o">.</span><span class="n">Join</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="p">],</span><span class="x"> </span><span class="s">" "</span><span class="p">)),</span><span class="x"> </span><span class="no">nil</span><span class="x">
+	</span><span class="p">})</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre>
+</div>
+
+<h2 id="section-1">其他?</h2>
+
+<p>只有Inputs和Commands是不够的。如果我们以后想要做些其他的操作呢？我们怎样持久化机器人的状态?双向的交流怎么样？而不是仅仅返回内容。</p>
+
+<p>这必须要编译！</p>
+
+<p>我们仍然处于构建这个机器人框架的早期，这是一个机会，讨论基础的接口应该是什么样的。</p>
+
+<p>下一步是提供各种类型的接口。更严肃一点，我们需要一个<code class="highlighter-rouge">Stream</code>接口或者类似的。还需要<code class="highlighter-rouge">Input.Conn</code>,这样我们可以处理任何插件的事件流。</p>
+
+<p>这潜在的让我们有能力实现同一时间接收多个input的事件流，因此我们可以从事件流中获取事件，处理后返回。</p>
+
+<p>一个例子是，从Slack中接受到消息，查询micro的服务，最后发送一个总结性的邮件。</p>
+
+<h2 id="section-2">怎样运行起来?</h2>
+
+<p>micro机器人在你的环境中单独运行起来，就像其他某个服务一样。也会通过服务发现进行注册。<img src="https://blog.micro.mu/assets/images/bot.png" alt="" /></p>
+
+<h2 id="section-3">我怎样运行?</h2>
+
+<p>因为机器人就像运行一个其他服务一下，你首先需要启动服务发现机制，默认是consul</p>
+
+<p>使用支持Slack的机器人</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="n">micro</span><span class="x"> </span><span class="n">bot</span><span class="x"> </span><span class="o">--</span><span class="n">inputs</span><span class="o">=</span><span class="n">slack</span><span class="x"> </span><span class="o">--</span><span class="n">slack_token</span><span class="o">=</span><span class="n">SLACK_TOKEN</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>以及HipChat</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>micro bot --inputs=hipchat --hipchat_username=XMPP_USERNAME --hipchat_password=XMPP_PASSWORD
+</code></pre>
+</div>
+
+<h2 id="section-4">运行中的机器人</h2>
+
+<p>这里有一些运行起来的机器人的截图，就像你看到的，它是一个CLI命令的复制。我们有一些额外的命令比如动画和地图。在这里可以看到<a href="https://github.com/micro/go-plugins">github.com/micro/go-plugins</a> </p>
+
+<p><img src="https://blog.micro.mu/assets/images/hipchat.png" alt="" /></p>
+
+<h2 id="commands-1">增加新的Commands</h2>
+
+<p>Commands是一个可以被机器人执行的函数，通过字符进行匹配，类似其他的机器人比如Hubot</p>
+
+<p>这里是怎样写一个简单的ping命令</p>
+
+<h3 id="section-5">编写命令</h3>
+
+<p>首先通过NewCommand创建一个命令，这个一个快速的方式，你也可以实现这个接口。</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">import</span><span class="x"> </span><span class="s">"github.com/micro/micro/bot/command"</span><span class="x">
+
+</span><span class="k">func</span><span class="x"> </span><span class="n">Ping</span><span class="p">()</span><span class="x"> </span><span class="n">command</span><span class="o">.</span><span class="n">Command</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="n">usage</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="s">"ping"</span><span class="x">
+	</span><span class="n">description</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="s">"Returns pong"</span><span class="x">
+
+	</span><span class="k">return</span><span class="x"> </span><span class="n">command</span><span class="o">.</span><span class="n">NewCommand</span><span class="p">(</span><span class="s">"ping"</span><span class="p">,</span><span class="x"> </span><span class="n">usage</span><span class="p">,</span><span class="x"> </span><span class="n">desc</span><span class="p">,</span><span class="x"> </span><span class="k">func</span><span class="p">(</span><span class="n">args</span><span class="x"> </span><span class="o">...</span><span class="kt">string</span><span class="p">)</span><span class="x"> </span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span><span class="x"> </span><span class="kt">error</span><span class="p">)</span><span class="x"> </span><span class="p">{</span><span class="x">
+		</span><span class="k">return</span><span class="x"> </span><span class="p">[]</span><span class="kt">byte</span><span class="p">(</span><span class="s">"pong"</span><span class="p">),</span><span class="x"> </span><span class="no">nil</span><span class="x">
+	</span><span class="p">})</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre>
+</div>
+
+<h3 id="section-6">注册命令</h3>
+
+<p>把命令添加到Commands map中，匹配的key需要被<a href="https://golang.org/pkg/regexp/#Match">golang/regexp.Match</a>匹配。</p>
+
+<p>这里我们只对ping命令作出响应</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">import</span><span class="x"> </span><span class="s">"github.com/micro/micro/bot/command"</span><span class="x">
+
+</span><span class="k">func</span><span class="x"> </span><span class="n">init</span><span class="p">()</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="n">command</span><span class="o">.</span><span class="n">Commands</span><span class="p">[</span><span class="s">"^ping$"</span><span class="p">]</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="n">Ping</span><span class="p">()</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre>
+</div>
+
+<h3 id="section-7">连接命令</h3>
+
+<p>在这里引入你的命令</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">import</span><span class="x"> </span><span class="n">_</span><span class="x"> </span><span class="s">"path/to/import"</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>接下来进行编译</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="n">cd</span><span class="x"> </span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">micro</span><span class="o">/</span><span class="n">micro</span><span class="x">
+</span><span class="k">go</span><span class="x"> </span><span class="n">build</span><span class="x"> </span><span class="o">-</span><span class="n">o</span><span class="x"> </span><span class="n">micro</span><span class="x"> </span><span class="n">main</span><span class="o">.</span><span class="k">go</span><span class="x"> </span><span class="n">link_input</span><span class="o">.</span><span class="k">go</span><span class="x">
+</span></code></pre>
+</div>
+
+<h2 id="section-8">下一步?</h2>
+
+<p>我们要意识到微服务世界并不容易，它需要一系列的工具，还要进行观测。比如监控服务、分布式tracing、结构化日志，这都是重要的组成部分。</p>
+
+<p>想象一个世界，机器人有能力感知分布式系统。当我们需要的时候，提供反馈给我们，而不是需要盯着控制台，处理一个个错误提示。你也许听说过NoOps?那么什么是BotOps?你不会被电话催促怎么样？常见的错误，都通过事先预定的程序处理怎么样？</p>
+
+<h2 id="section-9">总结</h2>
+
+<p>机器人的革命只是刚刚开始，基础设施和自动化的世界正在改变，我们相信机器人会扮演一个重要的角色，最初是传统的ChatOps ，未来会走的更远。</p>
+
+<p>机器人需要被看做第一等公民，跟配置管理、命令行、和API一样。我们只是把机器人加入到Micro的生态系统中来。</p>
+
+<p>这仍然是处于早期，但不就的将来将会让我们满意。</p>
+
+<p>如果你想了解更多，请看这个<a href="https://blog.micro.mu/">blog</a>，或者这个<a href="https://github.com/micro/micro">repo</a>，Twitter可以关注<a href="https://twitter.com/microhq">@MicroHQ</a>，Slack社区在<a href="http://slack.micro.mu/">这里</a></p>
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="center">
+  <div class="measure">
+    <!-- <small>
+      Theme crafted with &lt;3 by <a href="http://johnotander.com">John Otander</a> (<a href="https://twitter.com/4lpine">@4lpine</a>).<br>
+      &lt;/&gt; available on <a href="https://github.com/johnotander/pixyll">Github</a>.
+    </small> -->
+  </div>
+</footer>
+
+
+</body>
+</html>

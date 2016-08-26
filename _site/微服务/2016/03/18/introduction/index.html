@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Micro - 微服务生态系统 &#8211; Programmer</title>
+    <link rel="dns-prefetch" href="//maxcdn.bootstrapcdn.com">
+    <link rel="dns-prefetch" href="//cdn.mathjax.org">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="变化总是在进行中，我们越来越接近一个被技术和商业驱动的社会，维持竞争能力变得越来越困难，如果采用低效的平台、结构和代码，组织将会越来越低效。创立十年以上的技术公司正在经历扩张带来的技术痛苦，但大部分仍然采用旧有的技术解决新问题。是时候把世界上最成功的公司的竞争优势分享给其他人了，现在我们讨论微服务，一种构建你的核心技术优势的手段">
+    <meta name="robots" content="all">
+    <meta name="author" content="btfak">
+    
+    <meta name="keywords" content="微服务">
+    <link rel="canonical" href="http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/03/18/introduction/">
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed for Programmer" href="/feed.xml" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/pixyll.css?201608261417" type="text/css">
+
+    <!-- Fonts -->
+    
+    <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+    
+    
+
+    <!-- MathJax -->
+    
+
+    <!-- Verifications -->
+    
+    
+
+    <!-- Open Graph -->
+    <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Micro - 微服务生态系统">
+    <meta property="og:description" content="blog site of btfak">
+    <meta property="og:url" content="http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/03/18/introduction/">
+    <meta property="og:site_name" content="Programmer">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    
+    <meta name="twitter:title" content="Micro - 微服务生态系统" />
+    <meta name="twitter:description" content="变化总是在进行中，我们越来越接近一个被技术和商业驱动的社会，维持竞争能力变得越来越困难，如果采用低效的平台、结构和代码，组织将会越来越低效。创立十年以上的技术公司正在经历扩张带来的技术痛苦，但大部分仍然采用旧有的技术解决新问题。是时候把世界上最成功的公司的竞争优势分享给其他人了，现在我们讨论微服务，一种构建你的核心技术优势的手段" />
+    <meta name="twitter:url" content="http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/03/18/introduction/" />
+
+    <!-- Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/favicon-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/favicon-160x160.png" sizes="160x160">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+
+    
+</head>
+
+<body class="site">
+  
+	
+
+  <div class="site-wrap">
+    <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="http://btfak.com" class="site-title">Programmer</a>
+      <nav class="site-nav">
+        
+    
+
+    
+        <a href="/about/">About Me</a>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+      </nav>
+      <div class="clearfix"></div>
+      
+    </div>
+  </div>
+</header>
+
+
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+        
+
+
+<div class="post-header mb2">
+  <h1>Micro - 微服务生态系统</h1>
+  <span class="post-meta">Mar 18, 2016</span><br>
+  
+  <span class="post-meta small">
+  </span>
+</div>
+
+<article class="post-content">
+  <p>这是一系列介绍<a href="http://github.com/micro">Micro</a>框架的文章的第一篇，我将会把作者的博客翻译成中文，推广Micro这个微服务框架。</p>
+
+<p>让我们讨论一下软件开发的特性。</p>
+
+<p>变化总是在进行中，我们越来越接近一个被技术和商业驱动的社会，维持竞争能力变得越来越困难，如果采用低效的平台、结构和代码，组织将会越来越低效。创立十年以上的技术公司正在经历扩张带来的技术痛苦，但大部分仍然采用旧有的技术解决新问题。</p>
+
+<p>是时候把世界上最成功的公司的竞争优势分享给其他人了，现在我们讨论微服务，一种构建你的核心技术优势的手段。</p>
+
+<h2 id="section">什么是微服务?</h2>
+
+<p>微服务是一种软件架构模式，用于将大型架构拆解成小型模块，服务之间使用灵活的协议进行通信，使各个服务专注于自身的业务。</p>
+
+<p>用学院派的定义来说明微服务:</p>
+
+<ul>
+  <li>
+    <p>Loosely coupled service oriented architecture with a bounded context</p>
+  </li>
+  <li>
+    <p>An approach to developing a single application as a suite of small services, each running in its own process and communicating with lightweight mechanisms</p>
+  </li>
+</ul>
+
+<p>微服务并不是一个新的概念，这是一种新的服务架构模式，但早在unix中类似的理念就出现在进程和管道中。</p>
+
+<p>微服务架构的哲学是这样的</p>
+
+<ul>
+  <li>服务是很小的，单一的服务只做单一的业务，类似unix中的 『Do one thing and do it well』</li>
+  <li>应该适合进行自动化部署和测试，可以轻易的减轻运维和管理的负担</li>
+  <li>系统必须有很好的容错性，健壮性</li>
+</ul>
+
+<h2 id="section-1">为什么是微服务?</h2>
+
+<p>随着组织的技术和人员扩张，庞大的代码已经越来越难以维护。我们都认为twitter会失败，因为他们尝试在现有的巨大的系统上不断进行产品需求的开发。微服务的理念让Twitter分解整个应用为很小服务，每个服务都被单个小型团队负责。每个团队都为整个系统负责，而每个服务又可以单独的进行部署。</p>
+
+<p><a href="https://blog.micro.mu/assets/images/micro-service-architecture.png"></a></p>
+
+<p><img src="https://blog.micro.mu/assets/images/micro-service-architecture.png" alt="alt" /></p>
+
+<p>我们从第一手的经验知道了微服务让开发周期进行的更快，提高了生产力，构造了优秀的可扩展系统</p>
+
+<p>我们看一下其中的一些好处：</p>
+
+<ul>
+  <li>更容易进行开发：不同的团队根据不同的需求，管理好自己的服务即可</li>
+  <li>更容易理解：微服务很小，经常是1000行或者更少</li>
+  <li>更容易频繁的部署新版本：服务很容易独立的进行部署、扩展和管理</li>
+  <li>提高了错误的容忍度和错误隔离：单个服务的错误不会对其他服务造成影响</li>
+  <li>提高了执行的速度：团队独立的开发、部署和管理微服务将使需求实现的更快</li>
+  <li>
+    <p>服务可以重用：unix的设计理念影响了微服务，这让你可以复用很多服务</p>
+
+    <p>​</p>
+  </li>
+</ul>
+
+<h2 id="micro">什么是Micro?</h2>
+
+<p>Micro是一个微服务的生态系统，专注于为当代科技驱动的企业提供产品、服务和解决方案。我们计划为企业提供微服务资源以提高企业的技术水平。从早期的产品原型到大规模产品的部署都有解决方案。</p>
+
+<p>我们看到了行业的基本的转折点正在到来，摩尔定律在起作用，我们拥有了越来越多的能力，而我们并不能完全了解这些全新的能力，当前的工具和开发实践不能在新的领域再起作用。开发者没有获得工具来从庞大的代码系统转向更加高效的设计架构。大部分公司会经历到一个节点即大量的研发投入到庞大的系统中，但没有产生相应的产出。Netfix，Twitter等公司都经历了这些，结局都是构建自己的微服务平台。</p>
+
+<p>我们的愿景是提供基础的工具让任何人都能受益于微服务，我们已经开始行动，基于开源的微服务工具包<a href="http://github.com/micro">Micro</a> ，接下来将会有一系列的文件介绍各个工具。</p>
+
+<p>如果你想了解更多，请看这个<a href="https://blog.micro.mu/">blog</a>，或者这个<a href="https://github.com/micro/micro">repo</a>，Twitter可以关注<a href="https://twitter.com/microhq">@MicroHQ</a>，Slack社区在<a href="http://slack.micro.mu/">这里</a></p>
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="center">
+  <div class="measure">
+    <!-- <small>
+      Theme crafted with &lt;3 by <a href="http://johnotander.com">John Otander</a> (<a href="https://twitter.com/4lpine">@4lpine</a>).<br>
+      &lt;/&gt; available on <a href="https://github.com/johnotander/pixyll">Github</a>.
+    </small> -->
+  </div>
+</footer>
+
+
+</body>
+</html>

@@ -1,0 +1,1528 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Programmer</title>
+    <description>blog site of btfak</description>
+    <link>http://btfak.com/</link>
+    <atom:link href="http://btfak.com/feed.xml" rel="self" type="application/rss+xml" />
+    
+      <item>
+        <title>开源一个完整的BT搜索引擎</title>
+        <description>&lt;h3 id=&quot;section&quot;&gt;开源&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;地址  &lt;a href=&quot;http://github.com/btlike&quot;&gt;github.com/btlike&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;在线演示 &lt;a href=&quot;http://www.btlike.com&quot;&gt;www.btlike.com&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;section-1&quot;&gt;特性&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;高性能&lt;br /&gt;
+单核,768MB的&lt;a href=&quot;https://www.vultr.com/pricing/&quot;&gt;VPS&lt;/a&gt;上，每秒处理UDP请求超过12K，内存占用不超过100MB`&lt;/li&gt;
+  &lt;li&gt;大容量&lt;br /&gt;
+采用Mysql分表存储,设计容量6千万~8千万数据&lt;/li&gt;
+  &lt;li&gt;全文搜索&lt;br /&gt;
+采用&lt;a href=&quot;https://github.com/elastic/elasticsearch&quot;&gt;Elasticsearch&lt;/a&gt;实现全文索引和热度排序&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;section-2&quot;&gt;组件&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/btlike/spider&quot;&gt;spider&lt;/a&gt;   底层DHT网络爬虫库&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/btlike/crawl&quot;&gt;crawl&lt;/a&gt;     从DHT网络中抓取活跃的infohash与metadata并存储&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/btlike/storage&quot;&gt;storage&lt;/a&gt; 根据infohash从网络中抓取torrent并存储metadata&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/btlike/api&quot;&gt;api&lt;/a&gt;    对外提供接口，响应搜索等请求&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;section-3&quot;&gt;直接下载可执行文件运行(推荐方式)&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;下载地址: &lt;a href=&quot;https://github.com/btlike/release&quot;&gt;release&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;section-4&quot;&gt;安装准备(从源码安装，较为复杂)&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;安装 golang&lt;/li&gt;
+  &lt;li&gt;安装 mysql&lt;/li&gt;
+  &lt;li&gt;安装 &lt;a href=&quot;https://github.com/elastic/elasticsearch&quot;&gt;Elasticsearch&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;安装组件&lt;a href=&quot;https://github.com/btlike/crawl&quot;&gt;crawl&lt;/a&gt;&lt;br /&gt;
+go get github.com/btlike/crawl&lt;/li&gt;
+  &lt;li&gt;安装组件&lt;a href=&quot;https://github.com/btlike/api&quot;&gt;api&lt;/a&gt;&lt;br /&gt;
+go get github.com/btlike/api&lt;/li&gt;
+  &lt;li&gt;安装组件&lt;a href=&quot;https://github.com/btlike/storage&quot;&gt;storage&lt;/a&gt;&lt;br /&gt;
+go get github.com/btlike/storage&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;section-5&quot;&gt;流量图&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&quot;http://77g42f.com1.z0.glb.clouddn.com/flow.jpg&quot; alt=&quot;flow&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;section-6&quot;&gt;设计思路&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;从全网尽可能多的获取infohash&lt;/li&gt;
+  &lt;li&gt;从DHT网络，通过&lt;a href=&quot;http://www.bittorrent.org/beps/bep_0009.html&quot;&gt;BEP0009&lt;/a&gt;获取资源&lt;/li&gt;
+  &lt;li&gt;通过资源库查询资源，采用流量+带宽暴力遍历&lt;/li&gt;
+  &lt;li&gt;极力优化内存、CPU与带宽资源&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;section-7&quot;&gt;帮助与联系&lt;/h3&gt;
+&lt;p&gt;在项目下提issue或联系 yanyuan2046 at 126.com&lt;/p&gt;
+</description>
+        <pubDate>Wed, 17 Aug 2016 21:21:35 +0800</pubDate>
+        <link>http://btfak.com/bt%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/2016/08/17/opensource-of-btlike/</link>
+        <guid isPermaLink="true">http://btfak.com/bt%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/2016/08/17/opensource-of-btlike/</guid>
+      </item>
+    
+      <item>
+        <title>程序员身处的时代与面临的机遇</title>
+        <description>&lt;h2 id=&quot;section&quot;&gt;概述&lt;/h2&gt;
+
+&lt;p&gt;此文只狭义的讨论程序员这种职业，程序员：具备代码编写、调试能力的IT从业者。&lt;/p&gt;
+
+&lt;p&gt;我认为未来相当长的时间内（超过10年），广义的IT行业，特别是互联网行业，将持续繁荣景气。程序员供给将维持典型的金字塔形，初级远远多于高级。需求则相反，是倒金字塔形，对高级程序员的需求将越来大，具备高超编码技艺的程序员会有越来越大的议价能力。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;行业&lt;/h2&gt;
+
+&lt;p&gt;在所有职业当中，程序员的数量恐怕是增长率最高的，年复一年大量新人进入这个行业，但需求增长的更快！许多岗位总是缺人，缺的是中高级人员，但由于行业发展太快，大部分供给仍然是初级程序员。所以具有丰富工作经验的程序员是很抢手的。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;为什么需要这么多程序员&lt;/h2&gt;
+
+&lt;p&gt;很多传统行业逐渐被互联网侵蚀，相应的工作岗位其实也是被取代了。程序员让许多工作自动化了，这个趋势还会继续下去。最简单的例子是收银员，现在国外用自动收银机器取代人工，只需要十分之一的人员。金融领域也是，自动化交易取代了大部分手工交易。滴滴出行已经打垮了出租车行业，早晚会让出租车这个行业逐渐消亡。大部分行业，都会或早或晚的发生类似的淘汰。IT行业也会面临这样的淘汰，更高效的企业淘汰低效的企业。但会比其他行业慢得多，因为自动化、软件化其他行业是需要程序员进行开发和后期维护的。&lt;/p&gt;
+
+&lt;p&gt;许多人认为IT行业，就是很多行业当中的其中一个而已。几百年前的人也会认为“工业”只不过是一个小行业，因为人不多。随着科技的发展，工人成了主流，这“工业”开始分成各种各样划分开来的新行业。后来服务业（白领）又突然发展起来了，分裂成现在大家所熟悉的各种行业。&lt;/p&gt;
+
+&lt;p&gt;下一次工作变革就是编程。它会慢慢形成很多独立行业。现在已经能看得出来啊，软件行业里面已经有很多不同方向的，我干不了Ａ，Ａ干不了Ｂ，Ｂ干不了Ｃ，Ｃ又干不了我所做的。但是我们都是“程序员”。在以后，我们就不会再说“他是程序员”，而说“他是Ａ”，“他是Ｂ”。&lt;/p&gt;
+
+&lt;p&gt;所以你看，我们处在一个行业新老交替的大浪潮中，程序员又是核心生产力，需要只会越来越大。&lt;/p&gt;
+
+&lt;h2 id=&quot;it&quot;&gt;IT行业形成社会阶层了吗&lt;/h2&gt;
+
+&lt;p&gt;是的。在发达国家属于新中产阶级，国内IT从业者从收入上来说也是中产阶级水平了。行业内部也是阶级分明。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;行业：互联网 &amp;gt; 传统软件&lt;/p&gt;
+
+  &lt;p&gt;公司：独角兽 &amp;gt; BAT &amp;gt; 二线互联网 &amp;gt; 创业公司&lt;/p&gt;
+
+  &lt;p&gt;员工：名校海龟 &amp;gt; 985 &amp;gt; 211&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;许多圈子里的东西外人根本看不懂，进不去，这不是社会阶层是什么？&lt;/p&gt;
+
+&lt;h2 id=&quot;section-3&quot;&gt;程序员会持续紧缺吗&lt;/h2&gt;
+
+&lt;p&gt;程序员并不多，据说中国也只有200万会写程序的人（占人口0.14%）。印度270万程序员（最多的），也只占人口0.2%的样子。美国的Tech行业（包括IT在内）工作人员达到700万，占人口的2%以上。英国类似，160万员工，也占到2.4%。其它西欧国家应该都是差不多的比例。不过拿整个行业来对比不恰当。因为高科技行业其中只有一小部分人是搞程序的。美国专业从事软件程序的人口呢，好像只有102万（根据2010年的人口普查），0.3%，还少于：律师职业，104万；金融资产管理，110万；大学老师，130万。&lt;/p&gt;
+
+&lt;p&gt;程序员的总量本来就不多，资深的更少，某个领域资深的更是难得。比如北京地区资深golang开发工程师？候选人可能不超过100人吧。如果企业急需这样的人才，当然会愿意溢价。另一方面，这几年大量培训班出来的IOS开发进入市场，已经拉低了IOS的薪资水平，大大提高了求职难度。&lt;/p&gt;
+
+&lt;p&gt;所以紧缺的一直是中高级程序员，且会长期紧缺下去。在行业更替的过程中，需要很多人来做事，而能把事情做好的人又少。程序员只要有几年经验在几家公司，累积掌握到了独特（仅限于自己）的一套技能，总能找到高薪的有价值的工作。因为他们是稀有动物啊。只要有一家公司正好非常需要那一套独特的技能，稀有程度已经很明显了。因此稀有的高级程序猿可以挑来挑去。公司竞争抢程序员而不是程序员竞争入公司。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-4&quot;&gt;程序员的职业路线图&lt;/h2&gt;
+
+&lt;p&gt;既然已经找到了长长的雪坡，就要把雪球滚好。我认为这些是有利于程序员的长期职业发展的&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;专业：深入研究某项技术，达到专业、专家的级别&lt;/p&gt;
+
+  &lt;p&gt;平台：进入大型公司或核心团队，积累现实世界中的技术挑战经验&lt;/p&gt;
+
+  &lt;p&gt;学习：关注业界技术进展，适时学习新技术&lt;/p&gt;
+
+  &lt;p&gt;乐趣：享受技术本身的乐趣&lt;/p&gt;
+
+&lt;/blockquote&gt;
+</description>
+        <pubDate>Sat, 06 Aug 2016 11:21:35 +0800</pubDate>
+        <link>http://btfak.com/%E7%94%9F%E6%B4%BB/2016/08/06/dont-lose-your-position/</link>
+        <guid isPermaLink="true">http://btfak.com/%E7%94%9F%E6%B4%BB/2016/08/06/dont-lose-your-position/</guid>
+      </item>
+    
+      <item>
+        <title>BT搜索引擎爬虫实践</title>
+        <description>&lt;p&gt;最近完成了一个BT搜索引擎，基于&lt;a href=&quot;https://zh.wikipedia.org/zh/%E7%A3%81%E5%8A%9B%E9%93%BE%E6%8E%A5&quot;&gt;磁力链接&lt;/a&gt;，目前这个技术已经很成熟了，从三年前的&lt;a href=&quot;http://xiaoxia.org/2013/05/11/magnet-search-engine/&quot;&gt;这篇文章&lt;/a&gt;开始，和去年的&lt;a href=&quot;http://xiaoxia.org/2015/05/15/shousibaocai-opensource/&quot;&gt;开源&lt;/a&gt;，技术上几乎已经没有难题，更多难点在工程上。后端采用Golang+Mysql+Elasticsearch，前端采用bootstrap。后端由三个单独的模块组成，spider组件是从DHT网络获取活跃资源id，storage组件是根据id查询到种子信息（metadata），存储到Mysql，并索引到Elasticsearch。API组件是对外提供查询、搜索服务，API组件采用nginx进行负载均衡。前端采用bootstrap，使用nginx做为web服务器，前端直接与后端的API组件进行交互。&lt;/p&gt;
+
+&lt;p&gt;本文介绍爬虫的实现技巧。&lt;/p&gt;
+
+&lt;p&gt;磁力搜索的原理看&lt;a href=&quot;http://codemacro.com/2013/05/19/crawl-dht/&quot;&gt;这个文章&lt;/a&gt;，近两年已经有多个开源版本，我参考了&lt;a href=&quot;https://github.com/alanyang/dhtspider&quot;&gt;nodejs版本&lt;/a&gt;和&lt;a href=&quot;https://github.com/xiaojiong/DhtCrawler&quot;&gt;golang版本&lt;/a&gt;，前者在算法上更为巧妙，后者在实现上已经有现成的逻辑。结合两者，实现了自有版本，会在未来开源出来。&lt;/p&gt;
+
+&lt;p&gt;在单核，内存768M的VPS上，完全运行时，每秒UDP请求约12K，每日入口流量约220G，出口流量约300G，CPU会跑到100%，内存占用约100MB。&lt;/p&gt;
+
+&lt;p&gt;爬虫的关键在于认识尽可能多的节点，一旦进入某节点的哈希表中，此节点想要下载资源，都会询问你，这样你就得到了一个活跃的资源id。&lt;/p&gt;
+
+&lt;p&gt;第一个技巧：动态控制find_node请求的频率&lt;/p&gt;
+
+&lt;p&gt;启动时应该全力调用find_node，尽快的结识尽可能多的节点，随着认识你的节点数量迅速递增，再降低速率，前期结识的节点已经足够跑满你的CPU，否则会无端占用带宽、CPU资源。一个可以参考的算法是每分钟收到的get_peers请求每增加一万，find_node的sleep时间增加50毫秒，算下来当你每分钟收到40万个get_peers请求时，每两秒钟才会调用一次find_node，根据你的机器，这个50毫秒是可调整的。&lt;/p&gt;
+
+&lt;p&gt;第二个技巧：均匀分配节点id&lt;/p&gt;
+
+&lt;p&gt;节点会根据自己的id认识周围的节点，整个网络节点数量最大是16的40次方个，每个节点的id是随机的。加入我们运行100个节点，随机分配显然是不行的，应该是把整个网络均分为100份，每一份中运行我们的一个节点，才能尽可能接触到不同的资源，否则多个节点收到的资源可能会是同一个。参考代码：&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ID&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GenerateIDList&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int64&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ids&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+		&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0xff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0xff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0xff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0xff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0xff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0xff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0xff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0xff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0xff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0xff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+		&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0xff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0xff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0xff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0xff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0xff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0xff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0xff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0xff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0xff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0xff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;big&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NewInt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SetBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;step&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;big&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NewInt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Div&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;big&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NewInt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+		&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;big&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NewInt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Mul&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;step&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;big&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NewInt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int64&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+		&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;big&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NewInt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int64&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rand&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Intn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;99&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+		&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ids&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ids&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Bytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;第三个技巧：内存复用&lt;/p&gt;
+
+&lt;p&gt;在如此高的流量压力下怎样控制内存占用是关键的问题，理论上每个UDP请求都需要使用新的内存空间，但分析协议你会发现有趣的事情，协议定义看&lt;a href=&quot;http://www.bittorrent.org/beps/bep_0005.html&quot;&gt;这里&lt;/a&gt;。爬虫只会使用5条协议，发出的只有find_node，收到的是ping，get_peers，announce_peer，find_node。收到的四条协议在格式上是很接近的，而且长度是可控的。通过使用pprof进行分析，最主要的内存消耗发生在读取请求内容和解析请求内容上。如果我们运行的每个节点复用这些空间呢？那么内存总量就是可控的，只会随着节点数量线性增加，因此我们可以并发的运行一批节点，而节点接收UDP请求是单线程的。参考以下代码：&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nw&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Network&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Listening&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{})&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;c&quot;&gt;//每个节点解析请求需要占用的空间&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;buf&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;make&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1024&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;            &lt;/span&gt;&lt;span class=&quot;c&quot;&gt;//每个节点读取请求内容需要占用的空间&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+		&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;raddr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nw&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Conn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ReadFromUDP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;buf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+		&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+			&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;continue&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+		&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+		&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nw&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dht&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;krpc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Decode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;buf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;raddr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;第四个技巧：高并发下优化nf_conntrack&lt;/p&gt;
+
+&lt;p&gt;终于运行起了爬虫，但运行没几分钟，各种linux问题出现了，最开始应该是ulimit问题，这个问题很好解决，参考&lt;a href=&quot;http://www.stutostu.com/?p=1322&quot;&gt;这个文章&lt;/a&gt;。然后会出现开始大量报出：&lt;code class=&quot;highlighter-rouge&quot;&gt;nf_conntrack: table full, dropping packet&lt;/code&gt;。这个问题参考&lt;a href=&quot;http://jaseywang.me/2012/08/16/%E8%A7%A3%E5%86%B3-nf_conntrack-table-full-dropping-packet-%E7%9A%84%E5%87%A0%E7%A7%8D%E6%80%9D%E8%B7%AF/&quot;&gt;这个文章&lt;/a&gt;。原因就是，&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nf_conntrack/ip_conntrack 跟 nat 有关，用来跟踪连接条目，它会使用一个哈希表来记录 established 的记录。nf_conntrack 在 2.6.15 被引入，而 ip_conntrack 在 2.6.22 被移除，如果该哈希表满了，就会出现：nf_conntrack: table full, dropping packet。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;解决办法很简单，我们让某些端口的流量不要被记录即可。假如我们运行100个节点，而节点监听的端口是20000到20099，我们只需要执行以下命令即可。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;iptables -A INPUT -m state --state UNTRACKED -j ACCEPT
+iptables -t raw -A PREROUTING -p udp -m udp --dport 20000 -j NOTRACK
+...... //从端口20000一直到20099，每个端口一行
+iptables -t raw -A PREROUTING -p udp -m udp --dport 20099 -j NOTRACK
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Wed, 15 Jun 2016 17:21:35 +0800</pubDate>
+        <link>http://btfak.com/bt%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/2016/06/15/memory_optimize_on_dht_spider/</link>
+        <guid isPermaLink="true">http://btfak.com/bt%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/2016/06/15/memory_optimize_on_dht_spider/</guid>
+      </item>
+    
+      <item>
+        <title>多环境下的配置管理方案</title>
+        <description>&lt;p&gt;在开发中，我们需要面对各种各样的环境，开发环境、测试环境、生产环境……&lt;/p&gt;
+
+&lt;p&gt;并且，各个环境的参数和配置各不相同，比如数据库连接，服务器配置等。我们怎样在不同环境中调用正确的配置？&lt;/p&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;通过配置文件&lt;/h2&gt;
+
+&lt;p&gt;这是一种常见的思路，通过创建多个配置文件，但根据命名区分，比如开发环境为&lt;code class=&quot;highlighter-rouge&quot;&gt;develop-app.conf&lt;/code&gt;，测试环境为&lt;code class=&quot;highlighter-rouge&quot;&gt;testing-app.conf&lt;/code&gt;，生产环境为&lt;code class=&quot;highlighter-rouge&quot;&gt;production-app.conf&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;我们通过在系统中设置环境变量&lt;code class=&quot;highlighter-rouge&quot;&gt;export ENV_MODE=develop&lt;/code&gt;等等。在读取配置文件时，根据环境变量读取响应的配置文件。&lt;/p&gt;
+
+&lt;p&gt;这个方式易于使用，深得大家喜爱。但这个方案在集群扩大的一定程度时，会遇到一下几个主要问题：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;假如有30~40个微服务需要连接数据库运行，这个量级在中小型团队中很常见了，如果我们需要更改数据库密码，我们不得不将数十个project逐个进行更新，非常不灵活。&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;代码与配置掺杂在一起，代码是许多开发人员都可以看到的，也很容易泄露，而生产环境的各种秘钥应该只有少数人有权限能看到。这对系统的安全有重大影响。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;对于大量相同的配置（比如数据库配置），逻辑上我们应该存放在同一个地方，保证只有唯一可靠的数据来源。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;对于这些问题，我们认为配置应该集中化管理。&lt;/p&gt;
+
+&lt;p&gt;集中化管理带来以下好处：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;各个服务间相同的配置只需要维护一分数据，保证唯一性&lt;/li&gt;
+  &lt;li&gt;各个环境的配置环境实现权限隔离，少数人拥有查看生产环境配置的权限&lt;/li&gt;
+  &lt;li&gt;更改配置将变得简单，不影响服务本身&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;最简单的方案就是存储在&lt;code class=&quot;highlighter-rouge&quot;&gt;redis&lt;/code&gt;中。KV的存储方式天然适合关联配置文件。但要完整的使用整个方案，需要做一些准备。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;集中式配置管理&lt;/h2&gt;
+
+&lt;p&gt;我们的基本思路是：将配置文件的值替换为占位符，在系统启动时，相应的工具将根据占位符到&lt;code class=&quot;highlighter-rouge&quot;&gt;redis&lt;/code&gt;中查询到实际的值，替换回配置文件。&lt;/p&gt;
+
+&lt;p&gt;最初的配置文件是这样：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;database_host&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;127.0.0.1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;database_port&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3306&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;现在我们的配置文件变成了这样：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;database_host&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;redis_hget global.mysql host&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;database_port&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;redis_hget global.mysql port&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;读取配置&lt;/h2&gt;
+
+&lt;p&gt;在启动时，我们通过这个工具：&lt;a href=&quot;https://github.com/gogap/env_json&quot;&gt;https://github.com/gogap/env_json&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;这样读取配置文件&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ioutil&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ReadFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;./db.conf&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dbConf&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DBConfig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;env_json&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Unmarshal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dbConf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dbConf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;这个工具，默认从&lt;code class=&quot;highlighter-rouge&quot;&gt;/etv/env_string.conf&lt;/code&gt;读取&lt;code class=&quot;highlighter-rouge&quot;&gt;redis&lt;/code&gt;的配置信息，当然你可以更改，更多细节参看说明文档。&lt;/p&gt;
+
+&lt;p&gt;在这个过程中，&lt;code class=&quot;highlighter-rouge&quot;&gt;env_json&lt;/code&gt;首先会从&lt;code class=&quot;highlighter-rouge&quot;&gt;/etv/env_string.conf&lt;/code&gt;读取到&lt;code class=&quot;highlighter-rouge&quot;&gt;redis&lt;/code&gt;的配置信息。&lt;/p&gt;
+
+&lt;p&gt;典型的&lt;code class=&quot;highlighter-rouge&quot;&gt;/etv/env_string.conf&lt;/code&gt;内容如下&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;storages&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;engine&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;redis&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;options&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;db&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;password&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;pool_size&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;address&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;127.0.0.1:6379&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}]&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;连接上&lt;code class=&quot;highlighter-rouge&quot;&gt;redis&lt;/code&gt;后，以上面的例子来说，将执行&lt;code class=&quot;highlighter-rouge&quot;&gt;hget global.mysql host &lt;/code&gt;以及&lt;code class=&quot;highlighter-rouge&quot;&gt;hget global.mysql port &lt;/code&gt;，将取到的值通过模板替换，更新到配置文件中，得到一个正常的&lt;code class=&quot;highlighter-rouge&quot;&gt;json&lt;/code&gt;文本，剩下的就是通过&lt;code class=&quot;highlighter-rouge&quot;&gt;json&lt;/code&gt;库把&lt;code class=&quot;highlighter-rouge&quot;&gt;json&lt;/code&gt;内容解码到结构体中。&lt;/p&gt;
+
+&lt;p&gt;到目前为止，我们实现了从&lt;code class=&quot;highlighter-rouge&quot;&gt;redis&lt;/code&gt;中读取并替换配置，那么我们写入配置的时候呢？&lt;/p&gt;
+
+&lt;p&gt;假如我们有数十个服务，我们难道需要逐个去&lt;code class=&quot;highlighter-rouge&quot;&gt;redis&lt;/code&gt;中设置吗？我们怎样把这个流程自动化？&lt;/p&gt;
+
+&lt;h2 id=&quot;section-3&quot;&gt;写入配置&lt;/h2&gt;
+
+&lt;p&gt;我们需要另一个工具：&lt;a href=&quot;https://github.com/gogap/env_strings/tree/master/env_sync&quot;&gt;env_sync&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;我们存储配置文件其实是一个具体的git工程，比如开发环境是&lt;code class=&quot;highlighter-rouge&quot;&gt;develop_env&lt;/code&gt;,生产环境是&lt;code class=&quot;highlighter-rouge&quot;&gt;production_env&lt;/code&gt;，开发人员都可以编辑&lt;code class=&quot;highlighter-rouge&quot;&gt;develop_env&lt;/code&gt;这个工程，少数人可以编辑&lt;code class=&quot;highlighter-rouge&quot;&gt;production_env&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;工程里的内容什么呢？&lt;/p&gt;
+
+&lt;p&gt;我们约定了这样的目录结构&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;├── env_develop
+│   ├── components.accounts
+│   │   └── data
+│   ├── components.api
+│   │   └── data
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;在工程中，有一系列的文件夹，文件夹中有一个叫data的文件。这样的目录结构会被&lt;a href=&quot;https://github.com/gogap/env_strings/tree/master/env_sync&quot;&gt;env_sync&lt;/a&gt;识别到，并转化成一系列的&lt;code class=&quot;highlighter-rouge&quot;&gt;redis&lt;/code&gt;命令。&lt;/p&gt;
+
+&lt;p&gt;假如&lt;code class=&quot;highlighter-rouge&quot;&gt;global.mysql&lt;/code&gt;文件夹下的&lt;code class=&quot;highlighter-rouge&quot;&gt;data&lt;/code&gt;文件内容是&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;host&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;127.0.0.1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;port&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3306&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;转化出来的命令是：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;hset global.mysql host 127.0.0.1
+hset global.mysql port 3306
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;此过程与读取过程正好相反，同样的，&lt;a href=&quot;https://github.com/gogap/env_strings/tree/master/env_sync&quot;&gt;env_sync&lt;/a&gt;也是从&lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/env_strings.conf&lt;/code&gt;读取配置信息。与读取工具保持了统一。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-4&quot;&gt;总结&lt;/h2&gt;
+
+&lt;p&gt;整体来看我们需要做几个工作&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;为各个环境维护一个配置文件project&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;安装env_sync，便于同步配置文件到redis&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;设置&lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/env_strings.conf&lt;/code&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;更改读取配置文件的代码，兼容env_json&lt;/p&gt;
+
+    &lt;p&gt;​&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;再结合&lt;a href=&quot;http://lubia.cn/2016/05/30/deploy-micro/&quot;&gt;自动化部署工具&lt;/a&gt;，每次配置文件有更新时，我们就在线上环境自动同步到redis。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-5&quot;&gt;更多&lt;/h2&gt;
+
+&lt;p&gt;还有一种需求时，配置文件会动态变化，而我们不想重启服务就读取到配置文件，那你需要&lt;a href=&quot;https://github.com/gogap/redconf&quot;&gt;https://github.com/gogap/redconf&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;这个工具可以实现对redis中数据的检测，如果数据发生变化，会触发回调，应用可以得到变化前后的值。&lt;/p&gt;
+</description>
+        <pubDate>Tue, 31 May 2016 21:21:35 +0800</pubDate>
+        <link>http://btfak.com/go/2016/05/31/multi-env-config/</link>
+        <guid isPermaLink="true">http://btfak.com/go/2016/05/31/multi-env-config/</guid>
+      </item>
+    
+      <item>
+        <title>怎样自动化部署微服务</title>
+        <description>&lt;p&gt;这篇文章将讨论我们团队在实际开发和运维过程中，怎样基于gitlab的CI系统和supervisor，进行微服务的自动化部署。&lt;/p&gt;
+
+&lt;h2 id=&quot;ci&quot;&gt;CI&lt;/h2&gt;
+
+&lt;p&gt;持续集成的重要性不用多说，能够显著提高开发、部署和运维效率，但非侵入式的持续集成架构是很难的，此处分享我们在小型的开发团队中采用的持续集成方案。&lt;/p&gt;
+
+&lt;h3 id=&quot;gitlab&quot;&gt;Gitlab&lt;/h3&gt;
+
+&lt;p&gt;我们采用自建gitlab进行代码版本管理，通过docker进行搭建极其容易。目前的gitlab CI系统已经非常完善，可以针对特定的代码分支执行持续集成任务。&lt;/p&gt;
+
+&lt;p&gt;怎样安装gitlab-ci-runner参考&lt;a href=&quot;/2016/05/28/gitlab-ci-runner/&quot;&gt;这篇文章&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;supervisor&quot;&gt;Supervisor&lt;/h3&gt;
+
+&lt;p&gt;测试环境采用supervisor进行进程监控，保证应用挂掉之后能重启，且能正常的杀掉老的进程。&lt;/p&gt;
+
+&lt;h2 id=&quot;example&quot;&gt;Example&lt;/h2&gt;
+
+&lt;p&gt;以目前实现的一个监控组件monitor作为示例，分享怎样实现持续集成。&lt;/p&gt;
+
+&lt;p&gt;monitor是一个标准的micro服务，假设代码存放目录为&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$GOPATH&lt;/span&gt;/src/git.domain.com/micro/monitor
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;monitor的代码目录如下&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/micro-monitor-code.jpg&quot; alt=&quot;micro-monitor-code&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;其中与部署相关的是两个文件&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;.gitlab-ci.yml&lt;/code&gt;是一个名字固定的文件，gitlab会根据这个文件名，来找到这个文件，将其中的内容根据分支设定，发送给runner执行，比如我们的文件内容是:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;develop:
+    script:
+    - &lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;GOPATH&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/src/git.xxx.com/micro/monitor  //进入代码目录
+    &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; git pull &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; git checkout develop &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; go build  //更新代码、切换到develop分支、编译
+    &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; mkdir -p logs  //创建logs文件夹
+    &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; supervisorctl -c ../../supervisord.conf update  //更新supervisor配置文件
+    &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; supervisorctl -c ../../supervisord.conf restart monitor //重启服务
+    tags:
+      - micro   //将任务分发给有micro这个tag的runner执行
+    only:
+      - develop   //只监听develop分支
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;注意，文件里的GOPATH是一个变量，这个变量在gitlab后台的monitor工程中设置，它是全局的，不用每个工程都设置，在某个工程设置一次即可。&lt;/p&gt;
+
+&lt;p&gt;具体参考&lt;a href=&quot;/2016/05/28/gitlab-ci-runner/&quot;&gt;这篇文章&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;``supervisord.conf`是supervisor的配置文件，supervisor的安装等等内容请参考&lt;a href=&quot;http://supervisord.org/&quot;&gt;官网&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;内容如下：&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;program:monitor]
+&lt;span class=&quot;nv&quot;&gt;directory&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;%&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;here&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;s/micro/%&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;program_name&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;s
+&lt;span class=&quot;nv&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;RUN_MODE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;%&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ENV_RUN_MODE&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;s
+&lt;span class=&quot;nb&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;%&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;here&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;s/micro/%&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;program_name&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;s/%&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;program_name&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;s
+&lt;span class=&quot;nv&quot;&gt;process_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;%&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;program_name&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;s
+autorestart &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;true
+&lt;/span&gt;startretries &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 3
+&lt;span class=&quot;nv&quot;&gt;redirect_stderr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true
+&lt;/span&gt;stdout_logfile_maxbytes &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 20MB
+stdout_logfile_backups &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 20
+&lt;span class=&quot;nv&quot;&gt;stdout_logfile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;%&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;here&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;s/micro/%&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;program_name&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;s/logs/%&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;program_name&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;s.log
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;内容很简单，就是进去某个设定好的目录，执行某个命令。&lt;/p&gt;
+
+&lt;p&gt;实际效果：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/ci-01.jpg&quot; alt=&quot;micro-monitor-code&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/ci-02.jpg&quot; alt=&quot;micro-monitor-code&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;总结&lt;/h2&gt;
+
+&lt;p&gt;本质上就是gitlab+supervisor的组合，需要一些细节的设计，开发的项目需要增加两个文件。部署的服务器需要设计好路径结构，否则可能会找不到文件。实际操作过程中有疑问欢迎给我发邮件。自动化部署如果想要运行起来，还需要另一个方面的配合 — 不同环境的配置文件问题，本地环境、开发环境、测试环境、生产环境的配置大部分情况下都不一样，怎样智能的读取响应环境的配置文件？这个问题我们也有自己的解决方案，在接下来的文章中我会进一步说明。&lt;/p&gt;
+</description>
+        <pubDate>Mon, 30 May 2016 21:21:35 +0800</pubDate>
+        <link>http://btfak.com/ci/2016/05/30/deploy-micro/</link>
+        <guid isPermaLink="true">http://btfak.com/ci/2016/05/30/deploy-micro/</guid>
+      </item>
+    
+      <item>
+        <title>怎样使用gitlab-ci-runner</title>
+        <description>&lt;p&gt;这篇文件简单介绍，怎样安装使用gitlab-ci-runner，执行持续集成任务。&lt;/p&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;介绍&lt;/h2&gt;
+
+&lt;p&gt;gitlab-ci-runner是gitlab官方出品的持续集成工具，简单来说就是当你的代码触发了某个持续集成任务，运行在主机上的gitlab-ci-runner就会执行预先设计好的脚本。比如我们设计好，某个项目的develop分支有更新时，发送一段脚本到runner，这段事先写好的脚本，主要工作是进入这个项目的目录，git pull，编译，重启。这样就你只是推送了代码，但已经实现了简单的自动化部署。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;安装&lt;/h2&gt;
+
+&lt;p&gt;官方的安装文档在这里，非常简单，因为runner是采用golang编写的，所以你本质上只是下载了一个可执行文件，没有任何依赖项。按照你的平台选择即可：&lt;/p&gt;
+
+&lt;p&gt;https://gitlab.com/gitlab-org/gitlab-ci-multi-runner&lt;/p&gt;
+
+&lt;p&gt;不必多说。&lt;/p&gt;
+
+&lt;p&gt;注：gitlab-ci-multi-runner和gitlab-ci-runner就是一个东西，两个名字而已。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;连接&lt;/h2&gt;
+
+&lt;p&gt;安装好以后，运行起来的效果应该类似这样&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/gitlab-ci-multi-runner-01.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;注意，接下来的命令不要使用sudo，在linux环境下，如果使用sudo，在执行任务时会带来权限上的问题。&lt;/p&gt;
+
+&lt;h3 id=&quot;runner&quot;&gt;注册runner&lt;/h3&gt;
+
+&lt;p&gt;接下来执行&lt;code class=&quot;highlighter-rouge&quot;&gt;gitlab-ci-multi-runner register&lt;/code&gt;，进入交互式的页面，依次输入各个参数即可&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/gitlab-ci-multi-runner-02.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;runner-1&quot;&gt;激活runner&lt;/h3&gt;
+
+&lt;p&gt;执行&lt;code class=&quot;highlighter-rouge&quot;&gt;gitlab-ci-multi-runner verify&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/gitlab-ci-multi-runner-03.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;runner-2&quot;&gt;运行runner&lt;/h3&gt;
+
+&lt;p&gt;执行&lt;code class=&quot;highlighter-rouge&quot;&gt;gitlab-ci-multi-runner run &amp;amp;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;此时runner就已经运行起来，等待着gitlab发送任务。&lt;/p&gt;
+
+&lt;p&gt;此时在gitlab后台的runner页面中应该可以看到绑定成功的runner&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/gitlab-ci-multi-runner-04.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;runner-3&quot;&gt;为项目绑定runner&lt;/h2&gt;
+
+&lt;p&gt;在gitlab进入某个需要进行持续集成的项目目录，&lt;code class=&quot;highlighter-rouge&quot;&gt;setting &amp;gt; runners&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;为这个项目绑定runner，&lt;code class=&quot;highlighter-rouge&quot;&gt;ENABLE FOR THIS PROJECT&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/gitlab-ci-multi-runner-05.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;runner-4&quot;&gt;设置runner变量&lt;/h2&gt;
+
+&lt;p&gt;在某个项目的&lt;code class=&quot;highlighter-rouge&quot;&gt;setting &amp;gt; variables&lt;/code&gt;中，设置全局变量，注意这里设置的变量，所有项目都可以读取到。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/gitlab-ci-multi-runner-06.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+</description>
+        <pubDate>Sat, 28 May 2016 23:21:35 +0800</pubDate>
+        <link>http://btfak.com/ci/2016/05/28/gitlab-ci-runner/</link>
+        <guid isPermaLink="true">http://btfak.com/ci/2016/05/28/gitlab-ci-runner/</guid>
+      </item>
+    
+      <item>
+        <title>怎样设计友好的API接口</title>
+        <description>&lt;p&gt;&lt;em&gt;这篇文章是Dave Cheney在2014年发表的，我认为在go语言的接口设计上，这篇文章起到了指明灯的作用，包括&lt;a href=&quot;https://github.com/micro&quot;&gt;Micro&lt;/a&gt;在内的框架，都使用了这种方式提供API。原文看&lt;a href=&quot;http://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis&quot;&gt;这里&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;正文开始：&lt;/p&gt;
+
+&lt;p&gt;下面的内容是我的一次演示的文字版本，这是我在&lt;a href=&quot;http://www.dotgo.eu/&quot;&gt;dotGo&lt;/a&gt;上演讲的『Functional options for friendly APIs』，在这里已经编辑的可读了。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/api-design1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;我想用一个故事作为开头。&lt;/p&gt;
+
+&lt;p&gt;在2014年的晚些时候，你的公司发布了一款革命性的分布式社交网络工具，很明智的，你选择了Go来开发你的产品。&lt;/p&gt;
+
+&lt;p&gt;你分配到的任务是编写极为重要的服务端组件，看起来可能像这样&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/api-design2.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;这里有一些不可导出的字段需要初始化，通过一个goroutine运行起来，响应请求。&lt;/p&gt;
+
+&lt;p&gt;这个包有很简单的API，非常容易使用。&lt;/p&gt;
+
+&lt;p&gt;但有一个问题，当你发布了你的第一个版本后，新的需求不断的被提出来。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/api-design3.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;手机客户端经常是响应的很慢，甚至停止响应。你需要添加支持来对慢的客户端主动断开连接。&lt;/p&gt;
+
+&lt;p&gt;为了增加安全，新的需求是增加安全连接（TLS）。&lt;/p&gt;
+
+&lt;p&gt;然后，你的某些用户是在一个很小的服务器上运行服务，他们需要限制客户端数量的方式。&lt;/p&gt;
+
+&lt;p&gt;下面是想要对并发数进行限制。&lt;/p&gt;
+
+&lt;p&gt;不断的新需求…&lt;/p&gt;
+
+&lt;p&gt;限制你需要调整你的API来满足这一系列的新需求&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/api-design4.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;还需要考虑不同版本直接接口的兼容性问题。&lt;/p&gt;
+
+&lt;p&gt;实话说，谁用过这样的API？&lt;/p&gt;
+
+&lt;p&gt;谁编写过这样的API?&lt;/p&gt;
+
+&lt;p&gt;谁的代码以为依赖了这样的包，而不能正常使用了？&lt;/p&gt;
+
+&lt;p&gt;明显的这种解决方式是笨重而脆弱的，同时也不容易发现问题。&lt;/p&gt;
+
+&lt;p&gt;你的包的新用户，不知道哪些参数是可选的，哪些是必须的。&lt;/p&gt;
+
+&lt;p&gt;比如说，如果我想创建一个服务的实例作为测试，我需要提供一个真实的TLS证书吗，如果不需要，我需要在接口中提供什么？&lt;/p&gt;
+
+&lt;p&gt;如果我不关心最大连接数，或者最大并发数，我应该在参数中设置什么值，我应该使用0？0听起来是合理的，但这依赖于具体的接口是怎样实现的，这也许真的会导致并发数限制为0。&lt;/p&gt;
+
+&lt;p&gt;在我看来，这样写API是容易的，同时你把正确使用接口的责任抛给了使用者。&lt;/p&gt;
+
+&lt;p&gt;这个例子甚至代码写的很糟糕，文档也不友好，我想这示范了一个看起来华丽，其实很脆弱的API设计。&lt;/p&gt;
+
+&lt;p&gt;现在我们定位了问题，我们看看解决方案。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/api-design5.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;与其提供一个单独的接口处理多种情况，一种解决方案是提供一系列的接口。&lt;/p&gt;
+
+&lt;p&gt;用户按需调用即可。&lt;/p&gt;
+
+&lt;p&gt;但你很快会发现，提供如此大量的接口，很快会让你不堪重负。&lt;/p&gt;
+
+&lt;p&gt;让我们看看另一种方式。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/api-design6.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;一种非常简单的方式是提供一个配置结构体。&lt;/p&gt;
+
+&lt;p&gt;这有一些优势。&lt;/p&gt;
+
+&lt;p&gt;使用这种方式，如果有新的需求加入，在结构体中增加选项即可。对外的公共API仍然保持不变。这也能让文档更加友好、可读。&lt;/p&gt;
+
+&lt;p&gt;在结构体上注明这是&lt;code class=&quot;highlighter-rouge&quot;&gt;NewServer&lt;/code&gt;的参数，文档上也很容易识别。&lt;/p&gt;
+
+&lt;p&gt;潜在的它也允许用户使用0作为参数的值。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/api-design7.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;但是这种模式并不完美。&lt;/p&gt;
+
+&lt;p&gt;对于默认值是有歧义的，特别是0的值如果有特别的含义。&lt;/p&gt;
+
+&lt;p&gt;比如在这里的配置结构中，如果&lt;code class=&quot;highlighter-rouge&quot;&gt;port&lt;/code&gt;没有被设置，&lt;code class=&quot;highlighter-rouge&quot;&gt;NewServer&lt;/code&gt;会监听8080端口。&lt;/p&gt;
+
+&lt;p&gt;但是这有一个负面影响，你也许想设置为0，然后服务端默认分配一个随机端口，但你设置的0与默认值是相同的。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/api-design8.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;大部分时候，你的API用户只是想使用你的默认值。&lt;/p&gt;
+
+&lt;p&gt;即使他们不想改变你的配置的任何内容，仍然不得不传入一些参数。&lt;/p&gt;
+
+&lt;p&gt;当你的用户读你的测试代码或者示例代码时，在想着怎样使用你的包，他们会看到这个魔幻的空字符串参数。&lt;/p&gt;
+
+&lt;p&gt;对我来说，这让我感觉很糟糕。&lt;/p&gt;
+
+&lt;p&gt;为什么你的API的用户需要传入一个空的值，只是简单的让你的函数满足声明需求？&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/api-design9.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;一个常见的解决办法是传入一个结构体指针，这让调用者可以传入&lt;code class=&quot;highlighter-rouge&quot;&gt;nil&lt;/code&gt;，而不用考虑空值的问题。&lt;/p&gt;
+
+&lt;p&gt;在我看来，这个方案有前面的示例中的所有问题，甚至让问题更复杂了。&lt;/p&gt;
+
+&lt;p&gt;首先，我们仍然需要在第二个参数传入点什么，但目前，这个参数可以是nil了，而且大部分时候，对于默认的使用者，它就是nil。&lt;/p&gt;
+
+&lt;p&gt;使用指针的方式，包的作者和使用者都会担心的是，他们引用了同一份数据，随时有可能在运行中这份数据被修改而发生突变。&lt;/p&gt;
+
+&lt;p&gt;我想设计精良的API不应该要求用户传递这些额外的参数，只是为了应对一些罕见的情况。&lt;/p&gt;
+
+&lt;p&gt;我认为我们，Go程序员，应该努力确保不要求用户传递一个&lt;code class=&quot;highlighter-rouge&quot;&gt;nil&lt;/code&gt;作为参数。&lt;/p&gt;
+
+&lt;p&gt;如果我们想要传递配置信息时，这应该是自解释的，尽量的有表达性。&lt;/p&gt;
+
+&lt;p&gt;现在，我们怀着这样的理念，我讨论一下我认为更好的解决方案。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/api-design10.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;我们可以让API把不必须的参数作为一个变参。&lt;/p&gt;
+
+&lt;p&gt;不是传入nil，或者一些值为0的结构体，这种函数的设计发出了这样的信号：你不需要在config上传入任何参数。&lt;/p&gt;
+
+&lt;p&gt;在我看来这解决了两个问题。&lt;/p&gt;
+
+&lt;p&gt;首先，默认的调用方式变得简介命了。&lt;/p&gt;
+
+&lt;p&gt;其次，&lt;code class=&quot;highlighter-rouge&quot;&gt;NewServer&lt;/code&gt;现在只接受config的值，不是指针，移除了&lt;code class=&quot;highlighter-rouge&quot;&gt;nil&lt;/code&gt;和其他可能的参数，确保用户不会修改已经传入的参数。&lt;/p&gt;
+
+&lt;p&gt;我认为这个一个巨大的提升。&lt;/p&gt;
+
+&lt;p&gt;但我们深究一下，这仍然有问题。&lt;/p&gt;
+
+&lt;p&gt;明显对你的预期是提供最多一个config值，但这个参数是变参，实现的时候需要考虑用户传入多个参数的情况。&lt;/p&gt;
+
+&lt;p&gt;我们可以既能使用变参，同时也能提高我们的参数的表达性吗？&lt;/p&gt;
+
+&lt;p&gt;我认为这就是结局方案。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/api-design11.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在这里我想要说清楚，函数式参数的想法是来自于Rob Pike的这篇文章：&lt;a href=&quot;http://commandcenter.blogspot.com.au/2014/01/self-referential-functions-and-design.html&quot;&gt;Self referential functions and design&lt;/a&gt; ，我鼓励每个人都去看看。&lt;/p&gt;
+
+&lt;p&gt;这种方式与上面的例子关键的不同在于，服务的定制化并不是通过传递参数实现的，而是通过函数来直接修改&lt;code class=&quot;highlighter-rouge&quot;&gt;server&lt;/code&gt;的配置本身。&lt;/p&gt;
+
+&lt;p&gt;正如前面看到的，不传递变参让我们使用默认的方式。&lt;/p&gt;
+
+&lt;p&gt;当需要进行配置时，我们传递一个操作&lt;code class=&quot;highlighter-rouge&quot;&gt;server&lt;/code&gt;的配置的函数。&lt;/p&gt;
+
+&lt;p&gt;上面的代码中，&lt;code class=&quot;highlighter-rouge&quot;&gt;timeout&lt;/code&gt;这个函数是用于改变&lt;code class=&quot;highlighter-rouge&quot;&gt;server&lt;/code&gt;的配置中的timeout字段。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/api-design12.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在&lt;code class=&quot;highlighter-rouge&quot;&gt;NewServer&lt;/code&gt;的实现内部，直接应用这些函数即可。&lt;/p&gt;
+
+&lt;p&gt;在上面的代码中，我们调用了一个&lt;code class=&quot;highlighter-rouge&quot;&gt; net.Listener&lt;/code&gt;，在server的示例中，我们使用了这个默认的listener。&lt;/p&gt;
+
+&lt;p&gt;然后，对于每个传入的option，我们都调用它，把我们的配置传入进去。&lt;/p&gt;
+
+&lt;p&gt;很明显，如果没有option传递进来，我们就使用的是默认的server.&lt;/p&gt;
+
+&lt;p&gt;使用这种方式，我们可以让API有这样的特性&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;默认情况是实用的&lt;/li&gt;
+  &lt;li&gt;高度可配置&lt;/li&gt;
+  &lt;li&gt;配置可以不断增长&lt;/li&gt;
+  &lt;li&gt;自解释的文档&lt;/li&gt;
+  &lt;li&gt;对新的使用者很安全&lt;/li&gt;
+  &lt;li&gt;不会要求传入一个nil的或者空值（只是为了让编译通过）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;全文完。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/micro&quot;&gt;Micro&lt;/a&gt;在几乎所有接口中使用了这样的方式，比如要创建一个micro server的实例，开发者通过一个&lt;a href=&quot;https://github.com/micro/go-micro/blob/master/server/options.go&quot;&gt;option.go&lt;/a&gt;提供了所有可能的配置函数，当然你也可以自己实现。&lt;/p&gt;
+</description>
+        <pubDate>Sun, 22 May 2016 21:21:35 +0800</pubDate>
+        <link>http://btfak.com/go/2016/05/22/functional-options-for-friendly-apis/</link>
+        <guid isPermaLink="true">http://btfak.com/go/2016/05/22/functional-options-for-friendly-apis/</guid>
+      </item>
+    
+      <item>
+        <title>使用Micro构建有弹性的、高容错的应用</title>
+        <description>&lt;p&gt;这是一系列介绍&lt;a href=&quot;http://github.com/micro&quot;&gt;Micro&lt;/a&gt;框架的文章的第七篇，我将会把作者的博客翻译成中文，推广Micro这个微服务框架。&lt;/p&gt;
+
+&lt;p&gt;自发表上篇文章以来，已经有一段时间了，但我们仍然努力在为Micro添砖加瓦，现在确实需要还债了，让我们一次解决掉。&lt;/p&gt;
+
+&lt;p&gt;如果你想先了解一下 &lt;a href=&quot;https://github.com/micro/micro&quot;&gt;Micro&lt;/a&gt;工具箱，阅读以前的文章即可。&lt;/p&gt;
+
+&lt;p&gt;构建分布式系统是很有挑战性的，这毫无疑问。虽然我们已经解决了很多工程上的问题，我们仍然重复的在构建许多模块。目前，由于我们开始了更高级别的抽象，虚拟机到容器技术，适应新的语言，作用于云计算，都对微服务提出了要求。总有一些事情需要我们不断的去学习，怎样构建高性能的、高容错的系统仍然是下一波的技术浪潮。&lt;/p&gt;
+
+&lt;p&gt;重复与创新之间的战争从未停止，但我们需要做一些事情，通过云计算、容器技术、微服务来缓解我们的痛苦。&lt;/p&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;动机&lt;/h2&gt;
+
+&lt;p&gt;我们为什么这样做？为什么我们持续的重新构建同样的模块，为什么我们持续的尝试解决大规模、容错性和分布式系统的问题？&lt;/p&gt;
+
+&lt;p&gt;我脑海中出现的是『&lt;em&gt;bigger, stronger, faster&lt;/em&gt;』，或者是『&lt;em&gt;speed, scale, agility&lt;/em&gt;』，你可能经常从C级别的管理人员口中听到这个说法。但关键的是，确实存在这样的需求，需要我们构建更加高性能和要弹性的系统。&lt;/p&gt;
+
+&lt;p&gt;在互联网的早期，只有数千或者数万用户在线，随着时间的推移，我们看到开始加速，现在我们面对的是数十亿用户和数十亿的设备。我们需要学习怎样为目前的情况构建系统。&lt;/p&gt;
+
+&lt;p&gt;上一代的人也许记得&lt;a href=&quot;http://www.kegel.com/c10k.html&quot;&gt;C10K problem&lt;/a&gt;，我不确定我们现在处在什么阶段，但我想我们现在谈论的是百万级的并发。世界上最大的技术公司，在10年前就已经解决了这个问题，也有了模式来构建这样大规模的系统。但剩下的其他人仍然在学习。&lt;/p&gt;
+
+&lt;p&gt;像Amazon，Google，Microsoft现在提供给我们的云计算平台，对大规模部署是有益的。但我们仍然努力在搞清楚，怎样编写应用程序，可以高效的利用这些大规模的资源。你也许这些天听说了容器的编排，微服务、云计算很多了。工作在很多层面上推进着，当我们完全确定了我们的模式，确定了需要解决的问题，我们的Micro就能作为工业级的产品发布了，这还需要一段时间。&lt;/p&gt;
+
+&lt;p&gt;许多公司现在求助的问题是『我该怎样构建可扩展的、高容错的系统？』但目前对这些重要的问题，有帮助的回答是很少的。&lt;/p&gt;
+
+&lt;p&gt;我该怎样编写可扩展的、高容错的系统？&lt;/p&gt;
+
+&lt;p&gt;Micro看起来通过专注于微服务的必要的软件开发工具，定位了问题。我们会详细的谈谈怎样帮助你构建有弹性的、高容错的系统，我们从client端开始。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;客户端&lt;/h2&gt;
+
+&lt;p&gt;客户端在go-micro中是用于发起请求的模块，如果你已经构建过微服务挥着SOA架构，你会知道重要的一部分时间和执行过程是花在调用其他服务获取相关信息上面。&lt;/p&gt;
+
+&lt;p&gt;然而在巨大的应用中，关注点主要在接受请求返回内容，在微服务世界中，更像是取回或者发布内容。&lt;/p&gt;
+
+&lt;p&gt;这里是精简过的go-micro中client的接口，有最重要的三个方法Call, Publish  和 Stream。&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Client&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Call&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rsp&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{},&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;opts&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CallOption&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Publish&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Publication&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;opts&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PublishOption&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Stream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;opts&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CallOption&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Streamer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Request&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Service&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ContentType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Stream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;bool&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Call和Stream是用来做同步通信请求，Call返回一个单一的结果，而Stream是一个双向的流式连接，与另一个服务维持着，其中任何消息都可以发进来也可以发出去。Publish用于发布异步的消息，通过broker，但我们今天不讨论它。&lt;/p&gt;
+
+&lt;p&gt;客户端是怎样工作的，前面的文章已经讨论过了。翻看以前的文章即可。&lt;/p&gt;
+
+&lt;p&gt;我们只是特别的讨论一些重要的内部细节。&lt;/p&gt;
+
+&lt;p&gt;客户端使用RPC层，结合broker，codec，register，selector和transport来提供丰富的组合。分层的架构非常重要，所以我们可以把单个的组件进行分离，减少了整体的复杂性，也提供了插件化的能力。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;为什么客户端重要?&lt;/h2&gt;
+
+&lt;p&gt;客户端本质上抽象了与服务端之间的有弹性的、高容错的通信过程。像另一个服务发起请求看起来是非常直接的，但有几种情况是可能潜在的发生失败的。&lt;/p&gt;
+
+&lt;p&gt;下面我们开始了解这些功能和他们是怎样运作的。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-3&quot;&gt;服务发现&lt;/h2&gt;
+
+&lt;p&gt;在分布式系统中，服务因为各种原因会频繁的加入和脱离集群。网络隔离、机器故障、调度等等。我们并不真正想关心它们。&lt;/p&gt;
+
+&lt;p&gt;当我们像另一个服务发起请求，我们通过名字识别服务，并允许客户端通过服务发现获取到服务的一系列实例，得到各个实例的地址和端口。服务在启动时在服务发现中心进行注册，在退出时进行注销。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.micro.mu/assets/images/discovery.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;正如我们提到的，任何类型的问题都会出现在分布式系统，服务发现也不例外。所以我们依赖于经过严格测试的分布式服务发现系统，例如consul、etcd和zookeeper，使用它们存储服务的信息。&lt;/p&gt;
+
+&lt;p&gt;它们都使用基于Paxos的Raft算法来进行网络选举，这解决了我们的一致性问题。通过运行一个3到5个节点的集群，我们可以容忍大部分的系统故障，为客户端提供稳定可靠的服务。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-4&quot;&gt;节点选择&lt;/h2&gt;
+
+&lt;p&gt;现在我们可靠的把服务名字解析到了一堆地址列表。我们怎样选择其中的一个进行调用呢?这就是go-micro中的selector发挥作用的地方。它基于register模块构建，提供负载均衡策略，比如轮询或者随机，也提供过滤、缓存和黑名单的功能。&lt;/p&gt;
+
+&lt;p&gt;这里是定义的接口：&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Selector&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Select&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;service&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;opts&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SelectOption&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Mark&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;service&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;registry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Reset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;service&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Next&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;registry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Filter&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;registry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Service&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;registry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Service&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Strategy&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;registry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Service&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Next&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;section-5&quot;&gt;负载策略&lt;/h2&gt;
+
+&lt;p&gt;当前的策略是非常简单直接的，当Selector被调用时，它从register获取到服务，然后创建一个Next函数，从节点池中选择出符合要求的节点。&lt;/p&gt;
+
+&lt;p&gt;客户端会调用这个Next函数，根据负载均衡策略，获取到下一个符合要求的节点，并发出请求。如果这个请求失败了，而且重试次数大于1，它会使用相同的程序，获取下一个节点，再次调用。&lt;/p&gt;
+
+&lt;p&gt;这里是有很多不同的策略的，比如轮询、随机、最少连接、权重等等。负载均衡策略对于分布式系统是必不可少的。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-6&quot;&gt;缓存&lt;/h2&gt;
+
+&lt;p&gt;虽然有一个可靠的服务发现系统是很好的，但每次请求都去查询一次并不高效。如果你想象一个大规模的系统，每个服务都这样做，很容易就会使服务发现系统过载。这会让整个系统不可用。&lt;/p&gt;
+
+&lt;p&gt;为了避免这种情况，我们可以使用缓存。大部分的服务发现系统提供了一个监听更新的机制，一般来说叫做Watcher。不是去轮询服务发现系统，而是等待事件发送给我们。go-micro 的Registry提供了Watch的概念。&lt;/p&gt;
+
+&lt;p&gt;我们已经编写了一个带缓存的selector，它把服务缓存在内存中。如果缓存中不存在时，它会去服务发现系统查找，缓存，并用于之后的请求。如果watch事件收到了，缓存模块会与register进行更新。&lt;/p&gt;
+
+&lt;p&gt;首先，通过移除服务查找，大大的提高了性能。这也提供了一定的容错，万一服务发现系统宕机了呢？我们仍然有一点偏执，害怕缓存由于节点发生故障而被污染了，所以节点都维持着合适的TTL。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-7&quot;&gt;黑名单&lt;/h2&gt;
+
+&lt;p&gt;下面介绍一下黑名单，注意一下Selector的接口有Mark和Reset方法。我们不同真正的保证，注册进来的节点都是健康的，所以我们需要做黑名单。&lt;/p&gt;
+
+&lt;p&gt;任何一个请求发送之后，我们都会跟踪它的结果。如果这个服务的实例出现了多次失败，我们就可以大体上把这个节点加入黑名单，并过滤掉它。&lt;/p&gt;
+
+&lt;p&gt;节点在回到节点池之前会在黑名单中会存在一段时间，这是很严格的，如果这个节点失败了我们就需要移除掉它。这样我们可以持续的返回成功的请求，不会有任何延迟。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-8&quot;&gt;超时与重试&lt;/h2&gt;
+
+&lt;p&gt;Adrian Cockroft最近开始讨论在微服务架构中消失的组件，其中一个有意思的是，传统的超时和重试策略导致了雪崩效应。我建议你看看这个&lt;a href=&quot;http://www.slideshare.net/adriancockcroft/microservices-whats-missing-oreilly-software-architecture-new-york#24&quot;&gt;演示&lt;/a&gt;。这个演示把问题总结的特别好。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.micro.mu/assets/images/timeouts.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Adrian 在上面描述的是一种常见的情况，一个缓慢的响应会导致超时，然后客户端会触发重试。这事实上是一个请求链路，这创造了一系列的新请求，而旧有的请求仍然在处理中。这样的配置失误会导致大量服务的过载，造成的调用失败是很难回滚的。&lt;/p&gt;
+
+&lt;p&gt;在微服务世界，我们需要重新想想，处理重试和超时的策略。Adrian继续讨论了潜在的解决方案。其中一种方式是超时之后，在新的节点上发起请求。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.micro.mu/assets/images/good-timeouts.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在重试的这方面，我们已经在Micro中使用了。重试的次数可以进行配置，如果你调用了一个失败的节点，客户端会在新的节点发起重试。&lt;/p&gt;
+
+&lt;p&gt;超时经常被深思熟虑，但事实上经常从传统的静态超时设置开始。直到Adrian演示了他的想法，超时策略变得很清晰了。&lt;/p&gt;
+
+&lt;p&gt;预算型超时策略现在也内置在Micro中，让我们看看它是怎样工作的。&lt;/p&gt;
+
+&lt;p&gt;第一个调用设置了超时，每个调用链上的请求都会消耗整体的超时时间。如果时间为0了，我们就会停止请求或重试，并返回调用链。&lt;/p&gt;
+
+&lt;p&gt;按照Adrian提到的，提供动态的预算型超时是非常好的，避免了不必要的雪崩。&lt;/p&gt;
+
+&lt;p&gt;更远一点来说，下一步应该是移除任何类型静态的超时。服务的响应时间根据环境的不同，请求的不同是不同的。这应该是动态的SLA，根据当前的状态进行调整，但这些事会留在未来解决。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-9&quot;&gt;连接池&lt;/h2&gt;
+
+&lt;p&gt;连接池是构建可扩展系统的很重要部分，我们很快就看到了没有连接池的局限性，经常导致文件描述符数量达到限制，导致端口用尽。&lt;/p&gt;
+
+&lt;p&gt;目前有个进行中的&lt;a href=&quot;https://github.com/micro/go-micro/pull/86&quot;&gt;PR&lt;/a&gt;为go-micro增加了连接池，由于Micro插件化的特性，把连接池放在transport的上层很重要，这样HTTP，NATS，RabbitMQ等等，都会受益。&lt;/p&gt;
+
+&lt;p&gt;你也许会想，这是特定实现的，一些transport也许已经支持了。这是对的，不能总是保证在不同的transport下工作效果是一样的。通过把这个放置于上层，我们减少了transport模块的复杂性。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-10&quot;&gt;其他?&lt;/h2&gt;
+
+&lt;p&gt;确实有很多好用的东西是go-micro内置的，那么还有什么呢？我很高兴你这么问…&lt;/p&gt;
+
+&lt;h2 id=&quot;section-11&quot;&gt;服务版本&lt;/h2&gt;
+
+&lt;p&gt;我们有这个功能，这个功能在前面的文章也讨论过了。服务包括名字和版本，注册在服务发现系统。当一个服务从注册器中查询出来时，它的节点是按照版本分组的。这样一样，selector就可以根据版本，进行流量负载。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.micro.mu/assets/images/selector.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;section-12&quot;&gt;为什么版本很重要&lt;/h3&gt;
+
+&lt;p&gt;当我们发布新版本时，这非常重要，它可以确保所有事情运作正常，这样才能把所有服务进行升级。新版本可以被部署到一个小型的节点上，客户端会自动的分发一定比例的请求到这个新的节点。通过结合一些编排系统比如Kubernetes，你可以非常有信心的部署，一旦有任何问题也可以回滚。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-13&quot;&gt;过滤&lt;/h2&gt;
+
+&lt;p&gt;我们也有，selector是非常强大的，它有能力把过滤条件传递进去，对节点进行过滤。这在client端调用时可以传递参数。一些意见存在的过滤可以在&lt;a href=&quot;https://github.com/micro/go-micro/blob/master/selector/filter.go&quot;&gt;这里&lt;/a&gt;看到，比如metadata，endpoint和版本过滤。&lt;/p&gt;
+
+&lt;h3 id=&quot;section-14&quot;&gt;为什么过滤重要&lt;/h3&gt;
+
+&lt;p&gt;你也许有一些功能只在某些特定版本的服务上存在。需要将这些请求分发到这些特定版本的服务上。这是非常好的功能，特别是多个不同版本的服务在同时运行时。&lt;/p&gt;
+
+&lt;p&gt;另外一个有用的地方是，你想要根据地区对服务进行路由。通过设置数据中心的标签在服务上，你可以过滤出本地的节点。根据metadata进行过滤是非常强大的，希望有更多的应该能够把这个功能使用起来。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-15&quot;&gt;插件化的架构&lt;/h2&gt;
+
+&lt;p&gt;Micro原生的插件化架构是你一次又一次听到的。这从设计的第一天就已经确定了。这是非常重要的，Micro提供模块来构建整个系统。有时候的运行会超出控制，但这些都可以改善。&lt;/p&gt;
+
+&lt;h3 id=&quot;section-16&quot;&gt;为什么插件化很重要?&lt;/h3&gt;
+
+&lt;p&gt;每个人对怎样构建分布式系统都有自己的想法，我们实际上是提供了一个方式，让人们能设计他们想要的解决方案。不仅如此，现在也有很多经过严格测试的工具，我们可以直接使用，而不是自己重写任何东西。&lt;/p&gt;
+
+&lt;p&gt;技术始终在进化，全新的、更好的工具每天都在出现。我们怎样避免止步不前，插件化的架构意味着我们可以使用目前的组件，未来也可以使用更好的组件进行替代。&lt;/p&gt;
+
+&lt;h3 id=&quot;section-17&quot;&gt;插件&lt;/h3&gt;
+
+&lt;p&gt;每个go-micro的特性都被设计成golang中的接口，通过这样做，我们可以实际上替换底层的实现，这几乎不需要进行代码改动。在大部分情况下，只需要简单的引用这个包，然后在启动时加入参数就可以了。&lt;/p&gt;
+
+&lt;p&gt;在&lt;a href=&quot;https://github.com/micro/go-plugins&quot;&gt;go-plugins&lt;/a&gt;有很多现成的插件可以使用。&lt;/p&gt;
+
+&lt;p&gt;go-micro目前提供了默认的consul作为服务发现系统，http作为transport，你也许会想要使用一些别的东西，或者实现自己的插件。我们已经有社区的贡献者分享了&lt;a href=&quot;https://github.com/micro/go-plugins/tree/master/registry/kubernetes&quot;&gt;Kubernetes&lt;/a&gt; 的注册插件和&lt;a href=&quot;https://github.com/micro/go-plugins/pull/24&quot;&gt;Zookeeper&lt;/a&gt;的注册插件。&lt;/p&gt;
+
+&lt;h3 id=&quot;section-18&quot;&gt;我怎样使用插件&lt;/h3&gt;
+
+&lt;p&gt;大部分时候，插件的使用类似这样：&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Import&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;the&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plugin&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;github.com/micro/go-plugins/registry/etcd&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;go&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;go&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;registry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;etcd&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;registry_address&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10.0.0.1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2379&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;如果你想要看更多的细节，参考之前讨论 Micro on NATS的文章。&lt;/p&gt;
+
+&lt;h2 id=&quot;wrappers&quot;&gt;wrappers&lt;/h2&gt;
+
+&lt;p&gt;客户端和服务端都支持中间件的概念，称为wrapper。通过支持中间件，我们可以增加在请求和返回的业务逻辑前面或者后面，添加自定义的逻辑。&lt;/p&gt;
+
+&lt;p&gt;中间件是很容易理解的概念，数以千计的库在使用它。在处理崩溃、限制并发、认证、日志、记录等场景下，很容易发现它的妙处。&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Client&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Wrappers&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Wrapper&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Client&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StreamWrapper&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Streamer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Streamer&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Server&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Wrappers&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HandlerWrapper&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HandlerFunc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HandlerFunc&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SubscriberWrapper&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SubscriberFunc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SubscriberFunc&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StreamerWrapper&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Streamer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Streamer&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;wrapper&quot;&gt;我怎样使用Wrapper&lt;/h2&gt;
+
+&lt;p&gt;这里是一个很直接的插件&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;github.com/micro/go-micro&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;github.com/micro/go-plugins/wrapper/breaker/hystrix&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;service&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;micro&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NewService&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+		&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;micro&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;myservice&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+		&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;micro&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WrapClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hystrix&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NewClientWrapper&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()),&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;很容易对不对，我们发现很多公司在Micro上层，创建了自己的层级，用于初始化大部分默认的wrapper，所以所有的wrapper可以在同一个地方进行添加。&lt;/p&gt;
+
+&lt;p&gt;现在我们看看wrapper怎样让应用更有弹性，更能容错。&lt;/p&gt;
+
+&lt;h2 id=&quot;circuit-breaker&quot;&gt;circuit breaker&lt;/h2&gt;
+
+&lt;p&gt;在SOA或者微服务世界，一个单独的请求可能会调用多个服务。大部分情况下，聚合许多信息返回给调用者。在成功的情况下，它运行的很好，但一旦发生错误，很容易触发雪崩式的错误，除了重启整个系统，很难恢复。&lt;/p&gt;
+
+&lt;p&gt;我们部分的解决了这个问题，通过在客户端使用重试机制和黑名单。但在一些情况下，我们需要组织客户端发起这个请求。&lt;/p&gt;
+
+&lt;p&gt;这里是circuit breaker怎样起作用的&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.micro.mu/assets/images/circuit.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;circuit breakers的理念非常直接，方法的执行是根据对失败的情况进行监控而进行封装的。当失败的情况达到一个阈值时，breaker开始起作用，任何未来的调用尝试都会返回错误，而不会调用实际的业务函数。在超时时间过了以后，进入一个半开状态。如果某个请求失败了，breaker会再次生效，如果成功了就会恢复到正常。&lt;/p&gt;
+
+&lt;p&gt;虽然内部的Micro客户端有一些容错特性，但我们不应该依赖它来解决所有问题。在wrapper中使用circuit breakers让我们受益很多。&lt;/p&gt;
+
+&lt;h2 id=&quot;rate-limiting&quot;&gt;Rate Limiting&lt;/h2&gt;
+
+&lt;p&gt;如果我们非常轻松的能响应世界上所有的请求，那就太好了，不过是在梦里。真实的世界不是这样工作的，执行一个查询需要消耗时间，资源的限制让我们只能响应一定数量的请求。&lt;/p&gt;
+
+&lt;p&gt;我们需要考虑限制发起请求的数量，或者限制并发响应的数量。这就是rate limiting发挥作用的地方。如果没有rate limiting，很容易会把资源耗尽，或者完全的让系统崩溃，让系统不能响应未来的任何请求。这经常是DDOS攻击的常见做法。&lt;/p&gt;
+
+&lt;p&gt;每个人都听说过，使用过或者实现过一些类型的rate limiting。这里有很多不同的算法，其中一种是&lt;a href=&quot;https://en.wikipedia.org/wiki/Leaky_bucket&quot;&gt;Leaky Bucket&lt;/a&gt; 算法，我们不会在这里展开，但值得一读。&lt;/p&gt;
+
+&lt;p&gt;我们可以使用Micro Wrapper和已经存在的库来使用这个函数，一个已经存在的库在&lt;a href=&quot;https://github.com/micro/go-plugins/blob/master/wrapper/ratelimiter/ratelimit/ratelimit.go&quot;&gt;这里&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;我们实际上对YouTube实现的&lt;a href=&quot;https://github.com/youtube/doorman&quot;&gt;Doorman&lt;/a&gt;算法很感兴趣，一个全局的客户端rate limiter，我们也在寻求社区的其他实现。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-19&quot;&gt;服务端&lt;/h2&gt;
+
+&lt;p&gt;前面介绍了很多客户端的很多特性和使用方式，那么服务端呢，第一件事需要注意的是Micro在go-micro的API、CLI、Sidecar等等都使用了客户端，客户端的特性让整个架构都收益，但我们仍然需要在服务端解决一些问题。&lt;/p&gt;
+
+&lt;p&gt;在客户端，register用于发现服务，服务端进行注册。当一个服务的实例运行起来时，它在服务发现系统进行注册，在退出时进行注销，关键词是『gracefully』。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.micro.mu/assets/images/register.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;section-20&quot;&gt;处理错误&lt;/h2&gt;
+
+&lt;p&gt;在分布式环境中，我们都需要处理错误，我们需要容忍错误。register支持通过ttl来进行过期检查，一旦过期节点就是不健康的，底层的服务发现机制类型consul都支持这些功能。同时服务端也支持重新注册。这两者的结合意味着，节点可以在间隔时间内会重新注册，如果节点因为运行失败等等没有重新注册，register就会因为超时而认为节点不健康，将节点从register删除。&lt;/p&gt;
+
+&lt;p&gt;这种容错设计最先没有出现在go-micro中，但我们很快发现，在真实的世界中，因为服务的崩溃或其他原因程序退出时，并没有注销自己，所以需要这种ttl健康监测。&lt;/p&gt;
+
+&lt;p&gt;带来的影响就是，客户端需要处理一系列污染的请求。客户端也需要容错性，我们认为这样的功能设计排除了许多明显的问题。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-21&quot;&gt;增加更多功能设计&lt;/h2&gt;
+
+&lt;p&gt;另一件需要注意的事情是，服务端也提供了能力来使用Wrapper和中间件，这意味着我们也可以做circuit breaking， rate limiting等其他一些特性。&lt;/p&gt;
+
+&lt;p&gt;服务端的这个功能故意的设计的简单，但插件化的特性可以让你自由扩展。&lt;/p&gt;
+
+&lt;h2 id=&quot;sidecar&quot;&gt;客户端与Sidecar&lt;/h2&gt;
+
+&lt;p&gt;大部分我们讨论的都是存在于go-micro库中，这对所有的golang使用者是很好的，但其他人在想，我怎样从这里收益呢。&lt;/p&gt;
+
+&lt;p&gt;在最开始，Micro就包含了&lt;a href=&quot;https://github.com/micro/micro/tree/master/car&quot;&gt;Sidecar&lt;/a&gt;的设计理念，这是一个HTTP的代理，所有的go-micro的功能都内置其中，所以不管你用哪种语言构建你的应用，你都可以收益于我们在上面的讨论。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.micro.mu/assets/images/sidecar-rpc.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;sidecar的设计模式并不是新东西，NetflixOSS有一个叫做&lt;a href=&quot;https://github.com/Netflix/Prana&quot;&gt;Prana&lt;/a&gt;的项目。Buoyant有一个叫&lt;a href=&quot;https://linkerd.io/&quot;&gt;Linkerd&lt;/a&gt;的项目。&lt;/p&gt;
+
+&lt;p&gt;Micro Sidecar使用了默认的go-micro客户端，如果你想使用其他功能，你可以添加参数，很容易的重新编译。我们会想办法在未来简化这个程序。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-22&quot;&gt;还有更多&lt;/h2&gt;
+
+&lt;p&gt;这里讨论了许多&lt;a href=&quot;https://github.com/micro/go-micro&quot;&gt;go-micro&lt;/a&gt;的包和相关的工具，这些工具是很好的开始，但他们还不够。当你想要运行一个可扩展的、数以百计的微服务，处理数百万请求，仍然有许多问题需要解决。&lt;/p&gt;
+
+&lt;h3 id=&quot;platform&quot;&gt;Platform&lt;/h3&gt;
+
+&lt;p&gt;这是&lt;a href=&quot;https://github.com/micro/go-platform&quot;&gt;go-platform&lt;/a&gt;和&lt;a href=&quot;https://github.com/micro/platform&quot;&gt;platform&lt;/a&gt;发挥作用的地方了，micro解决了基础的组件，Platform则更进一步，解决运行可扩展的服务的更多问题。比如认证、分布式trace、同步锁、健康检查等等。&lt;/p&gt;
+
+&lt;p&gt;分布式系统需要一系列的工具用于提高容错性，Platform看起来会有帮助。通过提供一个分层的架构，我们可以在原始的核心工具上，构建任何自己需要的功能。&lt;/p&gt;
+
+&lt;p&gt;Platform仍然在早期，但Platform会解决大部分公司构建分布式平台时会遇到的问题。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-23&quot;&gt;总结&lt;/h2&gt;
+
+&lt;p&gt;科技在快速的进化，云计算给了我们不受限制的扩展能力。设法与变化保持同步很难，构建一个可扩展的，高容错的系统在今天仍然具有很大的挑战。&lt;/p&gt;
+
+&lt;p&gt;但不应该用以前的方式解决问题，作为一个社区，我们可以互相帮助，适应这个新的环境，构建随着不断增长的需求而不断扩张的系统。&lt;/p&gt;
+
+&lt;p&gt;Micro在这个过程中看起来提供了一些帮助，通过提供工具，简化了构建和管理分布式系统。希望这个文章能示范我们处理这些问题的方式。&lt;/p&gt;
+
+&lt;p&gt;如果你想了解更多，请看这个&lt;a href=&quot;https://blog.micro.mu/&quot;&gt;blog&lt;/a&gt;，或者这个&lt;a href=&quot;https://github.com/micro/micro&quot;&gt;repo&lt;/a&gt;，Twitter可以关注&lt;a href=&quot;https://twitter.com/microhq&quot;&gt;@MicroHQ&lt;/a&gt;，Slack社区在[这里&lt;/p&gt;
+</description>
+        <pubDate>Sun, 15 May 2016 23:21:35 +0800</pubDate>
+        <link>http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/05/15/resiliency/</link>
+        <guid isPermaLink="true">http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/05/15/resiliency/</guid>
+      </item>
+    
+      <item>
+        <title>Micro Bot - 微服务中的ChatOps</title>
+        <description>&lt;p&gt;这是一系列介绍&lt;a href=&quot;http://github.com/micro&quot;&gt;Micro&lt;/a&gt;框架的文章的第六篇，我将会把作者的博客翻译成中文，推广Micro这个微服务框架。&lt;/p&gt;
+
+&lt;p&gt;今天我想聊一下机器人。&lt;/p&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;机器人?真的吗…&lt;/h2&gt;
+
+&lt;p&gt;现在我知道你在想什么，现在有许多关于机器人的夸张说法。如果你对聊天机器人熟悉的话，你会知道这些都不是什么新说法，事实上最早的历史开始于&lt;a href=&quot;https://en.wikipedia.org/wiki/ELIZA&quot;&gt;Eliza&lt;/a&gt;。大众对机器人重新开始着迷，是因为我们发现了机器人有更多的功能，而不仅是简单的好玩。同时他们也提醒了我们下一代的人机交互接口会演变成什么样。&lt;/p&gt;
+
+&lt;p&gt;从工程师的思维来看，机器人不仅是为了交谈的目的，他们在执行任务的时候，超出想象的好用。大部分的我们已经对ChatOps很熟悉了。Github创造了这个概念，推出了他们的 &lt;a href=&quot;https://hubot.github.com/&quot;&gt;Hubot&lt;/a&gt;,这是一个聊天机器人，可以管理技术上和业务上的操作任务。&lt;/p&gt;
+
+&lt;p&gt;看看这篇Jesse Newland的演讲了解更多：&lt;a href=&quot;https://www.youtube.com/watch?v=NST3u-GjjFw&quot;&gt;ChatOpts at GitHub&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Hubot和机器人看起来已经证明了，在技术公司他们是非常有用的，他们在运维和自动化方面成为了好用的助手。现在通过HipChat或者Slack操控机器人来执行任务，而以前我们是手动的执行一些脚本，这明显要强大的多。这对整个团队带来的价值是显而易见的，每个人都能看到你在做的事情，已经事情的结果。&lt;/p&gt;
+
+&lt;h2 id=&quot;microchatops&quot;&gt;Micro服务怎样与ChatOps结合起来?&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/micro/micro&quot;&gt;&lt;strong&gt;Micro&lt;/strong&gt;&lt;/a&gt;，这个微服务工具箱，包括了一系列的服务，提供了接入点连接你正在运行的系统。API，Web控制台，CLI等等。他们都能与你的服务进行交互，观察你的服务的运行环境。在过去的几个月，这已经变得很清楚了，机器人是另外一种接入点，用于与你的服务进行交互与观察你的服务，这也是Micro世界的第一等公民。&lt;/p&gt;
+
+&lt;p&gt;这样一来&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.micro.mu/assets/images/micro_bot.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;首先我们要明确，Micro 机器人是处于非常早期的阶段，目前主要是通过CLI提供功能。我们现在不能说实现了ChatOps，但或许有一天可以呢…&lt;/p&gt;
+
+&lt;p&gt;Micro机器人包括了类似hubot的语法命令，已经一种实现的输入，比如Slack或者HipChat。这是粗糙的第一个版本，但我相信随着工作的投入，不久以后就能大大提供机器人的能力。希望社区也能加入进来。&lt;/p&gt;
+
+&lt;p&gt;Bot 包括了所有的CLI命令，也提供了Slack和HipChat的入口。我们的机器人目前运行在一个demo环境中，通过Micro Slack提供，在&lt;a href=&quot;http://slack.micro.mu/&quot;&gt;这里&lt;/a&gt;加入我们。&lt;/p&gt;
+
+&lt;p&gt;在最近的开发周期中，我们会看看增加一些入口，比如IRC,XMPP，让我们可以通过命令简单的管理运行中的微服务。如果你有新的入口或者命令需要添加，请提交PR，贡献者是非常欢迎的。目前的插件可以在这里看到：&lt;a href=&quot;https://github.com/micro/go-plugins/tree/master/bot&quot;&gt;github.com/micro/go-plugins/bot&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;这确实是一个基础的框架，用于对Micro生态系统做可编程的机器人。整个工具箱拥有插件化的特性。让我们看看Inputs和Commands是怎样工作的。&lt;/p&gt;
+
+&lt;h2 id=&quot;inputs&quot;&gt;Inputs&lt;/h2&gt;
+
+&lt;p&gt;Inputs是micro机器人怎样连接hipchat,slack,irc,xmpp等等。我们目前已经实现了HipChat和Slack，应该覆盖了大部分的用户。&lt;/p&gt;
+
+&lt;p&gt;这里是Input的接口定义&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Input&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// Provide cli flags&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Flags&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cli&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Flag&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// Initialise input using cli context&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cli&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// Stream events from the input&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Stream&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Conn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// Start the input&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// Stop the input&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Stop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// name of the input&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Input提供了方便的功能，用于添加你自己的命令行参数。&lt;code class=&quot;highlighter-rouge&quot;&gt;Flag()&lt;/code&gt;这个方法会在初始化之前调用，任何自定义的参数会增加到全局参数列表里面。&lt;/p&gt;
+
+&lt;p&gt;在参数被解析之后，&lt;code class=&quot;highlighter-rouge&quot;&gt;Init()&lt;/code&gt;会被调用，这样一来，这个入口的任何中间数据都会被初始化，一旦所有事情执行完成，机器人就会调用&lt;code class=&quot;highlighter-rouge&quot;&gt;Start（）&lt;/code&gt;然后是&lt;code class=&quot;highlighter-rouge&quot;&gt;Stream（）&lt;/code&gt;方法，用于与Input建立连接。&lt;/p&gt;
+
+&lt;p&gt;这是Stream方法返回的Conn接口&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Conn&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Recv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Send&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;机器人会持续的调用&lt;code class=&quot;highlighter-rouge&quot;&gt;Recv()&lt;/code&gt;来监听事件。&lt;code class=&quot;highlighter-rouge&quot;&gt;Recv()&lt;/code&gt;应该是一个阻塞的调用，否则我们会陷入死循环，耗尽CPU。一旦机器人处理完了事件，它会通过&lt;code class=&quot;highlighter-rouge&quot;&gt;Send()&lt;/code&gt;返回一些结果。&lt;/p&gt;
+
+&lt;p&gt;Event是一个基础的类型，用户在机器人和入口之间通信。他可以让我们把不同的消息类型，封装成统一的格式。目前只有一个&lt;code class=&quot;highlighter-rouge&quot;&gt;TextEvent&lt;/code&gt;类型，在未来我们会有更多。&lt;/p&gt;
+
+&lt;p&gt;机器人是不知道命令是来自于Slack,HipChat还是其他地方。它只知道收到了一个事件，然后需要执行它。这是一种很好的方式，用于把机器人和Input拆分开。&lt;/p&gt;
+
+&lt;p&gt;这里是Event类型&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Event&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;EventType&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;From&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;To&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Data&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Meta&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;commands&quot;&gt;Commands&lt;/h2&gt;
+
+&lt;p&gt;commands是可以被机器人执行的函数。这很简单，它们存储在map中，key经过正则，它们会匹配上input接收到的事件。如果正则匹配上了某个事件，关联的函数就会被执行。命令的执行结果就会被发送回input。如果事件的From字段不为空，返回会被发送到To字段。你可以看到这是怎样让机器人直接的进行交流，不管任何地方，任何时候。&lt;/p&gt;
+
+&lt;p&gt;当前的Command的接口非常直接，但未来可能会更改，一旦我们遇到更复杂的情况。&lt;/p&gt;
+
+&lt;p&gt;command的接口：&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Command&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// Executes the command with args passed in&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Exec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// Usage of the command&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Usage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// Description of the command&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Description&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;// Name of the command&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;这里是一个Echo Command的示例&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;// Echo returns the same message&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Echo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cli&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Command&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;usage&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;echo [text]&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;desc&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Returns the [text]&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+	&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NewCommand&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;echo&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;usage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;desc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+		&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+			&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;echo what?&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+		&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+		&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;strings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot; &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)),&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;其他?&lt;/h2&gt;
+
+&lt;p&gt;只有Inputs和Commands是不够的。如果我们以后想要做些其他的操作呢？我们怎样持久化机器人的状态?双向的交流怎么样？而不是仅仅返回内容。&lt;/p&gt;
+
+&lt;p&gt;这必须要编译！&lt;/p&gt;
+
+&lt;p&gt;我们仍然处于构建这个机器人框架的早期，这是一个机会，讨论基础的接口应该是什么样的。&lt;/p&gt;
+
+&lt;p&gt;下一步是提供各种类型的接口。更严肃一点，我们需要一个&lt;code class=&quot;highlighter-rouge&quot;&gt;Stream&lt;/code&gt;接口或者类似的。还需要&lt;code class=&quot;highlighter-rouge&quot;&gt;Input.Conn&lt;/code&gt;,这样我们可以处理任何插件的事件流。&lt;/p&gt;
+
+&lt;p&gt;这潜在的让我们有能力实现同一时间接收多个input的事件流，因此我们可以从事件流中获取事件，处理后返回。&lt;/p&gt;
+
+&lt;p&gt;一个例子是，从Slack中接受到消息，查询micro的服务，最后发送一个总结性的邮件。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;怎样运行起来?&lt;/h2&gt;
+
+&lt;p&gt;micro机器人在你的环境中单独运行起来，就像其他某个服务一样。也会通过服务发现进行注册。&lt;img src=&quot;https://blog.micro.mu/assets/images/bot.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;section-3&quot;&gt;我怎样运行?&lt;/h2&gt;
+
+&lt;p&gt;因为机器人就像运行一个其他服务一下，你首先需要启动服务发现机制，默认是consul&lt;/p&gt;
+
+&lt;p&gt;使用支持Slack的机器人&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;micro&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bot&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;inputs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;slack&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;slack_token&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SLACK_TOKEN&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;以及HipChat&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;micro bot --inputs=hipchat --hipchat_username=XMPP_USERNAME --hipchat_password=XMPP_PASSWORD
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;section-4&quot;&gt;运行中的机器人&lt;/h2&gt;
+
+&lt;p&gt;这里有一些运行起来的机器人的截图，就像你看到的，它是一个CLI命令的复制。我们有一些额外的命令比如动画和地图。在这里可以看到&lt;a href=&quot;https://github.com/micro/go-plugins&quot;&gt;github.com/micro/go-plugins&lt;/a&gt; &lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.micro.mu/assets/images/hipchat.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;commands-1&quot;&gt;增加新的Commands&lt;/h2&gt;
+
+&lt;p&gt;Commands是一个可以被机器人执行的函数，通过字符进行匹配，类似其他的机器人比如Hubot&lt;/p&gt;
+
+&lt;p&gt;这里是怎样写一个简单的ping命令&lt;/p&gt;
+
+&lt;h3 id=&quot;section-5&quot;&gt;编写命令&lt;/h3&gt;
+
+&lt;p&gt;首先通过NewCommand创建一个命令，这个一个快速的方式，你也可以实现这个接口。&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;github.com/micro/micro/bot/command&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Ping&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Command&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;usage&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ping&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Returns pong&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+	&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NewCommand&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ping&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;usage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;desc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+		&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;pong&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;section-6&quot;&gt;注册命令&lt;/h3&gt;
+
+&lt;p&gt;把命令添加到Commands map中，匹配的key需要被&lt;a href=&quot;https://golang.org/pkg/regexp/#Match&quot;&gt;golang/regexp.Match&lt;/a&gt;匹配。&lt;/p&gt;
+
+&lt;p&gt;这里我们只对ping命令作出响应&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;github.com/micro/micro/bot/command&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Commands&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;^ping$&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Ping&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;section-7&quot;&gt;连接命令&lt;/h3&gt;
+
+&lt;p&gt;在这里引入你的命令&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;path/to/import&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;接下来进行编译&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;github&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;com&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;micro&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;micro&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;go&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;micro&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;go&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;link_input&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;go&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;section-8&quot;&gt;下一步?&lt;/h2&gt;
+
+&lt;p&gt;我们要意识到微服务世界并不容易，它需要一系列的工具，还要进行观测。比如监控服务、分布式tracing、结构化日志，这都是重要的组成部分。&lt;/p&gt;
+
+&lt;p&gt;想象一个世界，机器人有能力感知分布式系统。当我们需要的时候，提供反馈给我们，而不是需要盯着控制台，处理一个个错误提示。你也许听说过NoOps?那么什么是BotOps?你不会被电话催促怎么样？常见的错误，都通过事先预定的程序处理怎么样？&lt;/p&gt;
+
+&lt;h2 id=&quot;section-9&quot;&gt;总结&lt;/h2&gt;
+
+&lt;p&gt;机器人的革命只是刚刚开始，基础设施和自动化的世界正在改变，我们相信机器人会扮演一个重要的角色，最初是传统的ChatOps ，未来会走的更远。&lt;/p&gt;
+
+&lt;p&gt;机器人需要被看做第一等公民，跟配置管理、命令行、和API一样。我们只是把机器人加入到Micro的生态系统中来。&lt;/p&gt;
+
+&lt;p&gt;这仍然是处于早期，但不就的将来将会让我们满意。&lt;/p&gt;
+
+&lt;p&gt;如果你想了解更多，请看这个&lt;a href=&quot;https://blog.micro.mu/&quot;&gt;blog&lt;/a&gt;，或者这个&lt;a href=&quot;https://github.com/micro/micro&quot;&gt;repo&lt;/a&gt;，Twitter可以关注&lt;a href=&quot;https://twitter.com/microhq&quot;&gt;@MicroHQ&lt;/a&gt;，Slack社区在&lt;a href=&quot;http://slack.micro.mu/&quot;&gt;这里&lt;/a&gt;&lt;/p&gt;
+</description>
+        <pubDate>Mon, 25 Apr 2016 21:21:35 +0800</pubDate>
+        <link>http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/04/25/the-micro-bot/</link>
+        <guid isPermaLink="true">http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/04/25/the-micro-bot/</guid>
+      </item>
+    
+      <item>
+        <title>Micro的架构与微服务的设计模式</title>
+        <description>&lt;p&gt;这是一系列介绍&lt;a href=&quot;http://github.com/micro&quot;&gt;Micro&lt;/a&gt;框架的文章的第五篇，我将会把作者的博客翻译成中文，推广Micro这个微服务框架。&lt;/p&gt;
+
+&lt;p&gt;在过去的几个月，我们已经有了很多有关micro架构的疑问和微服务的设计模式的问题，今天我们讨论一下这两个话题。&lt;/p&gt;
+
+&lt;h2 id=&quot;micro&quot;&gt;关于Micro&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/micro/micro&quot;&gt;Micro&lt;/a&gt;是一个微服务工具箱，它有自己固有的设计模式，但插件化的架构可以让底层的实现很轻易的被替换。&lt;/p&gt;
+
+&lt;p&gt;micro专注于定位微服务构建过程中的最基本的需求，并通过精密的设计来满足这些需求。&lt;/p&gt;
+
+&lt;p&gt;查看过往的文章可以了解微服务的理念和Micro的特性。&lt;/p&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;关于工具箱&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/micro/go-micro&quot;&gt;Go Micro&lt;/a&gt; 是一个用golang编写的，插件化的RPC框架。它提供了基础的库，比如服务发现、客户端负载均衡、编解码、同步异步通信等。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/micro/micro/tree/master/api&quot;&gt;Micro API&lt;/a&gt;是一个API网关，用于将外部的HTTP请求路由到内部的micro服务上。它有单一的接入点，可以通过反向代理或者http转换成RPC来访问。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/micro/micro/tree/master/web&quot;&gt;Micro Web&lt;/a&gt;是一个web仪表盘，也是作为micro web应用的反向代理。我们相信web应用也应该是一个微服务，在微服务世界里也应该是第一等公民。它表现的很像Micro API但也有单独的特性比如websocket&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/micro/micro/tree/master/car&quot;&gt;Micro Sidecar&lt;/a&gt;使用http服务，提供了go-micro的所有特性。虽然我们喜欢golang来构建微服务，但你也许想使用其他语言。所以Sidecar提供了一种其他语言的应用接入Micro世界的方式。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/micro/micro/tree/master/cli&quot;&gt;Micro CLI&lt;/a&gt;是一个简单直接的命令行接口，用于与你的服务交互。他也可以使用你的Sidecar作为代理来连接服务。&lt;/p&gt;
+
+&lt;p&gt;上面是很简单的介绍，下面我们更加深入一些。&lt;/p&gt;
+
+&lt;h2 id=&quot;rpcrestproto&quot;&gt;RPC,REST,Proto…&lt;/h2&gt;
+
+&lt;p&gt;第一件你想到的事情是，为什么是RPC，而不是REST? 在内部服务间的通信上，我们相信RPC是更合适的。或者更明确一点，RPC使用protobuf做编码，通过protobuf定义API。这种方式把两个需求结合起来了：一个需求是需要明确定义的API接口，另一个需求是高性能的消息编解码。RPC是非常直接的通信方式。&lt;/p&gt;
+
+&lt;p&gt;我们在这个选择上并不孤独。&lt;/p&gt;
+
+&lt;p&gt;Google是protobuf的创造者，在内部通过gRPC这个框架，大量的使用RPC调用。Hailo也从RPC/protobuf的组合中收益很多，不仅是系统性能，开发速度也提高很多。Uber选择开发自己的RPC框架，名字叫&lt;a href=&quot;http://uber.github.io/tchannel/&quot;&gt;TChannel&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;个人而言我认为未来的API将会使用RPC进行构建，因为它们结构化的格式、高效的编解码提供了定义良好的API和高性能的通信。&lt;/p&gt;
+
+&lt;h2 id=&quot;http-to-rpcapi&quot;&gt;HTTP to RPC,API…&lt;/h2&gt;
+
+&lt;p&gt;事实上，我们在web上RPC还有很长的路要走。在内部RPC的表现是完美的，但在面对外部请求比如网站、手机app的接口等等，就是另外一回事了。我们需要面对这个，这就是为什么Micro需要一个API网关，用来接受并转换http请求。&lt;/p&gt;
+
+&lt;p&gt;API网关在微服务架构中是一个常见的模式。它作为一个单一的接入点，外部世界的请求，通过它进行路由分发。它让HTTP API可以由背后的很多服务所组成。&lt;/p&gt;
+
+&lt;p&gt;micro的API网关使用路径到服务的解决方案，因此不同的请求路径，对应了不同的服务。比如/user =&amp;gt; user api，/order =&amp;gt; order api。&lt;/p&gt;
+
+&lt;p&gt;这里有一个例子。一个请求的路径是/comstomer/orders，这个请求会被转发到go.micro.api.customer这个服务，会使用 Customer.Orders.这个方法进行处理。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.micro.mu/assets/images/api.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;你也许会问，API服务到底是怎样的？我们下面来讨论一下不同类型的服务。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;服务的类型&lt;/h2&gt;
+
+&lt;p&gt;微服务的关键理念就是业务的拆解，这是从unix的设计哲学中得到的启示：『doing one thing and doing it well』，因为这个原因，我们认为不同的服务需要有逻辑上和架构上的区别，以实现自己不同的任务。&lt;/p&gt;
+
+&lt;p&gt;我们知道这些理念并没有什么太大的新意，但在一些非常大而且成功的公司，它们的实践取得了成功。我们的目标是传播这些开发理念，并通过工具来进行指导。&lt;/p&gt;
+
+&lt;p&gt;目前我们定义了下面的几种服务。&lt;/p&gt;
+
+&lt;h3 id=&quot;api&quot;&gt;API&lt;/h3&gt;
+
+&lt;p&gt;通过micro api运行，API 服务在你的架构中处于关键位置，大部分作用是接受外部世界的请求并分发到内部的服务上。你可以通过micro api提供的反向代理REST模式进行访问，也可以通过RPC接口进行访问。&lt;/p&gt;
+
+&lt;h3 id=&quot;web&quot;&gt;WEB&lt;/h3&gt;
+
+&lt;p&gt;通过micro web运行，web服务专注于服务html请求，构建仪表盘。micro web反向代理http和websocket，目前只有这两种协议支持，未来也许会增加。&lt;/p&gt;
+
+&lt;h3 id=&quot;srv&quot;&gt;SRV&lt;/h3&gt;
+
+&lt;p&gt;这是后台的RPC服务，他们的目标是为你的系统提供核心的功能，大部分并不是公开的接口。你仍然可以通过micro api和micro web，使用/rpc接入点进行访问。这种接入方式直接使用go-micro的client进行调用。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.micro.mu/assets/images/arch.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;按照过去的经验，我们发现这样的架构设计非常强大。可以被扩展到数以百计的服务。通过把它整合到Micro架构中，我们发现它为微服务的开发提供了非常好的基础。&lt;/p&gt;
+
+&lt;h2 id=&quot;namespacing&quot;&gt;Namespacing&lt;/h2&gt;
+
+&lt;p&gt;你也许会想，怎样区分micro api或者micro web以及服务呢。我们通过命名空间进行拆分。通过命名的前缀，我们可以很清晰的看到，某个服务是哪种类型的。这很简单但很高效。&lt;/p&gt;
+
+&lt;p&gt;micro api也会把/customer这样的请求路径定位到go.micro.api.customer服务。&lt;/p&gt;
+
+&lt;p&gt;默认的命名空间是：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;API - go.micro.api&lt;/li&gt;
+  &lt;li&gt;WEB - go.micro.web&lt;/li&gt;
+  &lt;li&gt;SRV - go.micro.srv&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;你应该把它设置成你的域名，比如com.example.api。这些都可以进行配置。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;同步和异步&lt;/h2&gt;
+
+&lt;p&gt;你经常听说微服务是很灵活的模式。大多数来说，微服务是关于创造事件驱动的架构，以及设计通过异步通信的方式响应的服务。&lt;/p&gt;
+
+&lt;p&gt;Micro把异步通信作为微服务构建中的第一等公民。事件通过异步消息，可以被任何人消费并作出反应，搭建一个新服务不需要对系统的其他部分作出任何更改。这是一种强大的设计模式，因为这个原因，我们在go-micro中定义了&lt;a href=&quot;https://godoc.org/github.com/micro/go-micro/broker#Broker&quot;&gt;Broker&lt;/a&gt;接口。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.micro.mu/assets/images/pub-sub.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;异步和同步通信在Micro中是分离开的。 &lt;a href=&quot;https://godoc.org/github.com/micro/go-micro/transport#Transport&quot;&gt;Transport&lt;/a&gt; 接口用于构建服务之间的点对点的通信。go-micro中的client和server基于transport来进行请求和返回RPC调用，提供了双向的通信流。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.micro.mu/assets/images/request-response.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在构建系统时，两种通信方式都应该使用，但关键是理解在什么场景下应该用什么类型的通信方式。在大部分情况下并没有好坏之分，我们需要权衡处理。&lt;/p&gt;
+
+&lt;p&gt;一个broker和异步通信的典型使用方式是这样：监听系统通过broker对服务的事件历史进行记录。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.micro.mu/assets/images/audit.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在这个例子中，每个服务的每个API在被调用时，都会把事件上报到监听topic，监听系统会订阅这个topic，并把他们存储到时间序列的数据库中。在admin管理平台可以看到任何用户的操作历史。&lt;/p&gt;
+
+&lt;p&gt;如果我们通过同步通信做，监听系统直接面对巨大的请求数。如果监听系统宕机了，我们就丢失了这些数据。通过把这些事件发布到broker，我们可以异步的持久化这些数据。这是一种微服务中常见的事件驱动设计模型。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-3&quot;&gt;我们怎样定义微服务?&lt;/h2&gt;
+
+&lt;p&gt;我们已经讨论了很多Micro能为微服务提供的工具箱，也定义了服务的类型。但还没有真正讨论，到底什么是微服务。&lt;/p&gt;
+
+&lt;p&gt;微服务与其他应用的区别到底在哪里，微服务为什么叫微服务。&lt;/p&gt;
+
+&lt;p&gt;现在有很多不同的定义，但有两条适合大部分微服务系统。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Loosely coupled service oriented architecture with a bounded context
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;An approach to developing a single application as a suite of small services, each running in its own process and communicating with lightweight mechanisms 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;微服务的哲学与unix也类似&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Do one thing and do it well
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;我们认为微服务是这样一种应用程序：专注于单一的业务，并通过明确定义的API对外提供服务。&lt;/p&gt;
+
+&lt;p&gt;看看我们在社交网络中怎样使用微服务：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.micro.mu/assets/images/facebook.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;其中一种是流行的MVC架构，在MVC世界中，每个实体代表了一个模型，模型又是作为数据库的抽象。模型之间也许有一对多或者多对多的关系。controller模块负责处理请求，接受model模块返回的数据，并把数据传输到view层，进行渲染，最后输出给用户。&lt;/p&gt;
+
+&lt;p&gt;在微服务架构中，面对同样的例子。每个模型实际上是一个服务，通过API进行服务间通信。用户请求，数据的集合以及渲染是通过一系列不同的web服务进行处理的。每个服务有自身的专注点，当我们需要增加一个新特性时，我们只需要把关联的服务进行修改，或者直接写一个新的服务。分离的理念提供了大规模开发的模式。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-4&quot;&gt;版本&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.micro.mu/assets/images/versioning.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;开发真实世界的软件时，版本是非常重要的。在微服务世界里，严格的把API和业务逻辑分离到许多不同的服务上，因为这个原因，服务的版本控制是核心的工具的很重要的一部分。可以让我们在流量很大时也能进行升级。&lt;/p&gt;
+
+&lt;p&gt;在go-micro中，服务定义了名字和版本，&lt;a href=&quot;https://godoc.org/github.com/micro/go-micro/registry#Registry&quot;&gt;Registry&lt;/a&gt;模块返回服务的列表，根据版本把节点进行了区分。这里是service的接口定义。&lt;/p&gt;
+
+&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Service&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;      &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Version&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Metadata&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Endpoints&lt;/span&gt;&lt;span class=&quot;x&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Endpoint&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Nodes&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;板块控制需要与&lt;a href=&quot;https://godoc.org/github.com/micro/go-micro/selector#Selector&quot;&gt;Selector&lt;/a&gt;结合起来，selector是客户端的负载均衡机制，通过selector的策略实现请求根据版本进行分发。&lt;/p&gt;
+
+&lt;p&gt;selector是非常强大的接口，我们根据不同的路由算法，比如随机、轮询、根据标签、响应时间等等。&lt;/p&gt;
+
+&lt;p&gt;通过使用默认的随机负载算法，再加上版本控制算法，我们就可以进行灰度发布。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.micro.mu/assets/images/selector.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在未来，我们会尝试实现一个全局的负载策略，根据历史的趋势进行选择，可以根据版本，设置不同的百分比，并动态的为服务增加标签。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-5&quot;&gt;大规模扩展&lt;/h2&gt;
+
+&lt;p&gt;上面的介绍的版本系统，是大规模扩展服务时的基本模式。register存储了服务的注册信息，我们通过selector实现了路由和负载均衡。&lt;/p&gt;
+
+&lt;p&gt;按照&lt;code class=&quot;highlighter-rouge&quot;&gt; doing one thing well&lt;/code&gt;的理念，扩展架构也应该是简单、明确定义的API、分层次的架构。通过创造这些工具，我们可以构建更加可靠的系统，专注于更高级别的业务需求。&lt;/p&gt;
+
+&lt;p&gt;这是Micro编写的基础理念，也是我们希望微服务开发者遵循的理念。&lt;/p&gt;
+
+&lt;p&gt;当我们在生产环境部署应用时，我们就需要构建可扩展、高容错、高性能的应用。云计算让我们可以进行不受限制的扩展，但是没有任何东西会一直正常运行。事实上，在构建分布式系统中，怎样对待运行失败的服务是非常重要的一方面，你在构建你的系统时，需要好好考虑。&lt;/p&gt;
+
+&lt;p&gt;在云计算的世界，我们想要在数据中运行错误，甚至多个数据中心运行错误的情况下，也能正常提供服务。在过去我们讨论的是冷热备份，或者是灾难恢复计划。在今天，最先进的技术公司，在全世界不停歇的运作，每个程序都会有多个备份，运行在世界上不同的数据中心。&lt;/p&gt;
+
+&lt;p&gt;我们需要向google，facebook，netflix和Twitter学习，即使在数据中心运行失败时，也要对用户提供服务，在多个数据中心运行失败时，也需要尽快恢复。&lt;/p&gt;
+
+&lt;p&gt;Micro可以让你构建这样的应用，通过插件化的架构，我们可以为不同的分布式系统，实现不同的工具箱。&lt;/p&gt;
+
+&lt;p&gt;服务发现和注册器是Micro的关键模块，它们可以用于发现在数据中心中的一系列服务，Micro API可以用于路由和负载一系列的服务。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://blog.micro.mu/assets/images/regions.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;section-6&quot;&gt;总结&lt;/h2&gt;
+
+&lt;p&gt;希望这篇文章清晰的讲解了Micro的架构，以及怎样实现可扩展的微服务设计模式。微服务首先是一种软件设计模式，我们可以通过工具实现基础、核心的功能，同时也能灵活组合其他设计模式。&lt;/p&gt;
+
+&lt;p&gt;因为Micro是一个插件化的架构，它强大的能力，可以实现不同的设计模式，在不同的场景中都能使用。比如你构建一个视频流的服务，你也许需要基于http的点对点服务。如果你对性能不敏感，你也许需要使用消息队列比如NATS或RabbitMQ。&lt;/p&gt;
+
+&lt;p&gt;使用Micro这样的工具进行开发是非常让人兴奋的。&lt;/p&gt;
+
+&lt;p&gt;如果你想了解更多，请看这个&lt;a href=&quot;https://blog.micro.mu/&quot;&gt;blog&lt;/a&gt;，或者这个&lt;a href=&quot;https://github.com/micro/micro&quot;&gt;repo&lt;/a&gt;，Twitter可以关注&lt;a href=&quot;https://twitter.com/microhq&quot;&gt;@MicroHQ&lt;/a&gt;，Slack社区在&lt;a href=&quot;http://slack.micro.mu/&quot;&gt;这里&lt;/a&gt;&lt;/p&gt;
+</description>
+        <pubDate>Mon, 18 Apr 2016 23:21:35 +0800</pubDate>
+        <link>http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/04/18/micro-architecture/</link>
+        <guid isPermaLink="true">http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/04/18/micro-architecture/</guid>
+      </item>
+    
+  </channel>
+</rss>

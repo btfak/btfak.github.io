@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Micro - 微服务工具箱 &#8211; Programmer</title>
+    <link rel="dns-prefetch" href="//maxcdn.bootstrapcdn.com">
+    <link rel="dns-prefetch" href="//cdn.mathjax.org">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="这篇文章我们将讨论Micro - 一个开源的微服务工具箱，Micro提供了核心的必须工具来构建和管理微服务。它包含了一系列由golang开发的库和工具，同时也通过Sidecar特性与其他语言兼容">
+    <meta name="robots" content="all">
+    <meta name="author" content="btfak">
+    
+    <meta name="keywords" content="微服务">
+    <link rel="canonical" href="http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/03/20/micro/">
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed for Programmer" href="/feed.xml" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/pixyll.css?201608261417" type="text/css">
+
+    <!-- Fonts -->
+    
+    <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+    
+    
+
+    <!-- MathJax -->
+    
+
+    <!-- Verifications -->
+    
+    
+
+    <!-- Open Graph -->
+    <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Micro - 微服务工具箱">
+    <meta property="og:description" content="blog site of btfak">
+    <meta property="og:url" content="http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/03/20/micro/">
+    <meta property="og:site_name" content="Programmer">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    
+    <meta name="twitter:title" content="Micro - 微服务工具箱" />
+    <meta name="twitter:description" content="这篇文章我们将讨论Micro - 一个开源的微服务工具箱，Micro提供了核心的必须工具来构建和管理微服务。它包含了一系列由golang开发的库和工具，同时也通过Sidecar特性与其他语言兼容" />
+    <meta name="twitter:url" content="http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/03/20/micro/" />
+
+    <!-- Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/favicon-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/favicon-160x160.png" sizes="160x160">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+
+    
+</head>
+
+<body class="site">
+  
+	
+
+  <div class="site-wrap">
+    <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="http://btfak.com" class="site-title">Programmer</a>
+      <nav class="site-nav">
+        
+    
+
+    
+        <a href="/about/">About Me</a>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+      </nav>
+      <div class="clearfix"></div>
+      
+    </div>
+  </div>
+</header>
+
+
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+        
+
+
+<div class="post-header mb2">
+  <h1>Micro - 微服务工具箱</h1>
+  <span class="post-meta">Mar 20, 2016</span><br>
+  
+  <span class="post-meta small">
+  </span>
+</div>
+
+<article class="post-content">
+  <p>这是一系列介绍<a href="http://github.com/micro">Micro</a>框架的文章的第二篇，我将会把作者的博客翻译成中文，推广Micro这个微服务框架。</p>
+
+<p>现在你也许听到了这个新现象：微服务。如果你对此不熟悉也有兴趣学习，欢迎参考上一篇文章。</p>
+
+<p>这篇文章我们将讨论Micro - 一个开源的微服务工具箱，Micro提供了核心的必须工具来构建和管理微服务。它包含了一系列由golang开发的库和工具，同时也通过Sidecar特性与其他语言兼容。</p>
+
+<p>在我们开始了解Micro之前，我们讨论一下为什么我们要把时间花费在它上面。</p>
+
+<h2 id="section">开发与部署</h2>
+<p>从我们过去在软件工程领域的经验可以很清晰的看到，我们有这样一种需求：专注于开发而不是部署。PasS的解决方案是可行的，类似AWS，Google和微软的公司，提供了功能丰富的平台，并快速的推进着容器技术（container）。所有的这些让我们点几下鼠标就能使用大规模计算服务。</p>
+
+<p>新世界看着不错，你也许说这解决了你所有的问题，真的是这样吗?当我们能接触到大规模计算的能力时，仍然缺少工具来让我们发挥出大规模计算的优势。不仅如此，在这个新世界中，容器的生命周期变得更加短暂，在运行时调度中不断创建和销毁。</p>
+
+<h2 id="section-1">规模的挑战</h2>
+<p>另一个问题是，正如我们一次又一次看到的，我们一直是巨型架构的受害者。随着功能需求的增加，现在的趋势是在巨型系统上不断增加功能，直到不断增加的技术债务让我们回天乏术。除此以外，随着组织不断扩张工程师团队，开发者想要单独的进行代码开发，或者开发功能时不被其他人block,变得极其困难。</p>
+
+<p>这是一种难以避免的需求：重新进行架构设计，使用SOA或者微服务架构。公司需要在研发上投入努力，在尝试和错误中学习。现在正需要这样一种工具来帮助我们构建可扩展系统，减少研发部门的阻碍，由在此领域有经验的人士为大家提供建议。</p>
+
+<h2 id="micro">了解Micro</h2>
+<p>在Micro中我们构建了一个微服务生态系统，包括用于开发的基本的工具、服务和解决方案。我们已经构建好了基础的工具，这个工具与整个项目同名，也叫<a href="http://github.com/micro/micro">Micro</a>,这一工具让我们更容易构建可扩展的架构，提供效率。</p>
+
+<p>让我们更深入的挖掘Micro的特性。</p>
+
+<h2 id="go-micro">Go Micro</h2>
+<p><a href="http://github.com/micro/go-micro">Go Micro</a> 是一个golang编写的用于构建微服务的插件化的RPC框架。它实现了服务创建、服务发现、服务间通信需要的功能需求。任何优秀的微服务架构都需要解决这三个基础问题：服务发现、同步通信和异步通信。</p>
+
+<p>Go Micro包括以下这些包和功能
+- Registry：客户端的服务发现</p>
+
+<ul>
+  <li>
+    <p>Transport：同步通信</p>
+  </li>
+  <li>
+    <p>Broker：异步通信</p>
+  </li>
+  <li>
+    <p>Selector：节点过滤、负载均衡</p>
+  </li>
+  <li>
+    <p>Codec：消息编解码</p>
+  </li>
+  <li>
+    <p>Server：基于此库构建RPC服务端</p>
+  </li>
+  <li>
+    <p>Client：基于此库构建RPC客户端</p>
+
+    <p>​</p>
+  </li>
+</ul>
+
+<p>Go Micro跟其他工具最大的不同是它是插件化的架构，这让上面每个包的具体实现都可以切换出去。举个例子，默认的服务发现的机制是通过Consul，但是如果想切换成etcd或者zookeeper 或者任何你实现的方案，都是非常便利的。官方实现的插件可以在这个地址看到：[<a href="https://github.com/micro/go-plugins">github.com/micro/go-plugins</a>]</p>
+
+<p>插件化架构的最大好处是你可以选择你喜欢的平台来支撑微服务架构，但无需更改任何底层代码。Go Micro无需任何更改，只需要import你的插件，直接使用即可。</p>
+
+<p>Go Micro是编写微服务的切入点，<a href="https://github.com/micro/go-micro">readme</a>提供了说明包括怎样编写、运行和查询一个服务。这个greeter示例可以参考：<a href="https://github.com/micro/micro/tree/master/examples/greeter">micro/examples/greeter</a> ，更多的服务示例可以在这个工程看到： <a href="https://github.com/micro">github.com/micro</a></p>
+
+<h2 id="sidecar">Sidecar</h2>
+
+<p>Go Micro提供了用Golang编写服务的方式，那么其他编程语言呢？我们怎样构建一个有兼容性的系统，让任何人都能受益于MIcro？虽然Micro是用golang编写的，我们提供了一个快速且方便的方式，让其他语言能够接入。</p>
+
+<p><a href="https://github.com/micro/micro/tree/master/car">Sidecar</a>是一个轻量级的组装服务，概念上来说就是将Micro的库提供的功能，依附于其他语言的主程序中。sidecar本质上是一个单独运行的服务，通过http提供接口，其他语言通过接口使用Go Micro提供的功能。</p>
+
+<p>sidecar的特性：</p>
+
+<ul>
+  <li>在服务发现系统进行注册</li>
+  <li>发现其他服务</li>
+  <li>与主程序进行健康检查</li>
+  <li>作为代理与RPC系统通信</li>
+  <li>通过websocket订阅</li>
+</ul>
+
+<p><img src="https://blog.micro.mu/assets/images/sidecar.png" alt="" /></p>
+
+<p>用ruby和python借助sidecar进行使用的例子可以在这里看到<a href="https://github.com/micro/micro/tree/master/examples/greeter">micro/examples/greeter</a>，我们会提供更多示例，帮助理解sidecar的使用。</p>
+
+<h2 id="api">API</h2>
+
+<p>服务之间的请求是非常简单直接的，但从外部接入就要复杂一些。具体的服务实例可能会崩溃，重新调度，并监听随机的端口。<a href="https://github.com/micro/micro/tree/master/api">API</a>这个组件提供了一个接入点，外部的服务可以通过这个API网关向内部的服务发起请求。</p>
+
+<p>API提供了几种不同的请求方式</p>
+
+<h3 id="rpc">/rpc</h3>
+
+<p>每个单独的服务可以通过/rpc这个接入点进行访问，示例如下：</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code>curl <span class="se">\</span>
+	-d <span class="s2">"service=go.micro.srv.greeter"</span> <span class="se">\</span>
+	-d <span class="s2">"method=Say.Hello"</span> <span class="se">\</span>
+	-d <span class="s2">"request={</span><span class="se">\"</span><span class="s2">name</span><span class="se">\"</span><span class="s2">: </span><span class="se">\"</span><span class="s2">John</span><span class="se">\"</span><span class="s2">}"</span> <span class="se">\</span>
+	http://localhost:8080/rpc
+
+<span class="o">{</span><span class="s2">"msg"</span>:<span class="s2">"Hello John"</span><span class="o">}</span>
+</code></pre>
+</div>
+
+<h3 id="apirequest">api.Request</h3>
+
+<p>API也可以通过约定好的URL格式，请求到内部的服务，这是API服务的一个强大功能。经过URL解析能将路径转换成实际的请求，示例如下</p>
+
+<p>请求</p>
+
+<div class="language-http highlighter-rouge"><pre class="highlight"><code><span class="err">GET /greeter/say/hello?name=John
+</span></code></pre>
+</div>
+
+<p>将会处理成</p>
+
+<div class="language-json highlighter-rouge"><pre class="highlight"><code><span class="err">service:</span><span class="w"> </span><span class="err">go.micro.api.greeter</span><span class="w"> </span><span class="err">(default</span><span class="w"> </span><span class="err">namespace</span><span class="w"> </span><span class="err">go.micro.api</span><span class="w"> </span><span class="err">is</span><span class="w"> </span><span class="err">applied)</span><span class="w">
+</span><span class="err">method:</span><span class="w"> </span><span class="err">Say.Hello</span><span class="w">
+</span><span class="err">request</span><span class="w"> </span><span class="p">{</span><span class="w">
+	</span><span class="nt">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
+	</span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/greeter/say/hello"</span><span class="p">,</span><span class="w">
+	</span><span class="nt">"get"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+		</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John"</span><span class="w">
+	</span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>这里看看通过protobuf定义的这个接口</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="n">syntax</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="s">"proto3"</span><span class="p">;</span><span class="x">
+
+</span><span class="n">message</span><span class="x"> </span><span class="n">Pair</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="n">optional</span><span class="x"> </span><span class="kt">string</span><span class="x"> </span><span class="n">key</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="m">1</span><span class="p">;</span><span class="x">
+	</span><span class="n">repeated</span><span class="x"> </span><span class="kt">string</span><span class="x"> </span><span class="n">values</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="m">2</span><span class="p">;</span><span class="x">
+</span><span class="p">}</span><span class="x">
+
+</span><span class="n">message</span><span class="x"> </span><span class="n">Request</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="n">optional</span><span class="x"> </span><span class="kt">string</span><span class="x"> </span><span class="n">method</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="m">1</span><span class="p">;</span><span class="x">   </span><span class="c">// GET, POST, etc</span><span class="x">
+	</span><span class="n">optional</span><span class="x"> </span><span class="kt">string</span><span class="x"> </span><span class="n">path</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="m">2</span><span class="p">;</span><span class="x">     </span><span class="c">// e.g /greeter/say/hello</span><span class="x">
+	</span><span class="k">map</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="x"> </span><span class="n">Pair</span><span class="o">&gt;</span><span class="x"> </span><span class="n">header</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="m">3</span><span class="p">;</span><span class="x">
+	</span><span class="k">map</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="x"> </span><span class="n">Pair</span><span class="o">&gt;</span><span class="x"> </span><span class="n">get</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="m">4</span><span class="p">;</span><span class="x">    </span><span class="c">// The URI query params</span><span class="x">
+	</span><span class="k">map</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="x"> </span><span class="n">Pair</span><span class="o">&gt;</span><span class="x"> </span><span class="n">post</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="m">5</span><span class="p">;</span><span class="x">   </span><span class="c">// The post body params</span><span class="x">
+	</span><span class="n">optional</span><span class="x"> </span><span class="kt">string</span><span class="x"> </span><span class="n">body</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="m">6</span><span class="p">;</span><span class="x">     </span><span class="c">// raw request body; if not application/x-www-form-urlencoded</span><span class="x">
+</span><span class="p">}</span><span class="x">
+
+</span><span class="n">message</span><span class="x"> </span><span class="n">Response</span><span class="x"> </span><span class="p">{</span><span class="x">
+	</span><span class="n">optional</span><span class="x"> </span><span class="kt">int32</span><span class="x"> </span><span class="n">statusCode</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="m">1</span><span class="p">;</span><span class="x">
+	</span><span class="k">map</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="x"> </span><span class="n">Pair</span><span class="o">&gt;</span><span class="x"> </span><span class="n">header</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="m">2</span><span class="p">;</span><span class="x">
+	</span><span class="n">optional</span><span class="x"> </span><span class="kt">string</span><span class="x"> </span><span class="n">body</span><span class="x"> </span><span class="o">=</span><span class="x"> </span><span class="m">3</span><span class="p">;</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>使用示例可以在这里看到：<a href="https://github.com/micro/micro/blob/master/examples/greeter/api/api.go">Greeter API</a></p>
+
+<h3 id="section-2">反向代理</h3>
+
+<p>最后一个API服务提供的功能是反向代理。正如上面例子中提到的，API服务可以通过路径解析到具体的服务，通过添加参数<code class="highlighter-rouge">--api_handler=proxy</code> 我们就可以支持REST风格的请求。反向代理只需要简单的在运行时天机<code class="highlighter-rouge">--api_handler=proxy</code> 参数即可。</p>
+
+<p>使用API构建RESTful 风格的API可以在这个例子中看到：<a href="https://github.com/micro/micro/tree/master/examples/greeter/api/go-restful">micro/examples/greeter/api</a></p>
+
+<h2 id="web-ui">Web UI</h2>
+
+<p>web UI 提供了一个简单的界面观察运行中的系统，也可以进行一些交互。它提供了类似API这样的反向代理功能，我们的『web代理』也可以把开发好的其他web应用接入到web UI中，web UI与API一样仍然通过路径解析实现与内部服务的通信，通过websocket我们可以实时了解运行中系统的情况</p>
+
+<p><img src="https://blog.micro.mu/assets/images/web.png" alt="" /></p>
+
+<h2 id="cli">CLI</h2>
+
+<p>CLI是一个命令行工具，让我们可以观察、交互和管理运行中的服务，当前的特性允许你查询服务注册，检查服务的健康情况，也可以对服务进行请求</p>
+
+<p><img src="https://blog.micro.mu/assets/images/cli.png" alt="" /></p>
+
+<p>其他有意思的特性包括，CLI可以使用Sidecar作为代理，只需要简单的设置参数：<code class="highlighter-rouge">--proxy_address=example.proxy.com</code></p>
+
+<h2 id="section-3">组装在一起</h2>
+
+<p>我们已经写了一个全功能的示例，整体的执行过程是这样的：</p>
+
+<ol>
+  <li>HTTP GET请求到API服务，请求地址是：/greeter/say/hello with the query name=John</li>
+  <li>API服务将请求解析并转换成默认的服务形式，服务是go.micro.api.greeter，方法是 Say.Hello</li>
+  <li>API使用Go Micro，查询注册器中服务go.micro.api.greeter注册的所有节点，根据负载均衡算法，选择其中一个节点，发出请求</li>
+  <li>go.micro.api.greeter服务收到请求，解析到结构体，去注册器查询到go.micro.srv.greeter这个服务，发送请求</li>
+  <li>greet server处理完成后，返回相应的内容到greet api</li>
+  <li>greet api转换greet服务的响应内容到 api.Response，返回到API服务</li>
+  <li>API服务解析请求，返回HTTP请求</li>
+</ol>
+
+<p>整体流程如下：</p>
+
+<p><img src="https://blog.micro.mu/assets/images/greeter.png" alt="" /></p>
+
+<p>有更复杂的例子，比如API服务请求多个服务，组装多个服务的返回内容。示例如下：<a href="https://github.com/micro/micro/tree/master/examples/greeter">greeter service</a></p>
+
+<h2 id="demo">Demo</h2>
+
+<p>如果你想看看正在运行中的系统，在这个页面查看：<a href="http://web.micro.pm/">web.micro.pm</a></p>
+
+<p>我们运行了一个Micro在Kubernetes上，demo是开源的，你可以运行一下：<a href="https://github.com/micro/kubernetes">github.com/micro/kubernetes</a></p>
+
+<h2 id="section-4">总结</h2>
+
+<p>Micro提供了基础的工具用于编写和管理微服务，Go Micro包括了核心的必须功能：服务发现、客户端、服务端和订阅、发布。CLI可以让你与运行中的服务进行交互。Sidecar可以让你接入其他非Micro应用。API是一个单独的接入点来调用内部的服务。借助于插件化的接口，你可以灵活选择各种组件来提升你的微服务。</p>
+
+<p>在Micro我们的目标是让开发人员在一开始就能应对大规模开发，提高工作效率。我们感觉Micro是最好的选择。随着时间推移，整个微服务生态系统功能会更加完善。</p>
+
+<p>如果你想了解更多，请看这个<a href="https://blog.micro.mu/">blog</a>，或者这个<a href="https://github.com/micro/micro">repo</a>，Twitter可以关注<a href="https://twitter.com/microhq">@MicroHQ</a>，Slack社区在<a href="http://slack.micro.mu/">这里</a></p>
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="center">
+  <div class="measure">
+    <!-- <small>
+      Theme crafted with &lt;3 by <a href="http://johnotander.com">John Otander</a> (<a href="https://twitter.com/4lpine">@4lpine</a>).<br>
+      &lt;/&gt; available on <a href="https://github.com/johnotander/pixyll">Github</a>.
+    </small> -->
+  </div>
+</footer>
+
+
+</body>
+</html>

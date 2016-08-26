@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>基于消息队列NATS构建微服务 &#8211; Programmer</title>
+    <link rel="dns-prefetch" href="//maxcdn.bootstrapcdn.com">
+    <link rel="dns-prefetch" href="//cdn.mathjax.org">
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="NATS是一个开源的消息系统，或者说消息队列。NATS的作者是Derek Collison,Apcera的作者。它起源于VMWare，最开始是一个ruby的系统。后来使用golang进行重写，逐步的成为了一个高扩展性的高性能消息系统">
+    <meta name="robots" content="all">
+    <meta name="author" content="btfak">
+    
+    <meta name="keywords" content="微服务">
+    <link rel="canonical" href="http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/04/11/micro-on-nats/">
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed for Programmer" href="/feed.xml" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/pixyll.css?201608261417" type="text/css">
+
+    <!-- Fonts -->
+    
+    <link href='//fonts.googleapis.com/css?family=Merriweather:900,900italic,300,300italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+    
+    
+
+    <!-- MathJax -->
+    
+
+    <!-- Verifications -->
+    
+    
+
+    <!-- Open Graph -->
+    <!-- From: https://github.com/mmistakes/hpstr-jekyll-theme/blob/master/_includes/head.html -->
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="基于消息队列NATS构建微服务">
+    <meta property="og:description" content="blog site of btfak">
+    <meta property="og:url" content="http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/04/11/micro-on-nats/">
+    <meta property="og:site_name" content="Programmer">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    
+    <meta name="twitter:title" content="基于消息队列NATS构建微服务" />
+    <meta name="twitter:description" content="NATS是一个开源的消息系统，或者说消息队列。NATS的作者是Derek Collison,Apcera的作者。它起源于VMWare，最开始是一个ruby的系统。后来使用golang进行重写，逐步的成为了一个高扩展性的高性能消息系统" />
+    <meta name="twitter:url" content="http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/04/11/micro-on-nats/" />
+
+    <!-- Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/favicon-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/favicon-160x160.png" sizes="160x160">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+
+    
+</head>
+
+<body class="site">
+  
+	
+
+  <div class="site-wrap">
+    <header class="site-header px2 px-responsive">
+  <div class="mt2 wrap">
+    <div class="measure">
+      <a href="http://btfak.com" class="site-title">Programmer</a>
+      <nav class="site-nav">
+        
+    
+
+    
+        <a href="/about/">About Me</a>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+      </nav>
+      <div class="clearfix"></div>
+      
+    </div>
+  </div>
+</header>
+
+
+    <div class="post p2 p-responsive wrap" role="main">
+      <div class="measure">
+        
+
+
+<div class="post-header mb2">
+  <h1>基于消息队列NATS构建微服务</h1>
+  <span class="post-meta">Apr 11, 2016</span><br>
+  
+  <span class="post-meta small">
+  </span>
+</div>
+
+<article class="post-content">
+  <p>这是一系列介绍<a href="http://github.com/micro">Micro</a>框架的文章的第四篇，我将会把作者的博客翻译成中文，推广Micro这个微服务框架。</p>
+
+<p>这篇文章我们会讨论基于<a href="http://nats.io/">NATS</a>使用<a href="https://github.com/micro/micro">Micro</a>。讨论包括了服务发现，同步通信和异步通信。如果需要了解Micro，请翻看以前的文章。</p>
+
+<h2 id="nats">NATS是什么?</h2>
+
+<p><a href="http://nats.io/">NATS</a>是一个开源的消息系统，或者说消息队列。NATS的作者是Derek Collison， <a href="https://www.apcera.com/">Apcera</a>的作者。它起源于VMWare，最开始是一个ruby的系统。后来使用golang进行重写，逐步的成为了一个高扩展性的高性能消息系统。</p>
+
+<h2 id="nats-1">为什么是NATS?</h2>
+
+<p>为什么不是呢?过去我使用过很多消息队列，很明显NATS是鹤立鸡群的，在过去消息系统似乎成了企业的灵丹妙药了，结果是每个人参与的每个系统都离不开消息系统。导致了很多无效的承诺、高昂的研发投入，制造出比它解决的更多的麻烦。</p>
+
+<p>NATS，相比之下，就十分专注，在难以置信的简洁之下，解决了性能问题，解决了高可用行问题。它的口号是『always on and available』，使用了一种『fire and forget』的消息模式。它简单、专注、轻量的特性使它在微服务的候选中脱颖而出。我们相信，在服务间的消息传递领域，它很快会变成主要的候选者。</p>
+
+<p>NATS能提供什么?</p>
+
+<ul>
+  <li>
+    <p>高性能、高扩展</p>
+  </li>
+  <li>
+    <p>高可用</p>
+  </li>
+  <li>
+    <p>极致的轻量级</p>
+  </li>
+  <li>
+    <p>一次部署</p>
+
+    <p>​</p>
+  </li>
+</ul>
+
+<p>NATS不支持什么？</p>
+
+<ul>
+  <li>持久化</li>
+  <li>事务</li>
+  <li>Enhanced delivery modes</li>
+  <li>Enterprise queueing</li>
+</ul>
+
+<p>NATS是否适合Micro呢？我们接着讨论</p>
+
+<h2 id="micro-on-nats">Micro on NATS</h2>
+
+<p><a href="https://github.com/micro/micro">Micro</a> 采用插件化的架构设计，用户可以替换底层的实现，而不更改任何底层的代码。每个<a href="https://github.com/micro/go-micro">Go-Micro</a>框架的底层模块定义了相应的接口， <a href="https://godoc.org/github.com/micro/go-micro/registry#Registry">registry</a> 是作为服务发现，<a href="https://godoc.org/github.com/micro/go-micro/transport#Transport">transport</a>作为同步通信， <a href="https://godoc.org/github.com/micro/go-micro/broker#Broker">broker</a>作为异步通信。</p>
+
+<p>为每个组件创建一个插件很简单，只需要实现这些组件的接口即可。我们会在未来的文章里详细讨论，怎样写插件，如果你想详细了解NATS的插件或者其他的类似etcd作为服务发现，kafka作异步通信，rabbitmq作同步通信，在这里可以看到： <a href="https://github.com/micro/go-plugins">github.com/micro/go-plugins</a></p>
+
+<p>Micro on NATS本质上是实现一系列的插件，将NATS消息系统整合到Micro的框架中来。通过为Go Micro提供不同的插件，我们可以创造出很多灵活的组合。</p>
+
+<p>在实践过程中，不能一套系统打天下，Micro on NATS的可以灵活的定义各种模型。</p>
+
+<p>下面我们会讨论一下NATS插件怎样在transport，broker和registry下工作。</p>
+
+<h2 id="transport">Transport</h2>
+
+<p><img src="https://blog.micro.mu/assets/images/request-response.png" alt="" /></p>
+
+<p>transport 是 go-micro定义的同步通信接口，它使用了泛型的语法描述，类似其他golang代码，比如<code class="highlighter-rouge">Liesten,Dial,Accept</code>。这些理念和模式在类似TCP和HTTP这样的同步通信中很容易理解，但是在消息系统中要怎样兼容呢？通信过程中，连接是与消息队列建立的，而不是服务本身。为了达到目的，我们使用消息系统中的topics和channels来创造虚连接。</p>
+
+<p>它是怎样工作起来的？</p>
+
+<p>一个服务使用<code class="highlighter-rouge">transport.Listen</code>来监听消息，这会与NATS之间建立连接。当<code class="highlighter-rouge">transport.Accept</code>被调用时，一个唯一的topic会被创建并订阅。这个唯一的topic地址会作为服务的地址，注册到go-micro的注册器中。每个收到的消息会被虚连接处理，如果一个连接已经存在，而且回复的地址是一样的，我们会简单的把消息积压在连接上。</p>
+
+<p>客户端通过<code class="highlighter-rouge">transport.Dial</code>来连接服务端，其实它是建立了与NATS的连接，然后创建了唯一的topic并且订阅这个topic。这个topic用于接收服务端的返回。任何时候客户端发送消息到服务端时，它都会把回复地址设置成这个topic。(译注：服务端的地址是固定的，而客户端的每个请求，都会生成一个客户端地址，唯一的请求与唯一的地址实现一一关联)</p>
+
+<p>当任何一边想要关闭连接时，简单的调用<code class="highlighter-rouge">transport.Close</code>就会断开与NATS的连接。</p>
+
+<p><img src="https://blog.micro.mu/assets/images/nats-transport.png" alt="" /></p>
+
+<p>使用transport插件</p>
+
+<p>引用插件</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">import</span><span class="x"> </span><span class="n">_</span><span class="x"> </span><span class="s">"github.com/micro/go-plugins/transport/nats"</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>启动时传入参数</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">go</span><span class="x"> </span><span class="n">run</span><span class="x"> </span><span class="n">main</span><span class="o">.</span><span class="k">go</span><span class="x"> </span><span class="o">--</span><span class="n">transport</span><span class="o">=</span><span class="n">nats</span><span class="x"> </span><span class="o">--</span><span class="n">transport_address</span><span class="o">=</span><span class="m">127.0.0.1</span><span class="o">:</span><span class="m">4222</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>或者直接在代码中创建</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="n">transport</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">nats</span><span class="o">.</span><span class="n">NewTransport</span><span class="p">()</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>go-micro的transport接口：</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">type</span><span class="x"> </span><span class="n">Transport</span><span class="x"> </span><span class="k">interface</span><span class="x"> </span><span class="p">{</span><span class="x">
+    </span><span class="n">Dial</span><span class="p">(</span><span class="n">addr</span><span class="x"> </span><span class="kt">string</span><span class="p">,</span><span class="x"> </span><span class="n">opts</span><span class="x"> </span><span class="o">...</span><span class="n">DialOption</span><span class="p">)</span><span class="x"> </span><span class="p">(</span><span class="n">Client</span><span class="p">,</span><span class="x"> </span><span class="kt">error</span><span class="p">)</span><span class="x">
+    </span><span class="n">Listen</span><span class="p">(</span><span class="n">addr</span><span class="x"> </span><span class="kt">string</span><span class="p">,</span><span class="x"> </span><span class="n">opts</span><span class="x"> </span><span class="o">...</span><span class="n">ListenOption</span><span class="p">)</span><span class="x"> </span><span class="p">(</span><span class="n">Listener</span><span class="p">,</span><span class="x"> </span><span class="kt">error</span><span class="p">)</span><span class="x">
+    </span><span class="n">String</span><span class="p">()</span><span class="x"> </span><span class="kt">string</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre>
+</div>
+
+<h2 id="broker">Broker</h2>
+
+<p><img src="https://blog.micro.mu/assets/images/pub-sub.png" alt="" /></p>
+
+<p>broke是go-micro的异步通信接口，它定义了泛型的、高等级的通用接口。NATS本身作为消息系统，是可以作为消息broker的。这里只有一个警告：nats并不持久化消息。虽然在某些场景有风险，但我们相信NATS可以也应该用于go-micro的broker。持久化并不是必须的，它提供了高扩展的发布和订阅架构。</p>
+
+<p>NATS通过Topics和Channels的理念，非常直接的实现了发布和订阅机制。这里并没有其他工作需要做。消息可以被发布到任何异步的fire and forget manner。通过NATS的Queue Group，订阅方可以通过channel的名字就行订阅。实现消息自动的分发的多个订阅者。</p>
+
+<p><img src="https://blog.micro.mu/assets/images/nats-broker.png" alt="" /></p>
+
+<p>使用broker插件</p>
+
+<p>引入包</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">import</span><span class="x"> </span><span class="n">_</span><span class="x"> </span><span class="s">"github.com/micro/go-plugins/broker/nats"</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>(译注：注意此时引用的是broker中的nats包，上面引用的是transport中的nats包)</p>
+
+<p>通过参数启动</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">go</span><span class="x"> </span><span class="n">run</span><span class="x"> </span><span class="n">main</span><span class="o">.</span><span class="k">go</span><span class="x"> </span><span class="o">--</span><span class="n">broker</span><span class="o">=</span><span class="n">nats</span><span class="x"> </span><span class="o">--</span><span class="n">broker_address</span><span class="o">=</span><span class="m">127.0.0.1</span><span class="o">:</span><span class="m">4222</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>也可以直接启动</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="n">broker</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">nats</span><span class="o">.</span><span class="n">NewBroker</span><span class="p">()</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>go-micro的broker需要实现的接口：</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">type</span><span class="x"> </span><span class="n">Broker</span><span class="x"> </span><span class="k">interface</span><span class="x"> </span><span class="p">{</span><span class="x">
+    </span><span class="n">Options</span><span class="p">()</span><span class="x"> </span><span class="n">Options</span><span class="x">
+    </span><span class="n">Address</span><span class="p">()</span><span class="x"> </span><span class="kt">string</span><span class="x">
+    </span><span class="n">Connect</span><span class="p">()</span><span class="x"> </span><span class="kt">error</span><span class="x">
+    </span><span class="n">Disconnect</span><span class="p">()</span><span class="x"> </span><span class="kt">error</span><span class="x">
+    </span><span class="n">Init</span><span class="p">(</span><span class="o">...</span><span class="n">Option</span><span class="p">)</span><span class="x"> </span><span class="kt">error</span><span class="x">
+    </span><span class="n">Publish</span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="x"> </span><span class="o">*</span><span class="n">Message</span><span class="p">,</span><span class="x"> </span><span class="o">...</span><span class="n">PublishOption</span><span class="p">)</span><span class="x"> </span><span class="kt">error</span><span class="x">
+    </span><span class="n">Subscribe</span><span class="p">(</span><span class="kt">string</span><span class="p">,</span><span class="x"> </span><span class="n">Handler</span><span class="p">,</span><span class="x"> </span><span class="o">...</span><span class="n">SubscribeOption</span><span class="p">)</span><span class="x"> </span><span class="p">(</span><span class="n">Subscriber</span><span class="p">,</span><span class="x"> </span><span class="kt">error</span><span class="p">)</span><span class="x">
+    </span><span class="n">String</span><span class="p">()</span><span class="x"> </span><span class="kt">string</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre>
+</div>
+
+<h2 id="register">Register</h2>
+
+<p><img src="https://blog.micro.mu/assets/images/service-discovery.png" alt="" /></p>
+
+<p>注册器是go-micro定义的服务发现接口，你也许想过。用消息系统做服务发现？这能工作吗？事实上它不仅能工作，还工作的很好。许多人在服务发现中使用消息系统，避免了不一致的发现机制。这是因为消息队列通过topics和channels实现了路由，Topics定义为服务的名字可以作为路由的key，订阅topics的服务自动实现了负载均衡。</p>
+
+<p>Go-micro把服务发现和传输机制看做两个不同的领域，任何时候，客户端向服务发起请求，都会首先在注册器中根据服务的名字查询到正在运行的服务节点，然后客户端通过transport与节点进行通信。</p>
+
+<p>一般来说，最常见的存储服务发现信息的方式是通过分布式key-value store，比如zookeeper、etcd等等。正如你了解到的，NATS闭市一个分布式的KV store，我们将做一下改动。。。</p>
+
+<p>广播查询！</p>
+
+<p>广播查询正如你想象的那样，服务都会监听一个特点的topic，任何需要服务发现信息的都需要订阅这个topic，然后对这个topic做一个反馈。</p>
+
+<p>因为我们并不知道有多少服务正在运行，我们对响应时间设置一个上限。这是一个粗糙的服务发现机制，但因为NATS本身的高扩展性和高性能，它运行的反而非常好。它也间接的提高了过滤服务节点的响应时间。未来我们会试着提高底层的实现。</p>
+
+<p>我们总结一下它是怎么工作的：</p>
+
+<ol>
+  <li>创建一个reply topic并订阅</li>
+  <li>向广播topic发起查询，附带上reply topic</li>
+  <li>监听回复，超过限制时间就注销订阅</li>
+  <li>聚合响应并返回结果</li>
+</ol>
+
+<p><img src="https://blog.micro.mu/assets/images/nats-registry.png" alt="" /></p>
+
+<p>使用register插件</p>
+
+<p>引入包</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">import</span><span class="x"> </span><span class="n">_</span><span class="x"> </span><span class="s">"github.com/micro/go-plugins/registry/nats"</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>通过参数启动</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">go</span><span class="x"> </span><span class="n">run</span><span class="x"> </span><span class="n">main</span><span class="o">.</span><span class="k">go</span><span class="x"> </span><span class="o">--</span><span class="n">registry</span><span class="o">=</span><span class="n">nats</span><span class="x"> </span><span class="o">--</span><span class="n">registry_address</span><span class="o">=</span><span class="m">127.0.0.1</span><span class="o">:</span><span class="m">4222</span><span class="x">
+</span></code></pre>
+</div>
+
+<p>或者直接在代码中设置</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>registry := nats.NewRegistry()
+
+</code></pre>
+</div>
+
+<p>go-micro中的register接口</p>
+
+<div class="language-go highlighter-rouge"><pre class="highlight"><code><span class="k">type</span><span class="x"> </span><span class="n">Registry</span><span class="x"> </span><span class="k">interface</span><span class="x"> </span><span class="p">{</span><span class="x">
+    </span><span class="n">Register</span><span class="p">(</span><span class="o">*</span><span class="n">Service</span><span class="p">,</span><span class="x"> </span><span class="o">...</span><span class="n">RegisterOption</span><span class="p">)</span><span class="x"> </span><span class="kt">error</span><span class="x">
+    </span><span class="n">Deregister</span><span class="p">(</span><span class="o">*</span><span class="n">Service</span><span class="p">)</span><span class="x"> </span><span class="kt">error</span><span class="x">
+    </span><span class="n">GetService</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span><span class="x"> </span><span class="p">([]</span><span class="o">*</span><span class="n">Service</span><span class="p">,</span><span class="x"> </span><span class="kt">error</span><span class="p">)</span><span class="x">
+    </span><span class="n">ListServices</span><span class="p">()</span><span class="x"> </span><span class="p">([]</span><span class="o">*</span><span class="n">Service</span><span class="p">,</span><span class="x"> </span><span class="kt">error</span><span class="p">)</span><span class="x">
+    </span><span class="n">Watch</span><span class="p">()</span><span class="x"> </span><span class="p">(</span><span class="n">Watcher</span><span class="p">,</span><span class="x"> </span><span class="kt">error</span><span class="p">)</span><span class="x">
+    </span><span class="n">String</span><span class="p">()</span><span class="x"> </span><span class="kt">string</span><span class="x">
+</span><span class="p">}</span><span class="x">
+</span></code></pre>
+</div>
+
+<h2 id="micronats">大规模在Micro中使用NATS</h2>
+
+<p>在上面的例子中，我们只是用了单个的NATS服务，但是在实际情况下，我们一般都是使用NATS集群来实现高可用和容错。你可以在<a href="http://nats.io/documentation/server/gnatsd-cluster/">这里</a>看看更多NATS集群的知识。</p>
+
+<p>Micro 在启动时可以接收一系列的参数，如环境变量等。如果直接使用client的库，也可以在创建时指定参数。</p>
+
+<p>在目前云计算的架构下，我们过去的经验是，每个AZ都应该有集群。大部分的云计算公司，不同的AZ之间的延迟大概是3到5毫秒，集群的通信是没有任何问题的。当我们运行一个高可用的配置，你的系统必须要能在AZ宕机、甚至整个region崩溃时还能提供服务。我们不建议跨region部署集群。理想的高等级工具应该是用于管理多集群和多region系统。</p>
+
+<p>Micro是一个极其灵活的微服务系统，它本身就被设计成运行在任何配置的任何地方。整个Micro世界是通过服务发现进行指导，服务的集群可以运行在机器集群中，AZ或者regions。再考虑到NATS集群，它可以让你构建高可用的服务。</p>
+
+<p><img src="https://blog.micro.mu/assets/images/region.png" alt="" /></p>
+
+<h2 id="section">总结</h2>
+
+<p>NATS是一个高可用和高性能的消息系统，在我们的微服务生态系统中运行的很好。它与Micro配合的非常的好，我们可以把它用在register，transport，broker中，我们也已经全部实现了这些插件。</p>
+
+<p>NATS在Micro中的使用只是一个示例，它展示了Micro高度的插件化架构，每个go-micro的包都可以被替换，底层不需要改动代码，上层也只需要改动非常少的代码。在未来我们还会看到更多的Micro on X，下一个可能是Micro on kubernetes。</p>
+
+<p>希望这可以鼓励你来使用Micro on NATS,或者编写自己的插件并回馈给社区。</p>
+
+<p>在这里看更多的NATS插件<a href="https://github.com/micro/go-plugins">github.com/micro/go-plugins</a></p>
+
+<p>如果你想了解更多，请看这个<a href="https://blog.micro.mu/">blog</a>，或者这个<a href="https://github.com/micro/micro">repo</a>，Twitter可以关注<a href="https://twitter.com/microhq">@MicroHQ</a>，Slack社区在<a href="http://slack.micro.mu/">这里</a></p>
+
+</article>
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="center">
+  <div class="measure">
+    <!-- <small>
+      Theme crafted with &lt;3 by <a href="http://johnotander.com">John Otander</a> (<a href="https://twitter.com/4lpine">@4lpine</a>).<br>
+      &lt;/&gt; available on <a href="https://github.com/johnotander/pixyll">Github</a>.
+    </small> -->
+  </div>
+</footer>
+
+
+</body>
+</html>
