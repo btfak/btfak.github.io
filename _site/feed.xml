@@ -3,8 +3,8 @@
   <channel>
     <title>Programmer</title>
     <description>blog site of btfak</description>
-    <link>http://btfak.com/</link>
-    <atom:link href="http://btfak.com/feed.xml" rel="self" type="application/rss+xml" />
+    <link>http://btfak.github.io/</link>
+    <atom:link href="http://btfak.github.io/feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
         <title>开源一个完整的BT搜索引擎</title>
@@ -70,8 +70,8 @@ go get github.com/btlike/storage&lt;/li&gt;
 &lt;p&gt;在项目下提issue或联系 yanyuan2046 at 126.com&lt;/p&gt;
 </description>
         <pubDate>Wed, 17 Aug 2016 21:21:35 +0800</pubDate>
-        <link>http://btfak.com/bt%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/2016/08/17/opensource-of-btlike/</link>
-        <guid isPermaLink="true">http://btfak.com/bt%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/2016/08/17/opensource-of-btlike/</guid>
+        <link>http://btfak.github.io/bt%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/2016/08/17/opensource-of-btlike/</link>
+        <guid isPermaLink="true">http://btfak.github.io/bt%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/2016/08/17/opensource-of-btlike/</guid>
       </item>
     
       <item>
@@ -134,8 +134,8 @@ go get github.com/btlike/storage&lt;/li&gt;
 &lt;/blockquote&gt;
 </description>
         <pubDate>Sat, 06 Aug 2016 11:21:35 +0800</pubDate>
-        <link>http://btfak.com/%E7%94%9F%E6%B4%BB/2016/08/06/dont-lose-your-position/</link>
-        <guid isPermaLink="true">http://btfak.com/%E7%94%9F%E6%B4%BB/2016/08/06/dont-lose-your-position/</guid>
+        <link>http://btfak.github.io/%E7%94%9F%E6%B4%BB/2016/08/06/dont-lose-your-position/</link>
+        <guid isPermaLink="true">http://btfak.github.io/%E7%94%9F%E6%B4%BB/2016/08/06/dont-lose-your-position/</guid>
       </item>
     
       <item>
@@ -214,8 +214,8 @@ iptables -t raw -A PREROUTING -p udp -m udp --dport 20099 -j NOTRACK
 &lt;/div&gt;
 </description>
         <pubDate>Wed, 15 Jun 2016 17:21:35 +0800</pubDate>
-        <link>http://btfak.com/bt%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/2016/06/15/memory_optimize_on_dht_spider/</link>
-        <guid isPermaLink="true">http://btfak.com/bt%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/2016/06/15/memory_optimize_on_dht_spider/</guid>
+        <link>http://btfak.github.io/bt%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/2016/06/15/memory_optimize_on_dht_spider/</link>
+        <guid isPermaLink="true">http://btfak.github.io/bt%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/2016/06/15/memory_optimize_on_dht_spider/</guid>
       </item>
     
       <item>
@@ -386,8 +386,8 @@ hset global.mysql port 3306
 &lt;p&gt;这个工具可以实现对redis中数据的检测，如果数据发生变化，会触发回调，应用可以得到变化前后的值。&lt;/p&gt;
 </description>
         <pubDate>Tue, 31 May 2016 21:21:35 +0800</pubDate>
-        <link>http://btfak.com/go/2016/05/31/multi-env-config/</link>
-        <guid isPermaLink="true">http://btfak.com/go/2016/05/31/multi-env-config/</guid>
+        <link>http://btfak.github.io/go/2016/05/31/multi-env-config/</link>
+        <guid isPermaLink="true">http://btfak.github.io/go/2016/05/31/multi-env-config/</guid>
       </item>
     
       <item>
@@ -475,8 +475,8 @@ stdout_logfile_backups &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 20
 &lt;p&gt;本质上就是gitlab+supervisor的组合，需要一些细节的设计，开发的项目需要增加两个文件。部署的服务器需要设计好路径结构，否则可能会找不到文件。实际操作过程中有疑问欢迎给我发邮件。自动化部署如果想要运行起来，还需要另一个方面的配合 — 不同环境的配置文件问题，本地环境、开发环境、测试环境、生产环境的配置大部分情况下都不一样，怎样智能的读取响应环境的配置文件？这个问题我们也有自己的解决方案，在接下来的文章中我会进一步说明。&lt;/p&gt;
 </description>
         <pubDate>Mon, 30 May 2016 21:21:35 +0800</pubDate>
-        <link>http://btfak.com/ci/2016/05/30/deploy-micro/</link>
-        <guid isPermaLink="true">http://btfak.com/ci/2016/05/30/deploy-micro/</guid>
+        <link>http://btfak.github.io/ci/2016/05/30/deploy-micro/</link>
+        <guid isPermaLink="true">http://btfak.github.io/ci/2016/05/30/deploy-micro/</guid>
       </item>
     
       <item>
@@ -542,8 +542,8 @@ stdout_logfile_backups &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 20
 &lt;p&gt;&lt;img src=&quot;/images/gitlab-ci-multi-runner-06.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 </description>
         <pubDate>Sat, 28 May 2016 23:21:35 +0800</pubDate>
-        <link>http://btfak.com/ci/2016/05/28/gitlab-ci-runner/</link>
-        <guid isPermaLink="true">http://btfak.com/ci/2016/05/28/gitlab-ci-runner/</guid>
+        <link>http://btfak.github.io/ci/2016/05/28/gitlab-ci-runner/</link>
+        <guid isPermaLink="true">http://btfak.github.io/ci/2016/05/28/gitlab-ci-runner/</guid>
       </item>
     
       <item>
@@ -730,8 +730,8 @@ stdout_logfile_backups &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 20
 &lt;p&gt;&lt;a href=&quot;https://github.com/micro&quot;&gt;Micro&lt;/a&gt;在几乎所有接口中使用了这样的方式，比如要创建一个micro server的实例，开发者通过一个&lt;a href=&quot;https://github.com/micro/go-micro/blob/master/server/options.go&quot;&gt;option.go&lt;/a&gt;提供了所有可能的配置函数，当然你也可以自己实现。&lt;/p&gt;
 </description>
         <pubDate>Sun, 22 May 2016 21:21:35 +0800</pubDate>
-        <link>http://btfak.com/go/2016/05/22/functional-options-for-friendly-apis/</link>
-        <guid isPermaLink="true">http://btfak.com/go/2016/05/22/functional-options-for-friendly-apis/</guid>
+        <link>http://btfak.github.io/go/2016/05/22/functional-options-for-friendly-apis/</link>
+        <guid isPermaLink="true">http://btfak.github.io/go/2016/05/22/functional-options-for-friendly-apis/</guid>
       </item>
     
       <item>
@@ -1071,8 +1071,8 @@ stdout_logfile_backups &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 20
 &lt;p&gt;如果你想了解更多，请看这个&lt;a href=&quot;https://blog.micro.mu/&quot;&gt;blog&lt;/a&gt;，或者这个&lt;a href=&quot;https://github.com/micro/micro&quot;&gt;repo&lt;/a&gt;，Twitter可以关注&lt;a href=&quot;https://twitter.com/microhq&quot;&gt;@MicroHQ&lt;/a&gt;，Slack社区在[这里&lt;/p&gt;
 </description>
         <pubDate>Sun, 15 May 2016 23:21:35 +0800</pubDate>
-        <link>http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/05/15/resiliency/</link>
-        <guid isPermaLink="true">http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/05/15/resiliency/</guid>
+        <link>http://btfak.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/05/15/resiliency/</link>
+        <guid isPermaLink="true">http://btfak.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/05/15/resiliency/</guid>
       </item>
     
       <item>
@@ -1311,8 +1311,8 @@ stdout_logfile_backups &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 20
 &lt;p&gt;如果你想了解更多，请看这个&lt;a href=&quot;https://blog.micro.mu/&quot;&gt;blog&lt;/a&gt;，或者这个&lt;a href=&quot;https://github.com/micro/micro&quot;&gt;repo&lt;/a&gt;，Twitter可以关注&lt;a href=&quot;https://twitter.com/microhq&quot;&gt;@MicroHQ&lt;/a&gt;，Slack社区在&lt;a href=&quot;http://slack.micro.mu/&quot;&gt;这里&lt;/a&gt;&lt;/p&gt;
 </description>
         <pubDate>Mon, 25 Apr 2016 21:21:35 +0800</pubDate>
-        <link>http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/04/25/the-micro-bot/</link>
-        <guid isPermaLink="true">http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/04/25/the-micro-bot/</guid>
+        <link>http://btfak.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/04/25/the-micro-bot/</link>
+        <guid isPermaLink="true">http://btfak.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/04/25/the-micro-bot/</guid>
       </item>
     
       <item>
@@ -1520,8 +1520,8 @@ stdout_logfile_backups &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 20
 &lt;p&gt;如果你想了解更多，请看这个&lt;a href=&quot;https://blog.micro.mu/&quot;&gt;blog&lt;/a&gt;，或者这个&lt;a href=&quot;https://github.com/micro/micro&quot;&gt;repo&lt;/a&gt;，Twitter可以关注&lt;a href=&quot;https://twitter.com/microhq&quot;&gt;@MicroHQ&lt;/a&gt;，Slack社区在&lt;a href=&quot;http://slack.micro.mu/&quot;&gt;这里&lt;/a&gt;&lt;/p&gt;
 </description>
         <pubDate>Mon, 18 Apr 2016 23:21:35 +0800</pubDate>
-        <link>http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/04/18/micro-architecture/</link>
-        <guid isPermaLink="true">http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/04/18/micro-architecture/</guid>
+        <link>http://btfak.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/04/18/micro-architecture/</link>
+        <guid isPermaLink="true">http://btfak.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/04/18/micro-architecture/</guid>
       </item>
     
   </channel>

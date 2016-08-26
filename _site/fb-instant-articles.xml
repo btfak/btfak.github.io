@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title></title>
-    <link>http://btfak.com</link>
+    <link>http://btfak.github.io</link>
     <description>
       blog site of btfak
     </description>
@@ -10,7 +10,7 @@
         
             <item>
                 <title>开源一个完整的BT搜索引擎</title>
-                <link>http://btfak.com/bt%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/2016/08/17/opensource-of-btlike/</link>
+                <link>http://btfak.github.io/bt%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/2016/08/17/opensource-of-btlike/</link>
                 <content:encoded>
                     <![CDATA[
                     <h3 id="section">开源</h3>
@@ -90,7 +90,7 @@ go get github.com/btlike/storage</li>
         
             <item>
                 <title>程序员身处的时代与面临的机遇</title>
-                <link>http://btfak.com/%E7%94%9F%E6%B4%BB/2016/08/06/dont-lose-your-position/</link>
+                <link>http://btfak.github.io/%E7%94%9F%E6%B4%BB/2016/08/06/dont-lose-your-position/</link>
                 <content:encoded>
                     <![CDATA[
                     <h2 id="section">概述</h2>
@@ -166,7 +166,7 @@ go get github.com/btlike/storage</li>
         
             <item>
                 <title>BT搜索引擎爬虫实践</title>
-                <link>http://btfak.com/bt%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/2016/06/15/memory_optimize_on_dht_spider/</link>
+                <link>http://btfak.github.io/bt%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E/2016/06/15/memory_optimize_on_dht_spider/</link>
                 <content:encoded>
                     <![CDATA[
                     <p>最近完成了一个BT搜索引擎，基于<a href="https://zh.wikipedia.org/zh/%E7%A3%81%E5%8A%9B%E9%93%BE%E6%8E%A5">磁力链接</a>，目前这个技术已经很成熟了，从三年前的<a href="http://xiaoxia.org/2013/05/11/magnet-search-engine/">这篇文章</a>开始，和去年的<a href="http://xiaoxia.org/2015/05/15/shousibaocai-opensource/">开源</a>，技术上几乎已经没有难题，更多难点在工程上。后端采用Golang+Mysql+Elasticsearch，前端采用bootstrap。后端由三个单独的模块组成，spider组件是从DHT网络获取活跃资源id，storage组件是根据id查询到种子信息（metadata），存储到Mysql，并索引到Elasticsearch。API组件是对外提供查询、搜索服务，API组件采用nginx进行负载均衡。前端采用bootstrap，使用nginx做为web服务器，前端直接与后端的API组件进行交互。</p>
@@ -258,7 +258,7 @@ iptables -t raw -A PREROUTING -p udp -m udp --dport 20099 -j NOTRACK
         
             <item>
                 <title>多环境下的配置管理方案</title>
-                <link>http://btfak.com/go/2016/05/31/multi-env-config/</link>
+                <link>http://btfak.github.io/go/2016/05/31/multi-env-config/</link>
                 <content:encoded>
                     <![CDATA[
                     <p>在开发中，我们需要面对各种各样的环境，开发环境、测试环境、生产环境……</p>
@@ -442,7 +442,7 @@ hset global.mysql port 3306
         
             <item>
                 <title>怎样自动化部署微服务</title>
-                <link>http://btfak.com/ci/2016/05/30/deploy-micro/</link>
+                <link>http://btfak.github.io/ci/2016/05/30/deploy-micro/</link>
                 <content:encoded>
                     <![CDATA[
                     <p>这篇文章将讨论我们团队在实际开发和运维过程中，怎样基于gitlab的CI系统和supervisor，进行微服务的自动化部署。</p>
@@ -541,7 +541,7 @@ stdout_logfile_backups <span class="o">=</span> 20
         
             <item>
                 <title>怎样使用gitlab-ci-runner</title>
-                <link>http://btfak.com/ci/2016/05/28/gitlab-ci-runner/</link>
+                <link>http://btfak.github.io/ci/2016/05/28/gitlab-ci-runner/</link>
                 <content:encoded>
                     <![CDATA[
                     <p>这篇文件简单介绍，怎样安装使用gitlab-ci-runner，执行持续集成任务。</p>
@@ -620,7 +620,7 @@ stdout_logfile_backups <span class="o">=</span> 20
         
             <item>
                 <title>怎样设计友好的API接口</title>
-                <link>http://btfak.com/go/2016/05/22/functional-options-for-friendly-apis/</link>
+                <link>http://btfak.github.io/go/2016/05/22/functional-options-for-friendly-apis/</link>
                 <content:encoded>
                     <![CDATA[
                     <p><em>这篇文章是Dave Cheney在2014年发表的，我认为在go语言的接口设计上，这篇文章起到了指明灯的作用，包括<a href="https://github.com/micro">Micro</a>在内的框架，都使用了这种方式提供API。原文看<a href="http://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis">这里</a></em></p>
@@ -820,7 +820,7 @@ stdout_logfile_backups <span class="o">=</span> 20
         
             <item>
                 <title>使用Micro构建有弹性的、高容错的应用</title>
-                <link>http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/05/15/resiliency/</link>
+                <link>http://btfak.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/05/15/resiliency/</link>
                 <content:encoded>
                     <![CDATA[
                     <p>这是一系列介绍<a href="http://github.com/micro">Micro</a>框架的文章的第七篇，我将会把作者的博客翻译成中文，推广Micro这个微服务框架。</p>
@@ -1173,7 +1173,7 @@ stdout_logfile_backups <span class="o">=</span> 20
         
             <item>
                 <title>Micro Bot - 微服务中的ChatOps</title>
-                <link>http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/04/25/the-micro-bot/</link>
+                <link>http://btfak.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/04/25/the-micro-bot/</link>
                 <content:encoded>
                     <![CDATA[
                     <p>这是一系列介绍<a href="http://github.com/micro">Micro</a>框架的文章的第六篇，我将会把作者的博客翻译成中文，推广Micro这个微服务框架。</p>
@@ -1425,7 +1425,7 @@ stdout_logfile_backups <span class="o">=</span> 20
         
             <item>
                 <title>Micro的架构与微服务的设计模式</title>
-                <link>http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/04/18/micro-architecture/</link>
+                <link>http://btfak.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/04/18/micro-architecture/</link>
                 <content:encoded>
                     <![CDATA[
                     <p>这是一系列介绍<a href="http://github.com/micro">Micro</a>框架的文章的第五篇，我将会把作者的博客翻译成中文，推广Micro这个微服务框架。</p>
@@ -1646,7 +1646,7 @@ stdout_logfile_backups <span class="o">=</span> 20
         
             <item>
                 <title>基于消息队列NATS构建微服务</title>
-                <link>http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/04/11/micro-on-nats/</link>
+                <link>http://btfak.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/04/11/micro-on-nats/</link>
                 <content:encoded>
                     <![CDATA[
                     <p>这是一系列介绍<a href="http://github.com/micro">Micro</a>框架的文章的第四篇，我将会把作者的博客翻译成中文，推广Micro这个微服务框架。</p>
@@ -1899,7 +1899,7 @@ stdout_logfile_backups <span class="o">=</span> 20
         
             <item>
                 <title>使用Go Micro编写微服务</title>
-                <link>http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/03/28/go-micro/</link>
+                <link>http://btfak.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/03/28/go-micro/</link>
                 <content:encoded>
                     <![CDATA[
                     <p>这是一系列介绍<a href="http://github.com/micro">Micro</a>框架的文章的第三篇，我将会把作者的博客翻译成中文，推广Micro这个微服务框架。</p>
@@ -2228,7 +2228,7 @@ protoc --go_out<span class="o">=</span><span class="nv">plugins</span><span clas
         
             <item>
                 <title>Micro - 微服务工具箱</title>
-                <link>http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/03/20/micro/</link>
+                <link>http://btfak.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/03/20/micro/</link>
                 <content:encoded>
                     <![CDATA[
                     <p>这是一系列介绍<a href="http://github.com/micro">Micro</a>框架的文章的第二篇，我将会把作者的博客翻译成中文，推广Micro这个微服务框架。</p>
@@ -2451,7 +2451,7 @@ protoc --go_out<span class="o">=</span><span class="nv">plugins</span><span clas
         
             <item>
                 <title>Micro - 微服务生态系统</title>
-                <link>http://btfak.com/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/03/18/introduction/</link>
+                <link>http://btfak.github.io/%E5%BE%AE%E6%9C%8D%E5%8A%A1/2016/03/18/introduction/</link>
                 <content:encoded>
                     <![CDATA[
                     <p>这是一系列介绍<a href="http://github.com/micro">Micro</a>框架的文章的第一篇，我将会把作者的博客翻译成中文，推广Micro这个微服务框架。</p>
