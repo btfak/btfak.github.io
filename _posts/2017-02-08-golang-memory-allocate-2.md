@@ -11,14 +11,9 @@ categories: golang
 首先看看mheap的数据结构
 
 ```go
-// Main malloc heap.
-// The heap itself is the "free[]" and "large" arrays,
-// but all the other global data is here too.
-//
-// mheap must not be heap-allocated because it contains mSpanLists,
-// which must not be heap-allocated.
-//
-//go:notinheap
+// mheap本身只包含"free[]" and "large"数组
+// 但其他的全局数据也在这里
+// mheap 禁止从堆上创建，因包含的mSpanLists不能从堆上创建
 type mheap struct {
 	lock      mutex
 	free      [_MaxMHeapList]mSpanList // free lists of given length
@@ -28,39 +23,27 @@ type mheap struct {
 	sweepgen  uint32                   // sweep generation, see comment in mspan
 	sweepdone uint32                   // all spans are swept
 
-	// allspans is a slice of all mspans ever created. Each mspan
-	// appears exactly once.
-	//
-	// The memory for allspans is manually managed and can be
-	// reallocated and move as the heap grows.
-	//
-	// In general, allspans is protected by mheap_.lock, which
-	// prevents concurrent access as well as freeing the backing
-	// store. Accesses during STW might not hold the lock, but
-	// must ensure that allocation cannot happen around the
-	// access (since that may free the backing store).
+    // allspans是所有曾经创建过的mspans的数组，每个mspan只存储一次
+    // allspans的内存是手动管理的，随着堆的增长，可以重新创建或移动
+    // 一般来说，allspans是被mheap.lock所保护，当释放backing store时，锁用于防止并发的访问
+    // 在STW期间访问可能不会持有锁，但必须确保分配不会发生在访问的时候(因为这可能释放backing store)
 	allspans []*mspan // all spans out there
 
-	// spans is a lookup table to map virtual address page IDs to *mspan.
-	// For allocated spans, their pages map to the span itself.
-	// For free spans, only the lowest and highest pages map to the span itself.
-	// Internal pages map to an arbitrary span.
-	// For pages that have never been allocated, spans entries are nil.
-	//
-	// This is backed by a reserved region of the address space so
-	// it can grow without moving. The memory up to len(spans) is
-	// mapped. cap(spans) indicates the total reserved memory.
+	
+    // spans是一张查询表，用于映射虚拟地址页的id到*mspan
+    // 对于已经分配spans，它们的页映射到span本身
+    // 对于空闲的spans，只有最低位和最高位的页映射到span本身
+    // 内部的页映射到一个固定的span
+    // 对于从未分配过的页，span是空的
+    // 空间分配在一个预先储备好大块的地址上，因此它可以不断增长而不需要移动。len(spans)是分配出去的内存，
+    // cap(spans)是所有储备的内存空间
 	spans []*mspan
 
-	// sweepSpans contains two mspan stacks: one of swept in-use
-	// spans, and one of unswept in-use spans. These two trade
-	// roles on each GC cycle. Since the sweepgen increases by 2
-	// on each cycle, this means the swept spans are in
-	// sweepSpans[sweepgen/2%2] and the unswept spans are in
-	// sweepSpans[1-sweepgen/2%2]. Sweeping pops spans from the
-	// unswept stack and pushes spans that are still in-use on the
-	// swept stack. Likewise, allocating an in-use span pushes it
-	// on the swept stack.
+    // sweepSpans包含两个mspan栈，一个是已经清理的使用中的spans，一个是未清理的使用中的spans。
+    // 这两个角色在每个GC周期相互转换，因此sweepgen这个字段在每个GC周期中增加2,这意味着清理完的spans
+    // 存放在sweepSpans[sweepgen/2%2]，而未清理的spans存放在sweepSpans[1-sweepgen/2%2]。
+    // 清理过程会把spans从未清理的栈中取出来，并把使用中的spans放到清理完成的栈中。同样的，分配一个使用中      
+    // 的span会把它放到已清理的栈中
 	sweepSpans [2]gcSweepBuf
 
 	_ uint32 // align uint64 fields on 32-bit for atomics
