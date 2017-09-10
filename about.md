@@ -5,7 +5,7 @@ permalink: /about/
 tags: about
 ---
 
-我是一名Golang程序员，热衷于自动化、微服务，曾就职于今日头条、滴滴出行。
+我是一名Golang程序员，热衷于自动化、微服务。
 
 了解我:
 
